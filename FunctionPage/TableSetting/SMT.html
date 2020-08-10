@@ -1,0 +1,1437 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<!--<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-table.min.css" />-->
+<!--<script src="js/jquery-1.9.1.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/layer/layer.min.js"></script>-->
+<!--<script src="js/report.js"></script>-->
+
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/highcharts.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background: #fff;
+    }
+
+    .title {
+        width: 100%;
+        height: 54px;
+        padding: 10px 15px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+        line-height: 33px;
+    }
+
+    .bottom {
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        height: 60px;
+        background: #337ab7;
+        z-index: 10000;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        font-size: 30px;
+        text-align: center;
+        line-height: 60px;
+        color: #fff;
+    }
+
+    #container0, #container1, container2, container3, container4 {
+        height: 100%;
+        margin: 15px;
+    }
+
+        #container0 h2 {
+            text-align: center;
+        }
+
+        #container0 .tabBody {
+            overflow: hidden;
+        }
+
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<body>
+
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:SMT">SMT看板</span>
+    </div>
+
+    <div class="bottom">
+        宣導信息：你是否按照SOP拿放PCB板？？？
+    </div>
+
+    <div id="container0">
+        <!--<h2>SMT 看板</h2>-->
+        <div class="tabHead"><table></table></div>
+        <div class="tabBody"><table></table></div>
+    </div>
+    <!--<div id="container1"></div>
+    <div id="container2"></div>
+    <div id="container3"></div>
+    <div id="container4"></div>-->
+</body>
+
+<script>
+
+
+    $(document).ready(function () {
+        //var _self = self;
+        $.fn.setWidth = function (widthArr) {  //只能设置一行
+            this.each(function (index, ele) {
+                $(this).css("width", widthArr[index] + "%");
+            });
+            return this;   //this:jQuery对象
+        }
+
+        var data1 = [
+    
+    {
+        "BU": "IOTBU",
+        "PARTNO": "73-16531-05",
+        "AOI4": "1",
+        "AOI2": "0",
+        "PCB2C": "1",
+        "SMTLOADING": "472",
+        "QUACK": "0",
+        "VI": "259",
+        "FDX": "8",
+        "ICT": "0",
+        "REWORK": "26",
+        "REPAIR": "1",
+        "TOTALWIP": "767"
+    },
+    {
+        "BU": "IOTBU",
+        "PARTNO": "73-16530-05",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "85",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "0",
+        "REPAIR": "0",
+        "TOTALWIP": "85"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "74-12130-02",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "19",
+        "SMTLOADING": "309",
+        "QUACK": "0",
+        "VI": "2",
+        "FDX": "0",
+        "ICT": "19",
+        "REWORK": "249",
+        "REPAIR": "1",
+        "TOTALWIP": "599"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "73-102091-04",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "1",
+        "SMTLOADING": "427",
+        "QUACK": "3",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "6",
+        "REWORK": "4",
+        "REPAIR": "0",
+        "TOTALWIP": "441"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "73-102092-04",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "530",
+        "QUACK": "4",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "3",
+        "REWORK": "121",
+        "REPAIR": "0",
+        "TOTALWIP": "658"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "73-102093-04",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "2",
+        "SMTLOADING": "90",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "3",
+        "REWORK": "18",
+        "REPAIR": "1",
+        "TOTALWIP": "114"
+    },
+    {
+        "BU": "MCEBUI",
+        "PARTNO": "73-17766-04",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "137",
+        "SMTLOADING": "115",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "4",
+        "REWORK": "820",
+        "REPAIR": "0",
+        "TOTALWIP": "1076"
+    },
+    {
+        "BU": "MCEBUI",
+        "PARTNO": "95.1342T00",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "132",
+        "SMTLOADING": "308",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "5",
+        "REWORK": "2064",
+        "REPAIR": "0",
+        "TOTALWIP": "2509"
+    },
+    {
+        "BU": "IOTBU",
+        "PARTNO": "73-16532-04",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "579",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "0",
+        "REPAIR": "0",
+        "TOTALWIP": "579"
+    },
+    {
+        "BU": "MCEBUI",
+        "PARTNO": "73-18376-05",
+        "AOI4": "2",
+        "AOI2": "0",
+        "PCB2C": "13",
+        "SMTLOADING": "47",
+        "QUACK": "1",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "3",
+        "REWORK": "71",
+        "REPAIR": "0",
+        "TOTALWIP": "135"
+    },
+    {
+        "BU": "MCEBUI",
+        "PARTNO": "800-43184-01",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "19",
+        "QUACK": "20",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "9",
+        "REWORK": "2098",
+        "REPAIR": "0",
+        "TOTALWIP": "2146"
+    },
+    {
+        "BU": "MCEBUI",
+        "PARTNO": "800-43183-01",
+        "AOI4": "276",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "335",
+        "QUACK": "1",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "972",
+        "REPAIR": "0",
+        "TOTALWIP": "1308"
+    },
+    {
+        "BU": "MCEBUII",
+        "PARTNO": "73-16274-03",
+        "AOI4": "200",
+        "AOI2": "0",
+        "PCB2C": "4",
+        "SMTLOADING": "301",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "19",
+        "REWORK": "2977",
+        "REPAIR": "0",
+        "TOTALWIP": "3301"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "73-13503-02",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "41",
+        "SMTLOADING": "1487",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "11438",
+        "REPAIR": "0",
+        "TOTALWIP": "12966"
+    },
+    {
+        "BU": "MCEBU",
+        "PARTNO": "73-12704-03",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "17",
+        "SMTLOADING": "166",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "5",
+        "REWORK": "2073",
+        "REPAIR": "0",
+        "TOTALWIP": "2261"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "95.0412T00",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "30",
+        "SMTLOADING": "32",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "3619",
+        "REPAIR": "0",
+        "TOTALWIP": "3681"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "73-13446-02",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "322",
+        "SMTLOADING": "184",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "2",
+        "REWORK": "17001",
+        "REPAIR": "0",
+        "TOTALWIP": "17509"
+    },
+    {
+        "BU": "MCEBU",
+        "PARTNO": "73-15399-02",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "1",
+        "SMTLOADING": "9",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "1561",
+        "REPAIR": "0",
+        "TOTALWIP": "1571"
+    },
+    {
+        "BU": "MCEBUII",
+        "PARTNO": "74-105093-01",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "605",
+        "QUACK": "3",
+        "VI": "105",
+        "FDX": "25",
+        "ICT": "10",
+        "REWORK": "1028",
+        "REPAIR": "0",
+        "TOTALWIP": "1776"
+    },
+    {
+        "BU": "MCEBUI",
+        "PARTNO": "800-43182-01",
+        "AOI4": "76",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "88",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "1896",
+        "REPAIR": "0",
+        "TOTALWIP": "1984"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "74-117632-01",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "4",
+        "SMTLOADING": "2",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "7",
+        "REWORK": "315",
+        "REPAIR": "0",
+        "TOTALWIP": "328"
+    },
+
+    {
+        "BU": "PCBU",
+        "PARTNO": "74-114207-01",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "2",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "7",
+        "REWORK": "84",
+        "REPAIR": "0",
+        "TOTALWIP": "93"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "74-111524-02",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "0",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "21",
+        "REWORK": "0",
+        "REPAIR": "1",
+        "TOTALWIP": "22"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "73-16852-03",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "30",
+        "SMTLOADING": "1054",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "35",
+        "REWORK": "432",
+        "REPAIR": "0",
+        "TOTALWIP": "1551"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "74-10054-02",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "6",
+        "SMTLOADING": "0",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "9",
+        "REPAIR": "0",
+        "TOTALWIP": "15"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "74-7465-02",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "9",
+        "SMTLOADING": "3",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "3",
+        "REWORK": "4194",
+        "REPAIR": "0",
+        "TOTALWIP": "4209"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "U58O163D00",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "1",
+        "SMTLOADING": "3",
+        "QUACK": "1",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "1",
+        "REWORK": "2214",
+        "REPAIR": "0",
+        "TOTALWIP": "2220"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "74-12134-02",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "15",
+        "SMTLOADING": "5",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "4",
+        "REWORK": "34",
+        "REPAIR": "0",
+        "TOTALWIP": "58"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "74-111524-01",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "64",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "2",
+        "ICT": "12",
+        "REWORK": "889",
+        "REPAIR": "0",
+        "TOTALWIP": "967"
+    },
+    {
+        "BU": "MCEBUI",
+        "PARTNO": "95.1825T00",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "4",
+        "SMTLOADING": "0",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "2",
+        "ICT": "1",
+        "REWORK": "135",
+        "REPAIR": "0",
+        "TOTALWIP": "142"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "73-16851-04",
+        "AOI4": "0",
+        "AOI2": "1",
+        "PCB2C": "5",
+        "SMTLOADING": "1225",
+        "QUACK": "0",
+        "VI": "1",
+        "FDX": "0",
+        "ICT": "111",
+        "REWORK": "478",
+        "REPAIR": "2",
+        "TOTALWIP": "1823"
+    },
+    {
+        "BU": "MCEBU",
+        "PARTNO": "73-17979-02",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "54",
+        "SMTLOADING": "530",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "1324",
+        "REPAIR": "0",
+        "TOTALWIP": "1908"
+    },
+    {
+        "BU": "IOTBU",
+        "PARTNO": "73-15597-01",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "6",
+        "SMTLOADING": "380",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "60",
+        "REPAIR": "0",
+        "TOTALWIP": "446"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "74-9446-01",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "33",
+        "SMTLOADING": "36",
+        "QUACK": "1",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "3780",
+        "REPAIR": "0",
+        "TOTALWIP": "3850"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "73-13411-02",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "3",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "1",
+        "REWORK": "1342",
+        "REPAIR": "0",
+        "TOTALWIP": "1346"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "73-13412-02",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "1",
+        "SMTLOADING": "0",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "5",
+        "REWORK": "1977",
+        "REPAIR": "0",
+        "TOTALWIP": "1983"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "800-48086-01",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "40",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "1",
+        "REWORK": "40",
+        "REPAIR": "0",
+        "TOTALWIP": "81"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "74-118843-01",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "24",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "120",
+        "REPAIR": "0",
+        "TOTALWIP": "144"
+    },
+    {
+        "BU": "MCEBUI",
+        "PARTNO": "800-36532-01",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "398",
+        "QUACK": "80",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "990",
+        "REPAIR": "0",
+        "TOTALWIP": "1468"
+    },
+    {
+        "BU": "MCEBUII",
+        "PARTNO": "800-41009-02",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "273",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "957",
+        "REPAIR": "0",
+        "TOTALWIP": "1230"
+    },
+    {
+        "BU": "MCEBU",
+        "PARTNO": "95.1901T00",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "6",
+        "SMTLOADING": "174",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "1",
+        "ICT": "0",
+        "REWORK": "42",
+        "REPAIR": "0",
+        "TOTALWIP": "223"
+    },
+    {
+        "BU": "MCEBU",
+        "PARTNO": "73-101240-03",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "206",
+        "QUACK": "0",
+        "VI": "200",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "26",
+        "REPAIR": "0",
+        "TOTALWIP": "432"
+    },
+    {
+        "BU": "IOTBU",
+        "PARTNO": "73-18015-02",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "545",
+        "QUACK": "0",
+        "VI": "260",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "0",
+        "REPAIR": "0",
+        "TOTALWIP": "805"
+    },
+    {
+        "BU": "MCEBUI",
+        "PARTNO": "95.1826T00",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "31",
+        "SMTLOADING": "0",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "1",
+        "REWORK": "116",
+        "REPAIR": "0",
+        "TOTALWIP": "148"
+    },
+    {
+        "BU": "MCEBUI",
+        "PARTNO": "95.1827T00",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "7",
+        "SMTLOADING": "100",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "1",
+        "REWORK": "42",
+        "REPAIR": "0",
+        "TOTALWIP": "150"
+    },
+    {
+        "BU": "MCEBU",
+        "PARTNO": "74-120368-01",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "0",
+        "QUACK": "2",
+        "VI": "0",
+        "FDX": "1",
+        "ICT": "2",
+        "REWORK": "17",
+        "REPAIR": "1",
+        "TOTALWIP": "23"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "74-118704-01",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "0",
+        "QUACK": "2",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "132",
+        "REPAIR": "0",
+        "TOTALWIP": "134"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "73-18821-04",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "72",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "3",
+        "REWORK": "3",
+        "REPAIR": "0",
+        "TOTALWIP": "78"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "74-9446-02",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "15",
+        "SMTLOADING": "7",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "1",
+        "REWORK": "59",
+        "REPAIR": "0",
+        "TOTALWIP": "82"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "74-117717-01",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "202",
+        "SMTLOADING": "90",
+        "QUACK": "1",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "3",
+        "REWORK": "305",
+        "REPAIR": "0",
+        "TOTALWIP": "601"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "U58O162D00",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "67",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "1505",
+        "REPAIR": "0",
+        "TOTALWIP": "1572"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "74-12130-01",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "40",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "3431",
+        "REPAIR": "0",
+        "TOTALWIP": "3471"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "73-14810-01",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "4",
+        "SMTLOADING": "0",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "40",
+        "REPAIR": "0",
+        "TOTALWIP": "44"
+    },
+    {
+        "BU": "MCEBU",
+        "PARTNO": "73-14346-06",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "3",
+        "SMTLOADING": "4",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "119",
+        "REPAIR": "0",
+        "TOTALWIP": "126"
+    },
+    {
+        "BU": "PCBU",
+        "PARTNO": "74-12765-02",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "1",
+        "SMTLOADING": "1",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "6",
+        "REWORK": "863",
+        "REPAIR": "0",
+        "TOTALWIP": "871"
+    },
+    {
+        "BU": "MCEBUI",
+        "PARTNO": "800-37542-06",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "32",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "12",
+        "REWORK": "2393",
+        "REPAIR": "0",
+        "TOTALWIP": "2437"
+    },
+    {
+        "BU": "MCEBUI",
+        "PARTNO": "800-42801-03",
+        "AOI4": "0",
+        "AOI2": "0",
+        "PCB2C": "0",
+        "SMTLOADING": "1000",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "3",
+        "REWORK": "2183",
+        "REPAIR": "0",
+        "TOTALWIP": "3186"
+    },
+    {
+        "BU": "MCEBUII",
+        "PARTNO": "73-15795-01",
+        "AOI4": "55",
+        "AOI2": "0",
+        "PCB2C": "9",
+        "SMTLOADING": "152",
+        "QUACK": "0",
+        "VI": "0",
+        "FDX": "0",
+        "ICT": "0",
+        "REWORK": "606",
+        "REPAIR": "0",
+        "TOTALWIP": "767"
+    }
+        ];
+
+
+        console.log(1);
+        var tableData = null;
+        var chartData = null;
+        drawTable($("#container0 .tabHead"), $("#container0 .tabBody"), data1, ["BU", "PARTNO", "AOI4", "AOI2", "PCB2C", "SMTLOADING", "QUACK", "VI", "FDX", "ICT", "REWORK", "REPAIR", "TOTALWIP"]);
+
+        //self.parent.client.CallFunction("MESStation.Config.SmtBoard", "GetSmtStationData", {}, function (e) {
+        //    console.log(e);
+        //    if (e.Status == "Pass") {
+        //        drawTable($("#container0 .tabHead"), $("#container0 .tabBody"), e.Data, ["BU", "PARTNO", "AOI4", "AOI2", "PCB2C", "SMTLOADING", "QUACK", "VI", "FDX", "ICT", "REWORK", "REPAIR", "TOTALWIP"]);
+        //    }
+        //});
+
+
+        self.parent.client.CallFunction("MESStation.Config.SmtBoard", "GetSMTlineData", {}, function (e) {
+            console.log(e);
+            if (e.Status == "Pass") {
+                $.each(e.Data.series, function (index, obj) {
+                    e.Data.series[index].data = str_num(obj.data);
+                });
+                highChart($("#container1"), e.Data);
+                //drawTable($("#container0 .tabHead"), $("#container0 .tabBody"), e.Data, ["BU", "PARTNO", "AOI4", "AOI2", "PCB2C", "SMTLOADING", "QUACK", "VI", "FDX", "ICT", "REWORK", "REPAIR", "TOTALWIP"]);
+                //console.log(e);
+            }
+
+        });
+
+        self.parent.client.CallFunction("MESStation.Config.SmtBoard", "GetSMTAllLineData", {}, function (e) {
+            console.log(e);
+            if (e.Status == "Pass") {
+                $.each(e.Data.series, function (index, obj) {
+                    e.Data.series[index].data = str_num(obj.data);
+                });
+                highChart($("#container2"), e.Data);
+                //drawTable($("#container0 .tabHead"), $("#container0 .tabBody"), e.Data, ["BU", "PARTNO", "AOI4", "AOI2", "PCB2C", "SMTLOADING", "QUACK", "VI", "FDX", "ICT", "REWORK", "REPAIR", "TOTALWIP"]);
+                //console.log(e);
+            }
+
+        });
+
+        function str_num(arr) {  //把字符串数组变成数字数组
+            var _arr = [];
+            $.each(arr, function (i,str) {
+                _arr.push(Number(str));
+            });
+            return _arr;
+        }
+
+        var xxx = {
+            "type": "column",
+            "title": "SMT Line S1產出狀況圖",
+            "subtitle": "SMT Line S1產出狀況圖",
+            "xAxis": {
+                "title": "時間",
+                "categories": [
+                  "08:00~09:00",
+                  "09:00~10:00",
+                  "10:00~11:00",
+                  "11:00~12:00",
+                  "12:00~13:00",
+                  "13:00~14:00",
+                  "14:00~15:00",
+                  "15:00~16:00",
+                  "16:00~17:00",
+                  "17:00~18:00"
+                ]
+            },
+            "yAxis": {
+                "title": "數量/(PCS)"
+            },
+            "series": [
+              {
+                  "name": "S1A",
+                  "data": [
+                    "4",
+                    "4",
+                    "4",
+                    "4",
+                    "4",
+                    "4",
+                    "4",
+                    "0",
+                    "0",
+                    "0"
+                  ]
+              },
+              {
+                  "name": "S1B",
+                  "data": [
+                    "22",
+                    "22",
+                    "22",
+                    "22",
+                    "22",
+                    "22",
+                    "22",
+                    "0",
+                    "0",
+                    "0"
+                  ]
+              }
+            ]
+        };
+
+
+        var Json11;
+
+        var Json1 = {     //JSON规范
+            type: "column",    //  bar  横（条形）     column  竖（柱形）
+            title: "主标题",
+            subtitle: "副标题",
+            xAxis: {
+                title: "x轴名（可带单位）",
+                categories: ["x1", "x2", "x3", "x4", "x5","x6"]    //x轴上各值
+
+            },
+            yAxis: {
+                title: "y轴名(%)"
+            },
+            series: [   //图表主要数据
+                {      //一条数据
+                    name: "数据名1",
+                    data: [61, 29, 33, 44, 53 , 22]   //长度要对应，类型是数字
+                },
+                {      //一条数据
+                    name: "数据名2",
+                    data: [22, 71, 54, 38, 74 , 32]   //长度要对应，类型是数字
+                },
+                {      //一条数据
+                    name: "数据名3",
+                    data: [88, 10, 29, 101, 6,67]   //长度要对应，类型是数字
+                },
+                {      //一条数据
+                    name: "数据名4",
+                    data: [12, 52, 53, 7, 69,100]   //长度要对应，类型是数字
+                },
+            ]
+        }
+
+        var Json2 = {
+            type: "bar",    //  bar  横（条形）     column  竖（柱形）
+            title: "主标题",
+            subtitle: "副标题",
+            xAxis: {
+                title: "x轴名（可带单位）",
+                categories: ["x1", "x2", "x3", "x4", "x5"]    //x轴上各值
+
+            },
+            yAxis: {
+                title: "y轴名(a)"
+            },
+            series: [   //图表主要数据
+                {      //一条数据
+                    name: "数据名1",
+                    data: [1, 2, 3, 4, 5]   //长度要对应，类型是数字
+                },
+                {      //一条数据
+                    name: "数据名2",
+                    data: [2, 1, 5, 3, 4]   //长度要对应，类型是数字
+                },
+                {      //一条数据
+                    name: "数据名3",
+                    data: [3, 10, 29, 1, 6]   //长度要对应，类型是数字
+                },
+                {      //一条数据
+                    name: "数据名4",
+                    data: [12, 2, 5, 7, 9]   //长度要对应，类型是数字
+                },
+            ]
+        }
+
+        var Json3 = {
+            type: "pie",    //  bar  横（条形）     column  竖（柱形）
+            title: "主标题",
+            subtitle: "副标题",
+            xAxis: {
+                title: "x轴名（可带单位）",
+                categories: ["x1", "x2", "x3", "x4", "x5"]    //x轴上各值
+
+            },
+            yAxis: {
+                title: "y轴名(b)"
+            },
+            series: [   //图表主要数据
+                {      //一条数据
+                    name: "数据名1",
+                    data: [1, 2, 3, 4, 5]   //长度要对应，类型是数字
+                }
+
+            ]
+        }
+
+
+        function highChart(control,data) {    //绘制直方图
+            var chart = {
+                type: data["type"],   //column  bar
+                height:"35%"
+            };
+            var title = {
+                text: data["title"]
+            };
+            var subtitle = {
+                text: data["subtitle"]
+            };
+            var xAxis = {
+                categories: data["xAxis"]["categories"],         // ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                title: {
+                    text: data["xAxis"]["title"],
+                    align: 'high'    //high
+                },
+                crosshair: true
+            };
+            var yAxis = {
+                min: 0,
+                title: {
+                    text: data["yAxis"]["title"],
+                    align: 'high'    //high
+                },
+                lineWidth: "1"
+            };
+            var company = data["yAxis"]["title"].match(/\(.+?\)/g)[0];
+            company = company.substr(1, company.length - 2);
+            var tooltip = {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                   '<td style="padding:0"><b>{point.y:.1f} '+ company +'</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            };
+            var plotOptions = {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            };
+            var credits = {
+                enabled: false
+            };
+            var series = data["series"];
+            var json = {};
+            json.chart = chart;
+            json.title = title;
+            json.subtitle = subtitle;
+            json.tooltip = tooltip;
+            json.xAxis = xAxis;
+            json.yAxis = yAxis;
+            json.series = series;
+            json.plotOptions = plotOptions;
+            json.credits = credits;
+            control.highcharts(json);
+        }
+
+        function drawTable(controlHead, controlBody, data, fieldArr) {
+            var wArr = [7.3, 12.4, 7.3, 7.3, 7.3, 7.3, 7.3, 7.3, 7.3, 7.3, 7.3, 7.3, 7.3]; //[7,16,7,7,7,7,7,7,7,7,7,7,7]
+            controlBody.find("table").bootstrapTable({
+                data: data,   //e
+                pagination: false,    //分页显示
+                pageSize: 10,         //初始化每一页的数据条数
+                pageList: [10, 25, 50, 100],
+                search: false,        //显示查找框
+                striped: true,        //背景色相间
+                showRefresh: false,   //显示重置按钮
+                //clickToSelect: true,   //单击一行内任意单元格选中该行
+                //singleSelect: false,  //单选
+                columns: columns(fieldArr)
+            });
+            controlBody.find("table tr").each(function () {
+                $(this).find("td").setWidth(wArr);
+            });
+            controlHead.find("table").bootstrapTable({
+                data: data,   //e
+                pagination: false,    //分页显示
+                pageSize: 10,         //初始化每一页的数据条数
+                pageList: [10, 25, 50, 100],
+                search: false,        //显示查找框
+                striped: true,        //背景色相间
+                showRefresh: false,   //显示重置按钮
+                //clickToSelect: true,   //单击一行内任意单元格选中该行
+                //singleSelect: false,  //单选
+                columns: columns(fieldArr)
+            });
+            controlHead.find("table").find("tr th").setWidth(wArr);
+
+            function columns (colList) {   //生成表格关键数据
+                var columns = [];
+                //columns.push({    //选择按钮
+                //    align: 'center',
+                //    valign: 'middle',
+                //    checkbox: true
+                //});
+                $.each(colList, function (i, val) {
+                    var title = "<label set-lan=" + "html:" + val + ">" + val + "</label>";
+                    var obj = {
+                        field: val,
+                        title: title,
+                        align: 'center',
+                        valign: 'middle'
+                    };
+                    columns.push(obj);
+                });
+                return columns;
+            }
+            var headTr = controlHead.find("tr");
+            var bodyTr = controlBody.find("tr");
+            //console.log(headTr, bodyTr);
+            bodyTr.each(function (index, tr) {     //留下身子
+                if (index == 0 || index == 1) {
+                    $(tr).remove();
+                }
+            });
+            headTr.each(function (index, tr) {      //留下头
+                if (index != 0 && index != 1) {
+                    $(tr).remove();
+                } else {
+                    $(tr).css({
+                        "background": "#337AB7",
+                        "color":"#fff"
+                    });
+                }
+            });
+            var offsetTop = 0;
+            var content = controlBody.find(".bootstrap-table");
+
+            animation();
+            function animation() {
+                setTimeout(function () {
+                    var timer = setInterval(function () {
+                        content.css({
+                            "position": "relative",
+                            "top": -offsetTop * 2 + "px"
+                        });
+                        offsetTop += 2;
+                        if (offsetTop >= 40 * (data.length - 1) / 2) {    //表走到头
+                            console.log("end!");
+                            offsetTop = 0;
+                            $("#container0").css("display", "none");
+                            setTimeout(function () {
+                                $("#container1").css("display", "none");
+                                setTimeout(function () {
+                                    $("#container2").css("display", "none");
+                                    content.css({
+                                        "position": "relative",
+                                        "top": "0px"
+                                    });
+                                    $("#container0").css("display", "block");
+                                    $("#container1").css("display", "block");
+                                    $("#container2").css("display", "block");
+                                    animation();
+                                    
+                                }, 10000);
+                            }, 10000)
+                            clearInterval(timer);
+                        }
+                    }, 100);
+                }, 3000);
+            }
+
+            
+
+
+
+
+
+            //开始动画
+            var ani_config = [
+                        {
+                            ele: content,
+                            type: "roll",   //滚动结束显示下个节点
+                            wait: 5000,  //先等待5秒再开始滚动
+                        },
+                        {
+                            ele: $("#container1"),
+                            type: "stop",  //停留指定时间显示下个节点
+                            wait: 10000   //停留时间：单位：ms(毫秒)
+                        },
+                        {
+                            ele: $("#container2"),
+                            type: "stop",  //停留指定时间显示下个节点
+                            wait: 10000   //停留时间：单位：ms(毫秒)
+                        },
+            ];
+
+
+            //animations(ani_config);
+
+            //function animations(config_arr) {   //轮流显示各节点
+            //    console.log("in");
+
+            //    $.each(config_arr, function (index, config_o) {
+
+            //    });
+            //    function animation(config_obj) {
+            //        if (config_obj.type == "roll") {  //滚动
+            //            config_obj.ele.css("display", "block");
+            //            var offsetTop = 0;
+            //            setTimeout(function () {    //开始滚动
+            //                var timer = setInterval(function () {
+            //                    config_obj.ele.css({
+            //                        "position": "relative",
+            //                        "top": -offsetTop * 2 + "px"
+            //                    });
+            //                    offsetTop += 2;
+            //                    if (offsetTop >= 40 * (data.length - 1) / 2) {    //表走到头
+            //                        config_obj.ele.css("display", "none");
+            //                        return true;
+            //                        //console.log("end!");
+            //                        //offsetTop = 0;
+            //                        //$("#container0").css("display", "none");
+            //                        //setTimeout(function () {
+            //                        //    $("#container1").css("display", "none");
+            //                        //    setTimeout(function () {
+            //                        //        $("#container2").css("display", "none");
+            //                        //        setTimeout(function () {
+            //                        //            $("#container3").css("display", "none");
+            //                        //        }, 10000);
+            //                        //    }, 10000);
+            //                        //}, 10000)
+            //                        //clearInterval(timer);
+            //                    }
+            //                }, 60);
+            //            }, config_obj.wait);
+            //        }
+            //        if (config_obj.type == "stop") {   //停留
+            //            config_obj.ele.css("display", "block");
+            //            setTimeout(function () {
+            //                config_obj.ele.css("display", "none");
+            //                return true;
+            //            }, config_obj.wait);
+            //        }
+            //    }
+
+            //}
+        }
+
+
+
+    });
+
+
+
+</script>
+
+</html>

@@ -1,0 +1,753 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Doc Config</title>  <!-- 称重 GCH 2018/11/19 ADD-->
+</head>
+
+<!--<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-table.min.css" />
+
+<script src="js/jquery-1.9.1.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/layer/layer.min.js"></script>-->
+
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+<link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background: #fff;
+    }
+
+    .title {
+        width: 100%;
+        height: 54px;
+        padding: 10px 15px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+        line-height: 33px;
+    }
+
+    .list {
+        width: 100%;
+        height: 34px;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-top: 25px;
+    }
+
+        .list .btnList {
+            height: 100%;
+            float: left;
+            border: 1px solid #337ab7;
+            border-radius: 3px;
+            border-right: none;
+        }
+
+            .list .btnList .btn0 {
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                color: rgb(103,106,108);
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor: pointer;
+            }
+
+                .list .btnList .btn0:hover {
+                    color: #fff;
+                    background: #286090;
+                }
+
+            .list .btnList .btn1,
+            .list .btnList .btn2 {
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                color: rgba(103,106,108,0.6); /*rgba(103,106,108,0.6)*/
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor: no-drop; /*no-drop*/
+            }
+
+                .list .btnList .btn1:hover,
+                .list .btnList .btn2:hover {
+                    color: #fff;
+                    background: #337ab7;
+                    opacity: 0.6;
+                }
+
+            .list .btnList .btn11,
+            .list .btnList .btn22 {
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                color: rgb(103, 106, 108);
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor: pointer;
+            }
+
+                .list .btnList .btn11:hover,
+                .list .btnList .btn22:hover {
+                    color: #fff;
+                    background: #286090;
+                }
+
+        .list .query {
+            float: right;
+            height: 100%;
+        }
+
+            .list .query .input {
+                float: left;
+                height: 100%;
+                width: 196px;
+                border: 1px solid #337ab7;
+                box-sizing: border-box;
+                border-radius: 5px;
+            }
+
+                .list .query .input input {
+                    width: 100%;
+                    height: 100%;
+                    padding: 6px 12px;
+                    border-radius: 5px;
+                    border: none;
+                    color: #676a6c;
+                    outline: none;
+                }
+
+            .list .query .btnQuery {
+                float: left;
+                height: 100%;
+                padding: 6px 12px;
+                line-height: 20px;
+                border: 1px solid #337ab7;
+                margin-left: 8px;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+
+                .list .query .btnQuery:hover {
+                    color: #fff;
+                    background: #286090;
+                }
+
+    .tab {
+        width: auto;
+        /*border: 1px solid #adadad;*/
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-left: 15px;
+        margin-right: 15px;
+        overflow: auto;
+    }
+
+    #ModifyList, #AddList {
+        position: absolute;
+    }
+
+        #AddList .addBtn, #ModifyList .editBtn {
+            background: #337ab7;
+            color: #fff;
+            font-weight: bold;
+        }
+
+            #AddList .addBtn:hover, #ModifyList .editBtn:hover {
+                background: #337ab7;
+            }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:ReworkSet">Doc Config</span>
+    </div>
+    <div class="list">
+        <div class="btnList">
+        	
+        </div>
+        <div class="query">
+            <div class="input">
+                <input type="text" value="" />
+            </div>
+            <div class="btnQuery" set-lan="html:Query">
+                Query
+            </div>
+        </div>
+    </div>
+    <div class="tab">
+        <table></table>
+    </div>
+    <!--新增弹窗-->
+    <div id="AddList" class="hidden">
+        <div class="panel-body">
+            <div class="row">
+                </br>
+                
+            </div>
+        </div>
+    </div>
+    <!--修改弹窗-->
+    <div id="ModifyList" class="hidden">
+        <div class="panel-body">
+            <div class="row">
+                </br>
+                
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+
+	$(document).on("ready",function (){
+	    var getData = null;
+	    var checkedData = null;
+		self.parent.client.CallFunction("MESStation.Config.WeightConfig", "QueryWeightConfig", { "SKUNO": "" }, function (e) {
+		    //console.log(e);
+		    if(e.Status == "Pass"){             //Pass
+		        getData = e.Data;                   //e.Data
+		        init(getData);
+		    }
+		});
+		function init(data) {                   //入口
+		    console.log("init");
+		    var btnMsg = [
+		    	{
+		    		"idName":"btn0",
+		    		"className":"btn0",
+		    		"iconClass":"glyphicon glyphicon-plus",
+		    		"name":"New",
+		    		"setLan":"New",
+		    		"fun":function (ev){
+		    			console.log("add");
+		    			layer.open({
+		    			    type: 1,
+		    			    skin: "layui-layer-lan",
+		    			    title: 'New Data',
+		    			    area: ["80%", "80%"],
+		    			    scrollbar: false,
+		    			    content: $("#AddList"),
+		    			    maxmin: true,
+		    			    success: function (layero, index) {
+		    			        $("#AddList").removeClass("hidden");                            //显示弹出框
+		    			        var inputList = $("#AddList .panel-body").find(".addList");
+		    			        inputList[4].value = self.parent.client.UserInfo.EMP_NO;        //显示修改人
+		    			        $(".addBtn").on("click", function () {                              //点击 新增数据
+		    			            var colNameList = ["SKUNO", "CTN_MIN_WEIGHT", "CTN_MAX_WEIGHT", "DEVIATION", "EDIT_EMP"];    //列名SKUNO   CTN_MIN_WEIGHT	 CTN_MAX_WEIGHT 	DEVIATION 	EDIT_EMP
+		    			            var sendData = {};                                                         //待发送的数据
+		    			            var flag = true;
+		    			            inputList.each(function (i, node) {                                  //为sendData赋值
+		    			                sendData[colNameList[i]] = node.value;
+		    			                if (inputList[i].value == "") {
+		    			                    flag = false;
+		    			                }
+		    			            });
+		    			            if (flag || true) {                   //任何一项为空都不能添加数据
+		    			                console.log(sendData);
+		    			                self.parent.client.CallFunction("MESStation.Config.WeightConfig", "AddWeightConfig", sendData , function (e) {
+		    			                    if (e.Status == "Pass") {      //Pass
+		    			                        console.log(sendData);
+		    			                        layer.msg("已新增1条数据!", {
+		    			                            icon: 1,
+		    			                            time: 1000
+		    			                        }, function () {
+		    			                            location.reload();
+		    			                        });
+		    			                    } else {
+		    			                        layer.msg("添加失敗:請核對正確后輸入!", {
+		    			                            icon: 0,
+		    			                            time: 1000
+		    			                        });
+		    			                    }
+		    			                });
+		    			            } else {
+		    			                layer.msg("请补全数据!", {
+		    			                    icon: 0,
+		    			                    time: 1000
+		    			                }, function () {
+		    			                });
+		    			            }
+		    			        });
+		    			    },
+		    			    end: function () {
+		    			        $("#AddList").addClass("hidden");                                       //隐藏弹出框
+		    			        $("#AddList .panel-body").find(".addList").each(function (index, node) {     //关闭弹出框各项数据置空
+		    			            node.value = "";
+		    			        });
+		    			    }
+		    			});
+		    		}
+		    	},
+		    	{
+		    		"idName":"btn1",
+		    		"className":"btn1",
+		    		"iconClass":"glyphicon glyphicon-pencil",
+		    		"name":"Edit",
+		    		"setLan":"Edit",
+		    		"fun":function (ev){  
+		    		    console.log("edit!");
+		    		    if ($(this).attr("class") == "btn11") {
+		    		        var checkedData = $('.tab table').bootstrapTable('getAllSelections');
+		    		        console.log(checkedData);
+		    		        //弹出layer框
+		    		        layer.open({
+		    		            type: 1,
+		    		            skin: "layui-layer-lan",
+		    		            title: 'Edit Data',
+		    		            area: ["80%", "80%"],
+		    		            scrollbar: false,
+		    		            content: $("#ModifyList"),
+		    		            maxmin: true,
+		    		            success: function (layero, index) {
+		    		                $("#ModifyList").removeClass("hidden");        //显示弹出框
+		    		                var colNameList = ["SKUNO", "CTN_MIN_WEIGHT", "CTN_MAX_WEIGHT", "DEVIATION"];    //列名SKUNO   CTN_MIN_WEIGHT	  CTN_MAX_WEIGHT 	DEVIATION 
+		    		                var inputList = $("#ModifyList .panel-body").find(".editList");
+		    		                $.each(inputList, function (i, node) {  //给各项赋值
+		    		                    node.value = checkedData[0][colNameList[i]];
+		    		                });
+		    		                $(".editBtn").on("click", function () {   //点击 修改数据
+		    		                    var sendData = {};                                 //值列表
+		    		                    var flag = false;
+		    		                    inputList.each(function (i, node) {      //i为下标
+		    		                        sendData[colNameList[i]] = node.value;
+		    		                        if (String(node.value) != String(checkedData[0][colNameList[i]])) {
+		    		                            //console.log(node.value =="undefined", checkedData[0][colNameList[i]] == undefined);
+		    		                            flag = true;   
+		    		                        }
+		    		                    });
+		    		                    if (flag || true) {      //最少修改一项数据后才能发送数据
+		    		                        console.log(sendData);
+		    		                        self.parent.client.CallFunction("MESStation.Config.WeightConfig", "UpdateWeightConfig", sendData, function (e) {
+		    		                            console.log(e);
+		    		                            if (e.Status == "Pass") {      //Pass
+		    		                                console.log(sendData);
+		    		                                layer.msg("已修改1条数据!", {
+		    		                                    icon: 1,
+		    		                                    time: 1000
+		    		                                }, function () {
+		    		                                    location.reload();
+		    		                                });
+		    		                            } else {
+		    		                                layer.msg("修改失敗:請核對正確后輸入!", {
+		    		                                    icon: 0,
+		    		                                    time: 1000
+		    		                                });
+		    		                            }
+		    		                        });
+		    		                    } else {
+		    		                        console.log(0);
+		    		                        layer.msg("请修改数据!", {
+		    		                            icon: 0,
+		    		                            time: 1000
+		    		                        }, function () {
+		    		                        });
+		    		                    }
+		    		                });
+		    		            },
+		    		            end: function () {
+		    		                $("#ModifyList").addClass("hidden");                                     //隐藏弹出框
+		    		                $(".panel-body").find("input").each(function (index, node) {  //关闭弹出框各项数据置空
+		    		                    node.value = "";
+		    		                });
+		    		            }
+		    		        });
+		    		    }
+		    		}
+		    	},
+		    	{
+		    		"idName":"btn2",
+		    		"className":"btn2",
+		    		"iconClass":"glyphicon glyphicon-trash",
+		    		"name":"Delete",
+		    		"setLan":"Delete",
+		    		"fun":function (ev){
+		    		    console.log("delete");
+		    		    if ($(this).attr("class") == "btn22") {
+		    		        layer.open({                          //确定是否删除?
+		    		            title: 'Warning',
+		    		            btn: ['Delete', 'Cancel'],
+		    		            content: "Delete operation cannot be rolled back! </br> Are you sure you want to delete these records?",
+		    		            yes: function (index) {      //确定删除
+		    		                layer.close(index);        //关闭该选择layer框
+		    		                var checkedData = $('.tab table').bootstrapTable('getAllSelections');
+		    		                console.log(checkedData);
+		    		                var successCount = 0;     //成功数量
+		    		                $.each(checkedData, function (i) {
+		    		                    var currentSKUNO = checkedData[i]["SKUNO"];
+		    		                    self.parent.client.CallFunction("MESStation.Config.WeightConfig", "DeleteWeightConfig", { "SKUNO": currentSKUNO }, function (e) {
+		    		                        console.log(e);
+		    		                        if (e.Status == "Pass") {   // Pass
+		    		                            successCount++;
+		    		                            if (successCount == checkedData.length) {
+		    		                                layer.msg("已删除" + checkedData.length + "条数据!", {
+		    		                                    icon: 1,
+		    		                                    time: 1000
+		    		                                }, function () {
+		    		                                    console.log("deleteSuccess!");
+		    		                                    location.reload();
+		    		                                });
+		    		                            }
+		    		                        }
+		    		                    });
+		    		                });
+		    		            }
+		    		        });
+		    		    }
+		    		}
+		    	}
+		    ];
+		    var layerContent = {
+		    	////SKUNO   CTN_MIN_WEIGHT	CTN_AVG_WEIGHT   CTN_MAX_WEIGHT 	DEVIATION 	EDIT_EMP 	EDIT_TIME   
+		    	"add":[
+		    		{
+		    			"type":"input",
+		    			"name":"SKUNO",
+		    			"setLan":"SKUNO",
+		    			"idName":"SKUNO",
+		    			"className":"form-control addList",
+		    			"enable":true
+		    		},
+		    				    		{
+		    			"type":"input",
+		    			"name":"CTN_MIN_WEIGHT",
+		    			"setLan":"CTN_MIN_WEIGHT",
+		    			"idName":"CTN_MIN_WEIGHT",
+		    			"className":"form-control addList",
+		    			"enable":true
+		    		},
+		    				    		{
+		    			"type":"input",
+		    			"name":"CTN_MAX_WEIGHT",
+		    			"setLan":"CTN_MAX_WEIGHT",
+		    			"idName":"CTN_MAX_WEIGHT",
+		    			"className":"form-control addList",
+		    			"enable":true
+		    		},
+							    		{
+		    			"type":"input",
+		    			"name":"DEVIATION",
+		    			"setLan":"DEVIATION",
+		    			"idName":"DEVIATION",
+		    			"className":"form-control addList",
+		    			"enable":true
+		    		},
+							    		{
+		    			"type":"input",
+		    			"name":"EDIT_EMP",
+		    			"setLan":"EDIT_EMP",
+		    			"idName":"EDIT_EMP",
+		    			"className":"form-control addList",
+		    			"enable":false
+		    		}
+		    	],
+		    	"edit":[
+		    		{
+		    			"type":"input",
+		    			"name":"SKUNO",
+		    			"setLan":"SKUNO",
+		    			"idName":"SKUNO",
+		    			"className":"form-control editList",
+		    			"enable":false
+		    		},
+		    				    		{
+		    			"type":"input",
+		    			"name":"CTN_MIN_WEIGHT",
+		    			"setLan":"CTN_MIN_WEIGHT",
+		    			"idName":"CTN_MIN_WEIGHT",
+		    			"className":"form-control editList",
+		    			"enable":true
+		    		},
+		    				    		{
+		    			"type":"input",
+		    			"name":"CTN_MAX_WEIGHT",
+		    			"setLan":"CTN_MAX_WEIGHT",
+		    			"idName":"CTN_MAX_WEIGHT",
+		    			"className":"form-control editList",
+		    			"enable":true
+		    		},
+							    		{
+		    			"type":"input",
+		    			"name":"DEVIATION",
+		    			"setLan":"DEVIATION",
+		    			"idName":"DEVIATION",
+		    			"className":"form-control editList",
+		    			"enable":true
+		    		}
+		    	]
+		    };
+
+		    loadLayer(layerContent);                //加载layer弹出层（跳出新增，修改层）
+		    createBtns(btnMsg);    		            //生成按钮
+		    showData(data);     		                //show数据
+		    setLanguage("DocConfig");     		                //设置多语言
+		    clickOperation();     		                //事件集合
+		}
+        
+        //生成按钮
+        function createBtns (btnMsg){   // array
+        	var btnList = $(".list .btnList");
+			var len = btnMsg.length;
+
+			//show按钮
+			for(var i = 0; i < len; i++){
+				btnList.append($(createDiv (btnMsg[i]["idName"],btnMsg[i]["className"],btnMsg[i]["iconClass"],btnMsg[i]["setLan"],btnMsg[i]["name"])));
+			}
+
+			//为按钮绑定事件
+			for(var j = 0; j < len; j++){
+				(function (ele,functionName){
+					$(ele).on("click",functionName);
+				})(document.getElementById(btnMsg[j]["idName"]),btnMsg[j]["fun"]);
+			}
+
+			function createDiv (idName,className,iconClass,setLan,name){
+				var div = document.createElement("div");
+				div.setAttribute("id",idName);
+				div.setAttribute("class",className);
+				div.appendChild(createI(iconClass));
+				div.appendChild(createSpan(setLan,name));
+				return div;
+				function createI (iconClass){
+					var i = document.createElement("i");
+					i.setAttribute("class",iconClass);
+					return i;
+				}
+				function createSpan (setLan,name){
+					var span = document.createElement("span");
+					span.setAttribute("set-lan","html:"+setLan);
+					span.innerHTML = name;
+					return span;
+				}
+			}
+		}
+	    //show数据
+		function showData(data) {
+		    $(".tab table").bootstrapTable({
+		        data: data,
+		        pagination: true,    //分页显示
+		        pageSize: 10,         //初始化每一页的数据条数
+		        pageList: [10, 25, 50, 100],
+		        search: false,        //显示查找框
+		        striped: true,        //背景色相间
+		        showRefresh: false,   //显示重置按钮
+		        clickToSelect: true,   //单击一行内任意单元格选中该行
+		        onCheck: function (row) {
+		            var rows = $('.tab table').bootstrapTable('getAllSelections');  ///getAllSelections
+		            //console.log(rows);
+		            if (rows.length == 1) {
+		                $("#btn1").attr("class", "btn11");
+		            } else {
+		                $("#btn1").attr("class", "btn1");
+		            }
+		            if (rows.length > 0) {
+		                $("#btn2").attr("class", "btn22");
+		            } else {
+		                $("#btn2").attr("class", "btn2");
+		            }
+		            checkedData = rows;
+		        },
+		        onUncheck: function (row) {
+		            var rows = $('.tab table').bootstrapTable('getAllSelections');  ///getAllSelections
+		            //console.log(rows);
+		            if (rows.length == 1) {
+		                $("#btn1").attr("class", "btn11");
+		            } else {
+		                $("#btn1").attr("class", "btn1");
+		            }
+		            if (rows.length > 0) {
+		                $("#btn2").attr("class", "btn22");
+		            } else {
+		                $("#btn2").attr("class", "btn2");
+		            }
+		            checkedData = rows;
+		        },
+		        //SKUNO   CTN_MIN_WEIGHT	CTN_AVG_WEIGHT   CTN_MAX_WEIGHT 	DEVIATION	EDIT_EMP	EDIT_TIME   
+		        columns: [{
+		            checkbox: true
+		        }, {          
+		            field: 'SKUNO',
+		            title: '<label set-lan="html:SKUNO">SKUNO</label>',
+		            align: 'center',
+                    valign: 'middle'
+		        }, {  
+		            field: 'CTN_MIN_WEIGHT',
+		            title: '<label set-lan="html:CTN_MIN_WEIGHT">CTN_MIN_WEIGHT</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'CTN_AVG_WEIGHT',
+		            title: '<label set-lan="html:CTN_AVG_WEIGHT">CTN_AVG_WEIGHT</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'CTN_MAX_WEIGHT',
+		            title: '<label set-lan="html:CTN_MAX_WEIGHT">CTN_MAX_WEIGHT</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'DEVIATION',
+		            title: '<label set-lan="html:DEVIATION">DEVIATION</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        },  {
+		            field: 'EDIT_EMP',
+		            title: '<label set-lan="html:EDIT_EMP">EDIT_EMP</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'EDIT_TIME',
+		            title: '<label set-lan="html:EDIT_TIME">EDIT_TIME</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }],
+		    });
+		    $(".tab table").find(".bs-checkbox").css({
+		        "text-align": "center",
+		        "vertical-align": "middle",
+		    });
+		}
+        //加载layer弹出层内容
+        function loadLayer(layerContent){  //layerContent：layer弹出框内容信息： obj
+        	var addLen = layerContent["add"].length;
+        	var editLen = layerContent["edit"].length;
+        	var addList = $("#AddList").find(".row");
+        	var editList = $("#ModifyList").find(".row");
+        	if(layerContent["add"]){
+        		for(var i = 0; i < addLen; i++){
+        			addLayer(layerContent["add"][i]);
+        		}
+        		addList[0].appendChild(createBtn("ADD","AddMsg","ADD","addBtn"));  //添加ADD按钮
+        	}
+        	if(layerContent["edit"]){
+        		for(var j = 0; j < editLen; j++){
+        			editLayer(layerContent["edit"][j]);
+        		}
+        		editList[0].appendChild(createBtn("EDIT","EditMsg","EDIT","editBtn"));  //添加EDIT按钮
+        	}
+
+        	function addLayer (addContent){  //obj
+        		addList[0].appendChild(createControl(addContent["type"],addContent["name"],addContent["setLan"],addContent["idName"],addContent["className"],addContent["enable"]));
+        	}
+
+        	function editLayer(editContent){
+        		editList[0].appendChild(createControl(editContent["type"],editContent["name"],editContent["setLan"],editContent["idName"],editContent["className"],editContent["enable"]));
+        	}
+
+			function createBtn (name,setLan,divClass,btnClass){
+				var oDiv = document.createElement("div");
+				var label = document.createElement("label");
+				var div = document.createElement("div");
+				var btn = document.createElement("button");
+				
+				oDiv.setAttribute("class",divClass+" col-sm-6 col-md-6");
+				label.setAttribute("class","col-xs-3 control-label text-right");
+				div.setAttribute("class","col-xs-8");
+				btn.setAttribute("class",btnClass+" form-control");
+				btn.setAttribute("set-lan","html:"+setLan);
+				btn.innerHTML = name;
+				
+				div.appendChild(btn);
+				oDiv.appendChild(label);
+				oDiv.appendChild(div);
+				return oDiv;
+			}
+			
+        	function createControl(type,name,setLan,idName,className,enable){  //生成控件
+        		var oDiv = document.createElement("div");
+        		oDiv.setAttribute("class","form-group col-sm-6 col-md-6");
+        		oDiv.appendChild(createLabel(setLan,name));
+        		oDiv.appendChild(createDiv(type,idName,className,enable));
+        		return oDiv;
+
+        		function createLabel(setLan,name){
+        			var label = document.createElement("label");
+        			label.setAttribute("class","col-xs-3 control-label text-right");
+        			label.setAttribute("set-lan",setLan);
+        			label.innerHTML = name;
+        			return label;
+        		}
+        		function createDiv(type,idName,className,enable){
+					var div = document.createElement("div");
+        			div.setAttribute("class","col-xs-8");
+
+        			switch(type){
+        				case "input":
+        					div.appendChild(createInput(idName,className,enable));
+        				break;
+        			}
+        			return div;
+
+        			function createInput(idName,className,enable){
+        				var oInput = document.createElement("input");
+        				oInput.setAttribute("id",idName);
+        				oInput.setAttribute("class",className);
+        				if(!enable){
+        					oInput.setAttribute("disabled","disabled");
+        				}
+        				return oInput;
+        			}
+        		}
+        	}
+        
+        	
+        }
+        //设置多语言
+		function setLanguage(pageMsg) {
+		    var client = self.parent.client;
+		    var MesUI = new MesClientUI(client);
+		    MesUI.SetLanguage(pageMsg);
+		}
+        //////////////////////////////////////////////////////////
+        //点击操作
+		function clickOperation() {
+		    /////////////////////////查询
+		    $(".query .btnQuery").on("click", function () {
+		        var val = $(".query .input input")[0].value;
+		        $(".tab")[0].innerHTML = "";
+		        var table = $("<table></table>");
+		        $(".tab").append(table);
+		        console.log(val);
+		        self.parent.client.CallFunction("MESStation.Config.WeightConfig", "QueryWeightConfig", { "SKUNO": val }, function (e) {
+		            console.log(e);
+		            if (e.Status == "Pass") {    //Pass
+		                showData(e.Data);     //e.Data
+		                setLanguage("DocConfig");
+		            }
+		        });
+		    });
+		}
+	});
+</script>
+</html>

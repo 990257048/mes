@@ -1,0 +1,1109 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Change Wo KPListID</title>
+</head>
+
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+
+<!--<script src="js/jquery-1.11.3.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.min.css" />-->
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background: #fff;
+        zoom:.65;
+    }
+
+    .title {
+        width: 100%;
+        height: 54px;
+        padding: 10px 15px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+        line-height: 33px;
+    }
+
+    .list {
+        width: 100%;
+        height: 34px;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-top: 25px;
+    }
+
+        .list .btnList {
+            height: 100%;
+            float: left;
+            border: 1px solid #337ab7;
+            border-radius: 3px;
+            border-right: none;
+        }
+
+            .list .btnList .btn1,
+            .list .btnList .btn2 {
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                color: rgba(103,106,108,0.6);
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor: no-drop;
+            }
+
+                .list .btnList .btn1:hover,
+                .list .btnList .btn2:hover {
+                    color: #fff;
+                    background: #337ab7;
+                    opacity: 0.6;
+                }
+
+            .list .btnList .btn11,
+            .list .btnList .btn22 {
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                color: rgb(103, 106, 108);
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor:pointer;
+            }
+
+                .list .btnList .btn11:hover,
+                .list .btnList .btn22:hover {
+                    color: #fff;
+                    background: #286090;
+                    
+                }
+
+        .list .query {
+            float: right;
+            height: 100%;
+        }
+
+            .list .query .input {
+                float: left;
+                height: 100%;
+                width: 196px;
+                border: 1px solid #337ab7;
+                box-sizing: border-box;
+                border-radius: 5px;
+            }
+
+                .list .query .input input {
+                    width: 100%;
+                    height: 100%;
+                    padding: 6px 12px;
+                    border-radius: 5px;
+                    border: none;
+                    color: #676a6c;
+                    outline: none;
+                }
+
+            .list .query .btnQuery {
+                float: left;
+                height: 100%;
+                padding: 6px 12px;
+                line-height: 20px;
+                border: 1px solid #adadad;
+                margin-left: 8px;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+
+                .list .query .btnQuery:hover {
+                    background: #e6e6e6;
+                }
+
+    .table {
+        width: auto;
+        height: auto;
+        border: 1px solid #adadad;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-left: 15px;
+        margin-right: 15px;
+        overflow: auto;
+    }
+
+        .table table {
+            width: auto;
+            color: #676a6c;
+            font-size: 13px;
+        }
+
+            .table table tr {
+                width: auto;
+            }
+
+                .table table tr td {
+                    cursor: pointer;
+                }
+
+                .table table tr:nth-last-of-type(even) td {
+                    background: rgb(249,249,249);
+                }
+
+                .table table tr:hover td {
+                    background: rgb(245,245,245);
+                }
+
+                .table table tr th {
+                    height: 45px;
+                    border: 1px solid #adadad;
+                    border-top: none;
+                    border-left: none;
+                    padding: 8px 8px;
+                    line-height: 29px;
+                    font-weight: bold;
+                    white-space:nowrap;
+                }
+
+                .table table tr td {
+                    height: 35px;
+                    border: 1px solid #adadad;
+                    border-top: none;
+                    border-left: none;
+                    padding: 8px 8px;
+                    line-height: 19px;
+                    white-space: nowrap;
+                }
+
+                    .table table tr th:nth-child(1),
+                    .table table tr td:nth-child(1) {
+                        width: 29px;
+                        text-align: center;
+                    }
+
+       .bottom{
+			height: 35px;
+			width: auto;
+			margin-left: 15px;
+			margin-right: 15px;
+			margin-top: 10px;
+			color: #676a6c;
+		}
+		.bottom p{
+			display: inline-block;
+			
+		}
+		.bottom ul{
+			float: right;
+			height: 32px;
+			list-style: none;
+			border: 1px solid #ddd;
+			border-right: none;
+			cursor: pointer;
+			border-radius: 5px;
+		}
+		.bottom ul li{
+			height: 100%;
+			float: left;
+			line-height: 32px;
+			padding-left: 12px;
+			padding-right: 12px;
+			border-right: 1px solid #ddd;
+		}
+		.bottom ul li:hover{
+			background: #f4f4f4;
+		}
+
+        .xxx{
+			top: 0;
+			left: 0;
+			position: absolute;
+			background: #000;
+			opacity: 0.5;
+			width: 100%;
+			height: 100%;
+			z-index: 100;
+			display: none;
+		}
+		
+		.float{
+            display:none;
+			position: absolute;
+			
+			width: 70%;
+			height: 60%;
+			top: 20%;
+			left: 15%;
+			background: #fff;
+			border: 1px solid #337ab7;
+			z-index: 101;
+		}
+		.float .tit{
+			width: 100%;
+			height: 41px;
+			padding-left: 20px;
+			color: #333;
+			font-size: 14px;
+			background: #f8f8f8;
+			line-height: 41px;
+			border-bottom: 1px solid #eee;
+		}
+            .float .tit span {
+                width:20px;
+                height:20px;
+                font-size:20px;
+                float:right;
+               
+                text-align:center;
+                line-height:20px;
+                display:inline-block;
+                margin-top:10px;
+                margin-right:20px;
+                cursor:pointer;
+            }
+                .float .tit span:hover {
+                    color:#676a6c;
+                }
+		.float .content{
+			width:100% ;
+			height:auto;
+			padding-bottom: 15px;
+			border-bottom: 1px solid #eee;
+		}
+		.float .content table{
+			width: auto;
+			margin-top:20px;
+			margin-left: 20px;
+			
+		}
+		.float .content table tr{
+			width: auto;
+			height: 34px;
+			line-height: 34px;
+			
+		}
+		.float .content table td:nth-child(1){
+			font-size: 13px;
+			color: #676a6c;
+			font-weight: bold;
+		}
+		.float .content table td:nth-child(2){
+			font-size: 14px;
+			color: rgb(103,106,108);
+		}
+		.float .content table tr td{
+			padding-left: 15px;
+			padding-right: 15px;
+		}
+		.float .content table select{
+			width: 180px;
+			height: 100%;
+			border: 1px solid #337ab7;
+			border-radius: 5px;
+			outline: none;
+		}
+		.float .updateBtn{
+			width: 100px;
+			text-align: center;
+			margin-left: 20px;
+			margin-top: 20px;
+			padding-top: 6px ;
+			padding-bottom:6px ;
+			
+			background: #337ab7;
+			color: #fff;
+			font-size: 14px;
+			border: 1px solid rgb(46,109,164);
+			cursor: pointer;
+			border-radius: 5px;
+		}
+		.float .updateBtn:hover{
+			background: #286090;
+		}
+
+        .tipMsg {
+        width:400px;
+        height:70px;
+        line-height:30px;
+        font-size:14px;
+        color:#286090;
+        border:1px solid #286090;
+        position:fixed;
+        left:50%;
+        top:50%;
+        
+        margin-top:-35px;
+        margin-left:-200px;
+        background:#ddd;
+        z-index:102;
+        text-indent:2em;
+        padding:5px;
+        display:none;
+    }
+</style>
+
+<body>
+
+    <div class="title" set-lan="html:ChangeWoKPListID">
+        Change Wo KPListID
+    </div>
+
+    <div class="list">
+        <div class="btnList">
+            <div class="btn1" set-lan="html:Edit">Edit</div>
+            <div class="btn2" set-lan="html:Delete">Delete</div>
+        </div>
+        <div class="query">
+            <div class="input">
+                <input type="text" value="" />
+            </div>
+            <div class="btnQuery" set-lan="html:Query">
+                查詢
+            </div>
+        </div>
+    </div>
+
+    <div class="table">
+        <table>
+            <!--<tr class="head">
+                <th><input type="checkbox" name="xxx" /></th>
+                <th>机种</th>
+                <th>BU</th>
+                <th>版本</th>
+                <th>机种名称</th>
+
+            </tr>
+            <tr class="cre">
+                <td><input type="checkbox" name="xxx" /></td>
+                <td>xxxxx</td>
+                <td>xxxx</td>
+                <td>xxxxxxx</td>
+                <td>xxxxxxxxxx xxxxxxxxx</td>
+            </tr>-->
+        </table>
+
+    </div>
+
+    <div class="bottom">
+        <span set-lan="html:Showing">顯示第</span> <p>1</p> <span set-lan="html:to">到第</span> <p>...</p> <span set-lan="html:of">項記錄，總共</span> <p>...</p> <span set-lan="html:rows">項記錄,每頁顯示</span>
+        <select name="" id="">
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="200">200</option>
+            <option value="500">500</option>
+        </select>
+        <span set-lan="html:rows per page">項記錄</span>
+        <ul>
+            <li><</li>
+            <li>1/...</li>
+            <li>></li>
+            <!--<li><input type="text" name="" value=" " /></li>
+            <li>跳轉</li>-->
+        </ul>
+    </div>
+
+    <!--/////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+
+    <div class="float">
+        <div class="tit">
+            Edit
+            <span>x</span>
+        </div>
+        <div class="content">
+            <table>
+                <tr>
+                    <td set-lan="html:WO">WO:</td>
+                    <td>xxxxxxxxxxxxxxxx</td>
+                </tr>
+                <tr>
+                    <td set-lan="html:List Name">List Name</td>
+                    <td>
+                        <select name="listName">
+                            <option value="null">null</option>
+                            
+                        </select>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <div class="updateBtn" set-lan="html:EditMsg">修改信息</div>
+
+    </div>
+
+    <div class="tipMsg"></div>
+
+    <div class="xxx"></div>
+
+</body>
+
+<script>
+		$(document).on("ready",function (){
+			var getData = null; //接收的數據
+			var processData;    //已处理的数据
+			var checkedNodes = []; //已選中的複選框節點
+			var flag1 = true;
+
+			
+			self.parent.client.CallFunction("MESStation.Config.RWOBASEConfig", "SELECTWOBASE", { "WO": "" }, function (e) {
+		        if (e.Status == "Pass") {
+		            getData = deepClone(e.Data);
+		            
+		            init();  //入口
+		        }
+		    });
+			
+		    function init() {  //入口
+		       
+		        //處理getData,得到需要用的數據processData
+		        processData = extractData(["WORKORDERNO", "PLANT", "DOWNLOAD_DATE", "WO_TYPE", "SKUNO", "SKU_VER", "SKU_SERIES", "WORKORDER_QTY", "INPUT_QTY", "FINISHED_QTY", "KP_LIST_ID", "EDIT_EMP", "EDIT_TIME"], getData);
+		        //console.log(processData);
+                //显示基本数据及分页功能
+		        paging1(processData);
+		        
+		        //複選框操作及樣式處理
+		        //selectInput();
+		        //點擊操作
+		        clickOperation();
+		        //////////////
+                //语言设置
+		        setLanguage();
+
+		        //xxx();
+
+
+		       
+		    }
+
+		    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		    function xxx() {
+		        console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+		        self.parent.client.CallFunction("MESStation.Config.WeightConfig", "QueryWeightConfig", { "SKU": "" }, function (e) {
+		            if (e.Status == "Pass") {
+		                console.log(e.Data);
+		            }
+
+		        });
+		    }
+
+		    function setLanguage() {
+		        var client = self.parent.client;
+		        mesUI = new MesClientUI(client);
+		        mesUI.SetLanguage("KPListID");
+		    }
+
+		    function clickOperation() {   //點擊的操作
+		        var updateBtn = $($(".list .btnList div")[0]);
+		        var deleteBtn = $($(".list .btnList div")[1]);
+		        var queryBtn = $(".list .query .btnQuery ");
+
+		        updateBtn.on("click", function () {   //點擊修改按鈕
+		            if ($(this).css("cursor") == "pointer") {
+		                
+		                showFloat();    //顯示彈窗
+
+		                draw($(document.body), $(".float"));    //弹窗移动事件
+		                $(".xxx").css("display", "block");       //底层变暗
+
+		                $(".float span")[0].onclick = function () {  //點擊取消
+		                    $(".float").css("display", "none"); //隐藏弹窗
+		                    $(".xxx").css("display", "none");    //底层變亮(復原)
+		                };
+
+		            }
+		            function showFloat() {  //顯示彈窗
+		                $(".float").css("display", "block");    //显示弹窗
+		                var woValue = $(checkedNodes[0].parentNode.parentNode).children()[1].innerHTML;
+		                var skuValue = $(checkedNodes[0].parentNode.parentNode).children()[5].innerHTML;
+		                var ListNames;
+		              
+		                $(".float .content table tr td")[1].innerHTML = woValue;
+		                
+		                self.parent.client.CallFunction("MESStation.Config.RWOBASEConfig", "SELECTCKPLISTLISTNAME", { "SKU": skuValue }, function (e) {
+		                    if (e.Status == "Pass") {
+		                        ListNames = deepClone(e.Data);
+		                        ListNames = extractData(["LISTNAME"], ListNames);
+		                        ListNames.push({"LISTNAME":"null"});
+		                        createListName(ListNames);
+		                    }
+		                });
+
+		                
+		                $(".float .updateBtn").on("click", function () {   //點擊修改信息
+		                    var listNameValue = $(".float .content table tr td select").val();
+		                    var sendData;
+		                    if (listNameValue != "null") {
+		                        sendData = {
+		                            "WO": woValue,
+		                            "LISTNAME": listNameValue
+		                        };
+		                    } else {
+		                        sendData = {
+		                            "WO": woValue,
+		                            "LISTNAME": ""
+		                        };
+		                    }
+		                    
+		                    self.parent.client.CallFunction("MESStation.Config.RWOBASEConfig", "UPDATEKPLISTID", sendData, function (e) {
+		                        if (e.Status == "Pass") {
+
+		                            var lan = $.cookie($.MES.CK_LAN_NAME);
+		                            $(".tipMsg").css("display", "block");
+
+		                            switch (lan) {
+		                                case "CHINESE":
+		                                    $(".tipMsg")[0].innerHTML = "提示：成功修改1条数据！2秒后自动刷新页面。";
+		                                    break;
+		                                case "CHINESE_TW":
+		                                    $(".tipMsg")[0].innerHTML = "提示：成功修改1條數據！2秒后自動刷新頁面。";
+		                                    break;
+		                                case "ENGLISH":
+		                                    $(".tipMsg")[0].innerHTML = "TIP : Successfully modify a piece of data! Refresh the page automatically after 2 seconds.";
+		                                    break;
+		                            }
+
+		                            var timer = setTimeout(function () {
+		                                location.reload();
+		                            }, 2000);
+
+		                                                       
+		                        }
+		                    });
+		                });
+
+		                function createListName(arr) {   //創建listName（option節點）
+                            var len = arr.length;
+		                    var select = $(".float .content table tr td select");
+		                    select.children().remove();
+		                    for (var i = 0; i < len; i++ ){
+		                        var option = $("<option value=" + arr[i].LISTNAME + ">" + arr[i].LISTNAME + "</option>");
+		                        select.append(option);
+		                    }
+		                }
+		            }
+
+		        });
+
+		        deleteBtn.on("click", function () {   //點擊刪除按鈕
+		            if ($(this).css("cursor") == "pointer") {
+		                alert("不支持刪除！");
+		            }
+		        });
+
+		        queryBtn.on("click", function () {   //点击查询
+
+		            var queryValue = $(".list .query input").val();
+		            var queryData;
+		            
+		            self.parent.client.CallFunction("MESStation.Config.RWOBASEConfig", "SELECTWOBASE", { "WO": queryValue }, function (e) {
+		                if (e.Status == "Pass") {
+		                    
+		                    queryData = deepClone(e.Data);
+		                    
+		                    var sendQueryData = extractData(["WORKORDERNO", "PLANT", "DOWNLOAD_DATE", "WO_TYPE", "SKUNO", "SKU_VER", "SKU_SERIES", "WORKORDER_QTY", "INPUT_QTY", "FINISHED_QTY", "KP_LIST_ID", "EDIT_EMP", "EDIT_TIME"], queryData)
+
+		                    paging1(sendQueryData);
+		                    
+		                }
+		            });
+		            
+
+		        });
+
+		    }
+
+		    function paging1(data) {  //分页功能
+		        var dataTotal = data.length;   //数据总数
+		        var textNodes = $(".bottom p");       //文本节点
+		        var selectNode = $(".bottom select"); //下拉框
+		        var jumpBtns = $(".bottom ul li");    //分页按钮
+		        var pagingData;                       //已分页处理的数据
+
+		        //初始化表
+		        initTable();
+		        //显示基本信息  
+		        showBasicInformation();
+		        //点击操作
+		        clickEvent();
+
+		        function initTable() {
+		            pagingData = arrification(data, 15)
+		            createTable(pagingData[0]);
+		            //複選框操作及樣式處理
+		            selectInput();
+		            jumpBtns[1].innerHTML = "1/" + pagingData.length;
+		        }
+
+		        function clickEvent() {   //点击事件
+		            selectNode.on("change", function () {     //改变每页显示的数据总数
+		                var dataCount = parseInt($(this).val()); //每页显示的数据总数
+		                ////数据分页处理
+		                pagingData = arrification(data, dataCount);
+		                ////创建表
+		                createTable(pagingData[0]);
+		                ////複選框操作及樣式處理
+		                selectInput();
+		                ////显示页数
+		                jumpBtns[1].innerHTML = "1/" + pagingData.length;
+		                ////顯示當前數據編號
+		                textNodes[0].innerHTML = 1;
+		                textNodes[1].innerHTML = dataCount;
+
+		            });
+
+		            $(jumpBtns[2]).on("click", function () {   //点击下一页
+		                var pageArr = jumpBtns[1].innerHTML.split("/");
+		                if (parseInt(pageArr[0]) < parseInt(pageArr[1])) {
+		                    pageArr[0]++;
+		                    ////显示页数
+		                    jumpBtns[1].innerHTML = pageArr[0] + "/" + pageArr[1];
+		                    ////顯示當前數據編號
+		                    textNodes[0].innerHTML = (pageArr[0] - 1) * pagingData[0].length + 1;
+		                    textNodes[1].innerHTML = pagingData[pageArr[0] - 1].length + (pageArr[0] - 1) * pagingData[0].length;
+		                    ////创建表
+		                    createTable(pagingData[pageArr[0] - 1]);
+		                    ////複選框操作及樣式處理
+		                    selectInput();
+		                }
+		            });
+		            $(jumpBtns[0]).on("click", function () {   //点击上一页
+		                var pageArr = jumpBtns[1].innerHTML.split("/");
+		                if (parseInt(pageArr[0]) > 1) {
+		                    pageArr[0]--;
+		                    ////显示页数
+		                    jumpBtns[1].innerHTML = pageArr[0] + "/" + pageArr[1];
+		                    ////顯示當前數據編號
+		                    textNodes[0].innerHTML = (pageArr[0] - 1) * pagingData[0].length + 1;
+		                    textNodes[1].innerHTML = pagingData[pageArr[0] - 1].length + (pageArr[0] - 1) * pagingData[0].length;
+		                    ////创建表
+		                    createTable(pagingData[pageArr[0] - 1]);
+		                    ////複選框操作及樣式處理
+		                    selectInput();
+		                }
+		            });
+		        }
+
+		        function showBasicInformation() {  //显示基本信息
+		            textNodes[2].innerHTML = dataTotal;  //显示总数
+		            if (dataTotal <= 15) {
+		                textNodes[1].innerHTML = dataTotal;     //显示当页数据信息
+		            } else {
+		                textNodes[1].innerHTML = 15;
+		            }
+		        }
+		    }
+
+		    function paging() {  //分页功能
+		        var dataTotal = processData.length;   //数据总数
+		        var textNodes = $(".bottom p");       //文本节点
+		        var selectNode = $(".bottom select"); //下拉框
+		        var jumpBtns = $(".bottom ul li");    //分页按钮
+		        var pagingData;                       //已分页处理的数据
+		        
+                //初始化表
+		        initTable();
+		        //显示基本信息  
+		        showBasicInformation();
+		        //点击操作
+		        clickEvent();
+
+		        
+
+		        //pagingData = arrification(processData, 2);
+
+		        function initTable() {
+		            pagingData = arrification(processData, 15)
+		            createTable(pagingData[0]);
+		            //複選框操作及樣式處理
+		            selectInput();
+		            jumpBtns[1].innerHTML = "1/" + pagingData.length;
+		        }
+
+		        function clickEvent() {   //点击事件
+		            selectNode.on("change", function () {     //改变每页显示的数据总数
+		                var dataCount = parseInt($(this).val()); //每页显示的数据总数
+                        ////数据分页处理
+		                pagingData = arrification(processData, dataCount);
+		                ////创建表
+		                createTable(pagingData[0]);
+		                ////複選框操作及樣式處理
+		                selectInput();
+                        ////显示页数
+		                jumpBtns[1].innerHTML = "1/"+pagingData.length;
+
+		            });
+
+		            $(jumpBtns[2]).on("click", function () {   //点击下一页
+		                var pageArr = jumpBtns[1].innerHTML.split("/");
+		                if (parseInt(pageArr[0]) < parseInt(pageArr[1])) {
+		                    pageArr[0]++;
+		                    jumpBtns[1].innerHTML = pageArr[0] + "/" + pageArr[1];
+		                    ////创建表
+		                    createTable(pagingData[pageArr[0] - 1 ]);
+		                    ////複選框操作及樣式處理
+		                    selectInput();
+		                }
+		            });
+		            $(jumpBtns[0]).on("click", function () {   //点击上一页
+		                var pageArr = jumpBtns[1].innerHTML.split("/");
+		                if (parseInt(pageArr[0]) > 1) {
+		                    pageArr[0]--;
+		                    jumpBtns[1].innerHTML = pageArr[0] + "/" + pageArr[1];
+		                    ////创建表
+		                    createTable(pagingData[pageArr[0] - 1 ]);
+		                    ////複選框操作及樣式處理
+		                    selectInput();
+		                }
+		            });
+		        }
+
+		        function showBasicInformation() {  //显示基本信息
+		            textNodes[2].innerHTML = dataTotal;  //显示总数
+		            if (dataTotal <= 15) {
+		                textNodes[1].innerHTML = dataTotal;     //显示当页数据信息
+		            } else {
+		                textNodes[1].innerHTML = 15;
+		            }
+		        }
+		    }
+
+		    function arrification(arr, count) {  //數組分類(可复用)
+		        var len = arr.length;
+		        var newArr = [];
+		        var smallArr = [];
+		        var currentIndex = 0;
+		        for (var i = 0; i <= len; i++){
+		            if (i != len) {
+		                smallArr.push(arr[i]);
+		                currentIndex++;
+
+		                if(currentIndex == count){
+		                    currentIndex = 0;
+		                    newArr.push(smallArr);
+		                    smallArr = [];
+		                }
+
+		                if (i == len - 1) {    //循环至最后一项
+		                    if (len % count != 0) {  //最后有剩余
+		                        newArr.push(smallArr);  //塞进剩余的数据
+		                        smallArr = [];
+		                    }
+		                }
+
+		            } else {
+		                return newArr;
+		            }
+		        }
+		    }
+
+		    function screenData(str, datas) {   //篩選數據（可复用） 
+		        
+		        var len = datas.length;
+		        var reg = new RegExp(str, "i");  //不區分大小寫
+		        var arrData = [];   //已篩選的數據
+		        //console.log(str, datas,reg);
+		        for (var i = 0; i <= len; i++) {
+		            if (i != len) {
+		                var tempData = datas[i];
+		                for (var prop in datas[i]) {
+		                    if (reg.test(datas[i][prop])) {
+		                        arrData.push(datas[i]);
+		                        break;
+		                    }
+		                }
+		            } else {
+		                return arrData;
+		            }
+		        }
+		    }
+
+		    function selectInput() {   //複選框選擇操作
+		        var inputList = $(".table table td:nth-child(1)").children(); //表內容的所有input
+		        var inputHead = $(".table table tr th").children();           //表頭input
+		        inputHead.on("click", function () {     //點擊全選框
+		            
+		            var len = inputList.length;
+		            if (this.checked) {   //選中狀態
+		                checkedNodes = [];
+		                for (var i = 0; i < len; i++) {
+		                    inputList[i].checked = true;
+		                    checkedNodes.push(inputList[i]);
+		                }
+
+		                /////////刪除按鈕變化
+		                changeDeleteStyle();
+		               
+		            } else {//未選中狀態
+		                checkedNodes = [];
+		                for (var i = 0; i < len; i++) {
+		                    inputList[i].checked = false;
+		                }
+
+		                /////////刪除按鈕變化
+		                changeDeleteStyle();
+		            }
+		        });
+
+		        inputList.on("click", function () {     //點擊表中的復選框
+		            checkedNodes = [];  //清空選中的input節點
+		            
+		            for (var i = 0; i < inputList.length; i++) {
+		                if (inputList[i].checked) {
+		                    checkedNodes.push(inputList[i]);
+		                }
+
+		            }
+		            
+                    /////////修改按鈕變化
+		            changeUpdateStyle();
+		            /////////刪除按鈕變化
+		            changeDeleteStyle();
+		        });
+
+		    }
+
+		    function changeUpdateStyle() {  //修改按鈕變化
+		        if (checkedNodes.length == 1) {
+		            $($(".list .btnList div")[0]).attr("class", "btn11");
+		        } else {
+		            $($(".list .btnList div")[0]).attr("class", "btn1");
+		        }
+		    }
+
+		    function changeDeleteStyle() {   //刪除按鈕變化
+		        if (checkedNodes.length != 0) {
+		            
+		            $($(".list .btnList div")[1]).attr("class", "btn22");
+		        } else {
+		            $($(".list .btnList div")[1]).attr("class", "btn2");
+		        }
+		    }
+
+			function extractData(arr, data) {   //提取数据， data是传来的原数据（未处理）（可复用）
+
+			    var datalen = data.length;
+			    var o = [];
+			    ////遍歷data
+			    for (var i = 0; i < datalen; i++) {
+			        var temp = {};
+			        for (var prop in data[i]) {
+			            if (arr.contains(prop)) {
+			                temp[prop] = data[i][prop];
+			            }
+			        }
+			        o.push(temp);
+			    }
+			    return o;
+			}
+
+			function createTable(data){   //data是处理好的数据（可复用）
+				var len = data.length;
+				var table = $(".table table");
+				if(flag1){
+				    flag1 = false;
+				    createHead();
+				}
+				createBody();
+				
+
+				function createHead(){    //创建表头
+					var tr = $("<tr></tr>");
+					tr.append($("<th><input type='checkbox' name='xxx' /></th>"));
+					for(var prop in data[0]){
+						var th = $("<th set-lan="+"html:"+prop+""+">"+prop+"</th>");
+						tr.append(th);
+					}
+					table.append(tr);
+				}
+
+				function createBody() {    //创建表身
+				    $(".table table .cre").remove();
+					for(var i = 0; i < len; i++){
+						var tr = $("<tr class="+"cre"+"></tr>");
+						tr.append($("<td><input type='checkbox' name='xxx' /></td>"));
+						for(var prop in data[i]){
+							var td = $("<td>"+data[i][prop]+"</td>");
+							tr.append(td);
+						}
+						table.append(tr);
+					}
+				}
+
+			}
+
+			function throttle(fun, delay) { //節流
+			    var prev = Date.now();
+			    return function () {
+			        var self = this;
+			        var args = arguments;
+			        var now = Date.now();
+
+			        if (now - prev >= delay) {
+			            fun.apply(self, args);
+			            prev = Date.now();
+			        }
+			    }
+			}
+
+		});
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+		Array.prototype.contains = function (obj) {  //判斷數組是否包含指定項
+		    var i = this.length;
+		    while (i--) {
+		        if (this[i] === obj) {
+		            return true;
+		        }
+		    }
+		    return false;
+		}
+
+		Array.prototype.distinct = function () { // 数组去重
+		    var arr = this;
+		    var result = [];
+		    var i, j, len = arr.length;
+		    for (var i = 0; i < len; i ++){
+		        for (var j = i + 1; j < len; j++){
+		            if(arr[i] === arr[j]){
+		                j = ++i;
+		            }
+		        }
+		        result.push(arr[i]);
+		    }
+		    return result;
+		}
+
+		function prop (obj){
+			var o = {};
+			for(var prop in obj){
+				o[prop] = obj[prop];
+			}
+			return o;
+		}
+
+		function timeChunk(arr, fn, count) {  //分時函數
+
+			var obj,t;
+			var start = function (){
+				var len = Math.min(count || 1,arr.length);
+				for(var i = 0; i < len; i++){
+					obj = arr.shift();
+					fn(obj);
+				}
+			};
+			return function (interval){
+				t = setInterval(function (){
+				    if (arr.length == 0) {
+
+						return clearInterval(t);
+					}
+					start();
+				},interval || 200);
+			}
+		}
+
+		function draw(father, son) { //參數都是jquery對象
+		    $(son.children()[0]).on("mousedown", function (e) {
+		        var x, y;
+
+		        var w1 = parseInt($(".father").width());
+		        var h1 = parseInt($(".father").height());
+		        var w2 = parseInt($(".son").width());
+		        var h2 = parseInt($(".son").height());
+
+		        //console.log(w1,h1,w2,h2);
+
+		        var dx = e.clientX - Math.floor(father.offset().left) - son.position().left;
+		        var dy = e.clientY - Math.floor(father.offset().top) - son.position().top;
+		        son.css({
+		            cursor: "move",
+		            border: "1px solid black"
+
+		        });
+
+		        $(document).on("mousemove", move);
+		        $(document).on("mouseup", stop);
+
+
+
+		        function move(e) {
+		            x = e.clientX - dx - Math.floor(father.offset().left);
+		            y = e.clientY - dy - Math.floor(father.offset().top);
+
+		            if (x <= 0) {   //防止出界
+		                x = 0;
+		            }
+		            if (x >= w1 - w2) {
+		                x = w1 - w2;
+		            }
+		            if (y <= 0) {
+		                y = 0;
+		            }
+		            if (y >= h1 - h2) {
+		                y = h1 - h2;
+		            }
+
+		            son.css({
+		                left: x + "px",
+		                top: y + "px",
+		            });
+		        }
+
+		        function stop() {
+		            $(document).off("mousemove");
+		            son.css({
+		                cursor: "pointer",
+		                border: "1px solid #337ab7"
+		            });
+		        }
+
+		    });
+		}
+
+		function deepClone(obj) {  //深度克隆
+		    var result, oClass = isClass(obj);
+		    if (oClass === "Object") {
+		        result = {};
+		    } else if (oClass === "Array") {
+		        result = [];
+		    } else {
+		        return obj;
+		    }
+		    for (key in obj) {
+		        var copy = obj[key];
+		        if (isClass(copy) == "Object" || isClass(copy) == "Array") {
+		            result[key] = arguments.callee(copy);
+		        } else {
+		            result[key] = obj[key];
+		        }
+		    }
+		    return result;
+		}
+
+		function isClass(o) {  //確定類型
+		    if (o === null) {
+		        return "Null";
+		    }
+		    if (o === undefined) {
+		        return "Undefined";
+		    }
+		    return Object.prototype.toString.call(o).slice(8, -1);
+		}
+
+
+</script>
+
+</html>

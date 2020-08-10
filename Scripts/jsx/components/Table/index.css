@@ -1,0 +1,376 @@
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    box-sizing: border-box;
+    font-size: 14px;
+    text-decoration: none;
+}
+html, body{
+    width: 100%;
+    height: 100%;
+}
+ 
+body{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+/* table */
+
+#root{
+    width: 60%;
+    height: 60%;
+    padding: 10px;
+    border: 1px solid #337ab7;
+    box-shadow: 4px 4px 8px #555;
+}
+.mes-table{
+    width: 100%; 
+    height: 100%;
+    background: #f5f5f5;
+    position: relative;
+}
+
+.table-top{
+    width: 100%;
+    height: 3.5rem;
+    padding: 0px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+.operate-box{
+    height: 2rem;
+    /* border: 1px solid red; */
+    display: flex;
+}
+.operate-button{
+    height: 100%;
+    padding: 0px 5px;
+}
+.operate-button button{
+    height: 100%;
+    padding: 0px 10px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.operate-button button[act=n].class1{
+    background: #6ab3f3;
+}
+.operate-button button[act=n].class1:hover{
+    background: #1788eb;
+}
+.operate-button button[act=y].class1{
+    background: #026fce;
+}
+
+
+
+
+
+.search-box{
+    width: 260px;
+    height: 2.5rem;
+    border-bottom: 2px solid #337ab7;
+    display: flex;
+}
+.search-box input{
+    width: calc(100% - 2.5rem);
+    height: 100%;
+    font-size: 1.2rem;
+    padding-left: 10px;
+    border: none;
+    background: #f5f5f5;
+    outline: none;
+}
+.search-box span{
+    display: inline-block;
+    width: 2.5rem;
+    height: 2.5rem;
+    /* border-top-left-radius:50%;
+    border-top-right-radius:50%; */
+    text-align: center;
+    line-height: 2.5rem;
+    font-size: 1.4rem;
+    color: #70b1eb;
+    cursor: pointer;
+}
+.search-box span:hover{
+    color: #337ab7;
+    font-size: 1.5rem;
+}
+
+
+
+.table-main{
+    width: 100%;
+    height: calc(100% - 6.5rem);
+    padding: 0px 10px;
+    display: flex;
+    position: relative;
+    color: rgb(26, 26, 29);
+}
+
+.table-left, .table-center, .table-right{
+    height: 100%;
+    /* border: 1px solid red; */
+    overflow: auto;
+
+}
+.table-left::-webkit-scrollbar,
+.table-center::-webkit-scrollbar
+{
+    display: none;
+}
+/* .table-center::-webkit-scrollbar{
+    width: 0px;
+    height: 8px;
+}
+.table-center::-webkit-scrollbar-thumb{
+    background: #337ab7;
+    border-radius: 4px;
+} */
+
+.table-right::-webkit-scrollbar
+{
+    width: 8px;
+}
+.table-right::-webkit-scrollbar-thumb{
+    background: #337ab7;
+    border-radius: 4px;
+}
+
+
+
+.table-center table{
+    width: 100%;
+}
+
+table{
+    border-collapse:collapse;
+}
+
+tr{
+    height:3rem;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+th{
+    height: 3.5rem;
+}
+th, td{
+    padding: 0px 15px;
+    text-align: center;
+}
+td {
+    line-height: 3rem;
+}
+
+
+
+td input[type=checkbox]{
+    width: 1.3rem;
+    height: 1.3rem;
+    cursor: pointer;
+}
+
+button[name=common-button]{
+    font-size: 1rem;
+    padding: 4px 8px;
+    color: #fff;
+    outline: none;
+    border: none;
+    border-radius: 3px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+button[name=common-button].class1{
+    background: #59aaef;
+}
+button[name=common-button].class1:hover{
+    background: #1788eb;
+}
+
+
+button[name=common-button].class2{
+    background: #ef5959;
+}
+button[name=common-button].class2:hover{
+    background: #eb1818;
+}
+
+
+
+
+
+
+.fix-tit{
+    width: calc(100% - 20px);
+    height: 3.5rem;
+    position: absolute;
+    left: 10px;
+    top: 0;
+    /* border-top: 1px solid red;
+    border-bottom: 1px solid red; */
+    background: #f5f5f5;
+    border-bottom: 1px solid #59aaef;
+    display: flex;
+}
+.fix-tit-left, .fix-tit-center, .fix-tit-right{
+    height: 100%;
+    /* border: 1px solid red; */
+}
+
+.fix-tit-center{
+    flex: 1;
+    overflow: auto;
+}
+.fix-tit-center::-webkit-scrollbar{
+    display: none;
+}
+
+.fix-tit-son{
+    text-align: center;
+    line-height: 3.5rem;
+    float: left;
+    font-weight: 800;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.table-bot{
+    width: 100%;
+    height: 3rem;
+    padding: 0px 10px;
+}
+.bot-content{
+    width: 100%;
+    height: 100%;
+    border-top: 1px solid #62adee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.paginate{
+    height: 2rem;
+    display: flex;
+    color: #337ab7;
+}
+.page-num{
+    height: 100%;
+    padding: 0px 10px;
+    line-height: 2rem;
+    cursor: pointer;
+    border: 1px solid #86bff1;
+    font-weight: 500;
+}
+.page-num:hover{
+    background: #62adee;
+    color: #fff;
+}
+.paginate input{
+    width: 80px;
+    height: 100%;
+    outline: none;
+    padding: 0px 8px;
+    border: 1px solid #62adee;
+}
+.paginate span{
+    display: inline-block;
+    height: 100%;
+    padding: 0px 10px;
+    line-height: 2rem;
+}
+
+
+
+
+
+/*全局阴影*/
+.global-shadow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, .4);
+}
+
+
+/*弹出层组件*/
+.lay{
+    background: #fff;
+    border: 1px solid #1788eb;
+    /* position: absolute; */
+    /* left: calc(50% - 150px);
+    top: calc(50% - 70px);     */
+    box-shadow: 3px 3px 10px #666;
+}
+.lay-tit{
+    width: 100%;
+    height: 2.4rem;
+    display: flex;
+}
+.lay-tit-content{
+    flex: 1;
+    padding:0px 10px;
+    line-height: 2.4rem;
+}
+.lay-tit-close{
+    width: 2.4rem;
+    color: #555;
+    font-size: 1.3rem;
+    text-align: center;
+    line-height: 2.4rem;
+}
+
+.lay-tit-close:hover{
+    background:#ddd;
+}
+.lay-main {
+    width: 100%;
+    height: calc(100% - 2.4rem);
+    background: #fff;
+}
+
+
+/*外部组件样式*/
+
+.layer-tip {
+    width: 100%;
+    height: 100%;
+    padding: 0px 8px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    align-content: space-between;
+}
+.layer-msg{
+    width: 100%;
+    height: 4rem;
+    line-height: 2rem;
+}
+.layer-btn-box{
+    width: 100%;
+    height: 2.5rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+

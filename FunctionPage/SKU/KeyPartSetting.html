@@ -1,0 +1,237 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeyPart Setting</title>
+    <link href="../../css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../css/font-awesome.css" rel="stylesheet" />
+    <link href="../../css/animate.css" rel="stylesheet" />
+    <link href="../../css/style.css" rel="stylesheet" />
+    <link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+    <style>
+        body {
+            zoom: .79;
+        }
+
+        .fixed-table-container {
+            clear: right;
+        }
+
+        td ol {
+            padding: 0;
+            margin: 0;
+            list-style: decimal inside;
+        }
+
+            td ol li:not(:last-child) {
+                border-bottom: 1px solid #ddd;
+            }
+
+        .tabs-container .tabs-left > .nav-tabs,
+        .tabs-container .tabs-right > .nav-tabs {
+            width: 200px;
+        }
+
+        .file-outline {
+            padding: 4px 0 0 0;
+            margin-left: -4px !important;
+            z-index: 0;
+            height: 34px;
+            position: absolute !important;
+            clip: rect(0px 400px 34px 75px);
+        }
+
+        #ModifyList, #AddList {
+            position: absolute;
+            width: 100%;
+            color: #000;
+        }
+
+            #AddList .panel-body, #ModifyList .panel-body {
+                padding-top: 30px;
+            }
+
+            #AddList .ctr-wrap, #ModifyList .ctr-wrap {
+                height: 50px;
+            }
+
+            #AddList .lab, #AddList .ctr, #ModifyList .lab, #ModifyList .ctr {
+                height: 30px;
+                line-height: 30px;
+            }
+
+            #AddList .lab, #ModifyList .lab {
+                line-height: 30px;
+                text-align: right;
+                background: #bbd6ef;
+                border-bottom: 1px solid #337ab7;
+            }
+
+            #AddList .ipt, #ModifyList .ipt {
+                height: 100%;
+            }
+
+        .radio-new {
+            width: 25px;
+            height: 25px;
+            line-height: 30px;
+        }
+
+        .ctr-wrap .Add, .ctr-wrap .Update {
+            background: #337ab7;
+            color: #fff;
+            height: 100%;
+            line-height: 30px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+            .ctr-wrap .Add:hover, .ctr-wrap .Update:hover {
+                background: #014783;
+            }
+        /*#AddList .addBtn, #ModifyList .editBtn {
+            background: #337ab7;
+            color: #fff;
+            font-weight: bold;
+        }
+
+            #AddList .addBtn:hover, #ModifyList .editBtn:hover {
+                background: #337ab7;
+            }*/
+        #tip {
+            width: 100%;
+            padding: 20px;
+            background: #808080;
+        }
+
+            #tip p {
+                color: #fff;
+            }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="full-height">
+    <div class="panel-body full-height">
+        <!--KP List Toolbar-->
+        <div id="KP_List_Table_Toolbar">
+            <!--GCH 2018/12/06 ADD (添加新增修改按钮)-->
+            <div class="btn-group hidden-xs" role="group">
+                <button type="button" class="btn btn-outline btn-primary" id="AddKPList">
+                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i><lan set-lan="html:New"> New</lan>
+                </button>
+            </div>
+            <div class="btn-group hidden-xs" role="group">
+                <button type="button" class="btn btn-outline btn-primary" id="EditKPList">
+                    <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i><lan set-lan="html:Edit"> Edit</lan>
+                </button>
+            </div>
+            <div class="btn-group hidden-xs" role="group">
+                <button type="button" class="btn btn-outline btn-primary" id="DeleteKPList">
+                    <i class="glyphicon glyphicon-trash" aria-hidden="true"></i><lan set-lan="html:Delete"> Delete</lan>
+                </button>
+            </div>
+            <div class="btn-group hidden-xs">
+                <button type="button" class="btn btn-outline btn-primary" id="DownloadTemplateFile">
+                    <i class="glyphicon glyphicon-cloud-download" aria-hidden="true"></i><lan set-lan="html:Template"> Template File</lan>
+                </button>
+            </div>
+            <div class="btn-group hidden-xs m-l-lg" style="">
+                <label class="btn btn-outline btn-primary input-group" for="KPFileUpload" style="z-index:1;"><lan set-lan="html:Upload"> Upload</lan></label>
+                <!--btn btn-outline btn-primary file-outline-->
+                <input id="KPFileUpload" type="file" class="btn btn-outline btn-primary file-outline" accept=".xlsx,.xlsm,.xlsb,.xls,.xltx,.xltm,.xlt,.xlam,.xla">
+                <div class="">
+                    <table id="Table_layer"></table>
+                </div>
+                <div class="hidden" id="table_box1"></div>
+                <div class="table_box hidden"></div>
+                <div class="hidden" id="excel_box"></div>
+            </div>
+        </div>
+        <!--Kp List-->
+        <table id="KP_List_Table"></table>
+        <div id="tip">
+            <p>說明﹕在SI Loading 時掃描主板﹐子板料號匹配關系.</p>
+            <p>1.MainSkuno主板料號﹐SubSkuno子板料號.</p>
+            <p>2.Seqno 作為(MotherBoard)的設為 1 最后掃描﹐其余的按實際掃描順序填寫﹐Seqno 數字大的先掃描.</p>
+            <p>3.Packing_flag 標志子板包裝時是否要掃描﹐要填寫 1 ﹐否則填寫 0 .</p>
+            <p>4.AutoStation 主要指在包裝PACKING需要卡的子板測試資料</p>
+            <p>5.AutoStation2 主要卡在包裝后可能還有測試資料的情況，如SYSFA 氣壓測試.</p>
+            <p>6.TestStation 設置在子板掃描 SI Loading 時要卡前段子板最後的測試資料. 如 PCBA 在ICT 結工單，ICT-PCBDL(TEST)--SILOADING 之間工單有測試PCBDL，為防止漏測，可以配置PCBDL，SILOADING 會卡PCBDL</p>
+            <p>7.SN_Flag 過PACKING工站並且有自帶BOX 不是XOC的情況,則對應的BOX需要設置SN_Flag為1.</p>
+        </div>
+
+    </div>
+    <!--弹出框-->
+    <div id="AddList" class="hidden">
+        <div class="panel-body">
+            <div class="row">
+                <!--<div class="col-xs-6 ctr-wrap">
+                    <div class="col-xs-4 lab">labelName</div>
+                    <div class="col-xs-8  ctr ">
+                        <input type="text" name="name" value=" " class="col-xs-12 form-control ipt" />
+                    </div>
+                </div>
+                <div class="col-xs-6 ctr-wrap">
+                    <div class="col-xs-4 lab">labelName</div>
+                    <div class="col-xs-8  ctr ">
+                        <input type="text" name="name" value=" " class="col-xs-12 form-control ipt" />
+                    </div>
+                </div>
+                <div class="col-xs-6 ctr-wrap">
+                    <div class="col-xs-4 lab">labelName</div>
+                    <div class="col-xs-8  ctr ">
+                        <input type="text" name="name" value=" " class="col-xs-12 form-control ipt" />
+                    </div>
+                </div>
+                <div class="col-xs-6 ctr-wrap">
+                    <div class="col-xs-5 null"></div>
+                    <div class="col-xs-2  ctr add ">
+                        <botton class="">Add</botton>
+                    </div>
+                </div>-->
+                <!--<div class="col-xs-6 ctr-wrap">
+                    <div class="col-xs-4 lab">labelName</div>
+                    <div class="col-xs-8  ctr ">
+                        <input type="radio" name="name1" value="v1" class="radio-new" /> &nbsp;:Y
+                        <input type="radio" name="name1" value="v2" class="radio-new" /> &nbsp;:N
+                    </div>
+                </div>-->
+                <div class="col-xs-6 ctr-wrap">
+                    <div class="col-xs-4 lab">labelName</div>
+                    <div class="col-xs-8  ctr ">
+                        <select class="col-xs-12 form-control ipt">
+                            <option value="value1">text1</option>
+                            <option value="value2">text2</option>
+                            <option value="value3">text3</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="ModifyList" class="hidden">
+        <div class="panel-body">
+            <div class="row">
+                </br>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <script src="../../Scripts/bootstrap.min.js"></script>
+    <script src="../../Scripts/plugins/JSON/json2.js"></script>
+    <script src="../../Scripts/plugins/layer/layer.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/tableExport.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table-export.js"></script>
+    <script src="../../Scripts/plugins/excel/xlsx.full.min.js"></script>
+    <script src="../../Scripts/Setting/KeyPartSetting.js"></script>
+</body>
+</html>

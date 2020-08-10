@@ -1,0 +1,835 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<!--<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-table.min.css" />-->
+<!--<script src="js/jquery-1.9.1.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/layer/layer.min.js"></script>-->
+<!--<script src="js/report.js"></script>-->
+
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/highcharts.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background: #fff;
+        zoom:.81;
+    }
+
+    .title {
+        width: 100%;
+        height: 54px;
+        padding: 10px 15px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+        line-height: 33px;
+    }
+
+    .bottom {
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        height: 60px;
+        background: #337ab7;
+        z-index: 10000;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        font-size: 30px;
+        text-align: center;
+        line-height: 60px;
+        color: #fff;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    #container1 {
+        margin-left:10px;
+        margin-right:10px;
+    }
+    /*.topTitles, .t, .bottomTitles, .b {
+        width:100%;
+    }*/
+    .tites .tab {
+        width:100%;
+    
+    }
+    .bigTit, .smallTit {
+        width:100%;
+    }
+        .bigTit span {
+            float:left;
+            width:50%;
+            height:50px;
+            line-height:50px;
+            text-align:center;
+            border:1px solid #337ab7;
+            background:#0eb96b;
+            color:#000;
+            font-weight:800;
+            font-size:18px;
+        }
+        .smallTit span:nth-child(odd) {
+            float:left;
+            width:25%;
+            height:43px;
+            line-height:40px;
+            text-align:center;
+            border:1px solid #337ab7;
+            background:#acc6ef;
+            color:#fff;
+            font-weight:600;
+            font-size:16px;
+        }
+         .smallTit span:nth-child(even) {
+            float:left;
+            width:25%;
+            height:43px;
+            line-height:40px;
+            text-align:center;
+            border:1px solid #337ab7;
+            background:#537ab7;
+            color:#fff;
+            font-weight:600;
+            font-size:16px;
+        }
+    .left, .right {
+        width:50%;
+        float:left;
+        background:#eee;
+        border:1px solid #337ab7;
+    }
+    /*.topTitles,.bottomTitles {
+        width:100%;
+        height:auto;
+        padding-bottom:20px;
+    }*/
+    .tites {
+        width:100%;
+        height:auto;
+        padding-bottom:20px;
+    }
+</style>
+
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:SMT">packing看板</span>
+    </div>
+
+    <div id="container1">
+        <h2 style="text-align:center;">Packing 每小時產出效率電子看板</h2>
+
+        <!--<div class="titles"> 
+            <div class="bigTit">
+                <span>bigTitle1</span>
+                <span>bigTitle2</span>
+            </div>
+            <div class="smallTit">
+                <span>smallTitle1</span>
+                <span>smallTitle2</span>
+                <span>smallTitle3</span>
+                <span>smallTitle4</span>
+            </div>
+        </div>
+
+        <div class="tab">
+            <div class="left">
+                <table></table>
+            </div>
+            <div class="right">
+                <table></table>
+            </div>
+        </div>    
+
+        <div class="titles"> 
+            <div class="bigTit">
+                <span>bigTitle1</span>
+                <span>bigTitle2</span>
+            </div>
+            <div class="smallTit">
+                <span>smallTitle1</span>
+                <span>smallTitle2</span>
+                <span>smallTitle3</span>
+                <span>smallTitle4</span>
+            </div>
+        </div>
+
+        <div class="tab">
+            <div class="left">
+                <table></table>
+            </div>
+            <div class="right">
+                <table></table>
+            </div>
+        </div>-->   
+    </div>
+</body>
+
+<script>
+
+    $(document).ready(function () {
+        $.fn.setWidth = function (widthArr) {  //只能设置一行
+            this.each(function (index, ele) {
+                $(this).css("width", widthArr[index] + "%");
+            });
+            return this;   //this:jQuery对象
+        }
+
+        var tabJ = {
+            "Status": "Pass",
+            "Message": "执行成功",
+            "Data": {
+                "series": [
+                  {
+                      "title": {
+                          "fitstLeft": "PCBU 一線(150/小時)",
+                          "second1": "白班(2019/5/14)",
+                          "second2": "晚班(2019/5/14)"
+                      },
+                      "DATA": [
+                        {
+                            "時間0": "08:00~09:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "20:00~21:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "09:00~10:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "21:00~22:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "10:00~11:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "22:00~23:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "11:00~12:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "23:00~00:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "12:00~13:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "00:00~01:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "13:00~14:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "01:00~02:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "14:00~15:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "02:00~03:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "15:00~16:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "03:00~04:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "16:00~17:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "04:00~05:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "17:00~18:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "05:00~06:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "18:00~19:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "06:00~07:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "19:00~20:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "07:00~08:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "白班 Total",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "晚班Total",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        }
+                      ]
+                  },
+                  {
+                      "title": {
+                          "fitstLeft": "MCEBU一線(150/小時)",
+                          "second1": "白班(2019/5/14)",
+                          "second2": "晚班(2019/5/14)"
+                      },
+                      "DATA": [
+                        {
+                            "時間0": "08:00~09:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "20:00~21:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "09:00~10:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "21:00~22:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "10:00~11:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "22:00~23:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "11:00~12:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "23:00~00:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "12:00~13:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "00:00~01:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "13:00~14:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "01:00~02:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "14:00~15:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "02:00~03:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "15:00~16:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "03:00~04:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "16:00~17:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "04:00~05:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "17:00~18:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "05:00~06:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "18:00~19:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "06:00~07:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "19:00~20:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "07:00~08:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        },
+                        {
+                            "時間0": "白班 Total",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0.0%",
+                            "時間1": "晚班Total",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0.0%"
+                        }
+                      ]
+                  },
+                  {
+                      "title": {
+                          "fitstLeft": "MCEBU一線(150/小時)",
+                          "second1": "白班(2019/5/14)",
+                          "second2": "晚班(2019/5/14)"
+                      },
+                      "DATA": [
+                        {
+                            "時間0": "08:00~09:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "20:00~21:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "09:00~10:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "21:00~22:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "10:00~11:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "22:00~23:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "11:00~12:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "23:00~00:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "12:00~13:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "00:00~01:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "13:00~14:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "01:00~02:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "14:00~15:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "02:00~03:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "15:00~16:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "03:00~04:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "16:00~17:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "04:00~05:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "17:00~18:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "05:00~06:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "18:00~19:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "06:00~07:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "19:00~20:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "07:00~08:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "白班 Total",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": null,
+                            "產出(Pcs)1": null,
+                            "效率%1": null
+                        }
+                      ]
+                  },
+                  {
+                      "title": {
+                          "fitstLeft": "MCEBU一線(150/小時)",
+                          "second1": "白班(2019/5/14)",
+                          "second2": "晚班(2019/5/14)"
+                      },
+                      "DATA": [
+                        {
+                            "時間0": "08:00~09:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "20:00~21:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "09:00~10:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "21:00~22:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "10:00~11:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "22:00~23:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "11:00~12:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "23:00~00:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "12:00~13:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "00:00~01:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "13:00~14:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "01:00~02:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "14:00~15:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "02:00~03:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "15:00~16:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "03:00~04:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "16:00~17:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "04:00~05:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "17:00~18:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "05:00~06:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "18:00~19:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "06:00~07:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "19:00~20:00",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": "07:00~08:00",
+                            "產出(Pcs)1": "0",
+                            "效率%1": "0"
+                        },
+                        {
+                            "時間0": "白班 Total",
+                            "產出(Pcs)0": "0",
+                            "效率%0": "0",
+                            "時間1": null,
+                            "產出(Pcs)1": null,
+                            "效率%1": null
+                        }
+                      ]
+                  }
+                ]
+            },
+            "MessageCode": "MES00000001",
+            "StartTime": "0001-01-01 00:00:00",
+            "EndTime": "0001-01-01 00:00:00",
+            "ProccessTime": 0.0,
+            "MessagePara": [],
+            "MessageID": "MSGID641557817915186",
+            "ClientID": "CID371557817543648"
+        }
+
+
+        self.parent.client.CallFunction("MESStation.Config.RPACKING_RATE_DETAIL", "GetProByHour1", {}, function (e) {    //表2
+            //console.log(ev);
+            //var e = tabJ;
+            if (e.Status == "Pass") {
+                console.log(e.Data);
+                var container = $("#container1");
+                var tabs = e.Data["series"];
+                var tabLen = tabs.length;
+                var s = tabLen % 2 == 0 ? tabLen / 2 : (tabLen + 1) / 2 ;
+                for (var i = 0; i < s; i++){   //生成看板结构
+                    var nodes = createTabWrap();
+                    container.append($(nodes[0]));
+                    container.append($(nodes[1]));
+                }
+
+                var tables = container.find("table");
+                var bigTit = container.find(".bigTit span");
+                var smallTit = container.find(".smallTit span");
+
+
+                $.each(tabs, function (index, tabO) {
+                    //tables[index];
+                    bigTit.eq(index).text(tabO["title"]["fitstLeft"]);
+                    for (var i = 0; i <= 1; i++ ){
+                        var x = index * 2 + i;
+                        if (i == 0) {
+                            smallTit.eq(x).text(tabO["title"]["second1"]) ;
+                        } else {
+                            smallTit.eq(x).text(tabO["title"]["second2"]);
+                        }
+                    }
+                    drawTable(tables.eq(index), tabO["DATA"], getFields(tabO["DATA"][0]));
+                });
+
+            }
+            function getFields(obj) {
+                var fields = [];
+                for (var prop in obj) {
+                    fields.push(prop);
+                }
+                return fields;
+            }
+        });
+
+
+
+
+        function str_num(arr) {  //把字符串数组变成数字数组
+            var _arr = [];
+            $.each(arr, function (i,str) {
+                _arr.push(Number(str));
+            });
+            return _arr;
+        }
+
+        function createTabWrap() {
+            var tites = $("<div class='tites'></div>");
+            var bigTit = $("<div class='bigTit'><span></span><span></span></div>");
+            var smallTit = $("<div class='smallTit'><span></span><span></span><span></span><span></span></div>");
+            tites.append(bigTit);
+            tites.append(smallTit);
+            var tab = $("<div class='tab'><div class='left'><table></table></div><div class='right'><table></table></div></div>");
+            return [tites, tab];
+        }
+
+        function drawTable($ele,data,fieldArr) {
+            $ele.bootstrapTable({
+                data: data,   //e
+                pagination: false,    //分页显示
+                pageSize: 10,         //初始化每一页的数据条数
+                pageList: [10, 25, 50, 100],
+                search: false,        //显示查找框
+                striped: false,        //背景色相间
+                showRefresh: false,   //显示重置按钮
+                columns: columns(fieldArr)
+            });
+            function columns(colList) {   //生成表格关键数据
+                var columns = [];
+                //columns.push({    //选择按钮
+                //    align: 'center',
+                //    valign: 'middle',
+                //    checkbox: true
+                //});
+                $.each(colList, function (i, val) {
+                    var title = "<label set-lan=" + "html:" + val + ">" + val.match(/\D*/g)[0] + "</label>";
+                    var obj = {
+                        field: val,
+                        title: title,
+                        align: 'center',
+                        valign: 'middle'
+                    };
+                    columns.push(obj);
+                });
+                return columns;
+            }
+
+        }
+
+        function highChart(control,data) {    //绘制直方图
+            var chart = {
+                type: data["type"],   //column  bar
+                height:"35%"
+            };
+            var title = {
+                text: data["title"]
+            };
+            var subtitle = {
+                text: data["subtitle"]
+            };
+            var xAxis = {
+                categories: data["xAxis"]["categories"],         // ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                title: {
+                    text: data["xAxis"]["title"],
+                    align: 'high'    //high
+                },
+                crosshair: true
+            };
+            var yAxis = {
+                min: 0,
+                title: {
+                    text: data["yAxis"]["title"],
+                    align: 'high'    //high
+                },
+                lineWidth: "1"
+            };
+            var company = data["yAxis"]["title"].match(/\(.+?\)/g)[0];
+            company = company.substr(1, company.length - 2);
+            var tooltip = {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                   '<td style="padding:0"><b>{point.y:.1f} '+ company +'</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            };
+            var plotOptions = {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            };
+            var credits = {
+                enabled: false
+            };
+            var series = data["series"];
+            var json = {};
+            json.chart = chart;
+            json.title = title;
+            json.subtitle = subtitle;
+            json.tooltip = tooltip;
+            json.xAxis = xAxis;
+            json.yAxis = yAxis;
+            json.series = series;
+            json.plotOptions = plotOptions;
+            json.credits = credits;
+            control.highcharts(json);
+        }
+
+    });
+
+</script>
+
+</html>

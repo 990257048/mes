@@ -1,0 +1,102 @@
+*{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+html, body, #root, #app{
+    width: 100%;
+    height: 100%;
+}
+
+body{
+    padding: 10px;
+    overflow: hidden;
+}
+
+
+
+.tit{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.search-content{
+    width: 360px;
+    height: 160px;
+    padding: 8px;
+}
+
+.search-content .ant-row{
+    height: 100%;
+}
+
+.search-content .ant-col{
+    height: 40px;
+    line-height: 40px;
+    /* border: 1px solid red; */
+}
+
+.main{
+    width: 100%;
+    height: calc(100% - 42px);
+    /* border: 1px solid red; */
+    position: relative;
+
+}
+
+.table-wrap{
+    width: 100%;
+    height: 100%;
+}
+
+.new-drawer-wrap, .edit-drawer-wrap{
+    width: 100%;
+    height: 100%;
+    /* border: 1px solid red; */
+}
+
+.new-drawer-time, .new-drawer-time2, .edit-drawer-time, .edit-drawer-time2{
+    width: 160px;
+    height: 100%;
+    /* line-height: 46px; */
+    padding-left: 20px; 
+    /* font-size: 16px; */
+    float: left;
+    border-right: 1px solid #ddd;
+    /* border-left: 1px solid #ddd; */
+    overflow: auto;
+}
+.new-drawer-main, .edit-drawer-main{
+    width: calc(100% - 160px);
+    height: 100%;
+    float: left;
+    /* border: 1px solid red; */
+    padding: 0px 10px 0px 20px;
+
+}
+
+.new-drawer-control-wrap, .edit-drawer-control-wrap{
+    width: 100%;
+    height: 66px;
+    margin-top: 10px;
+    /* border: 1px solid red; */
+}
+
+.new-drawer-control-label, .edit-drawer-control-wrap{
+    line-height: 30px;
+    font-size: 14px;
+}
+
+.new-drawer-control, .edit-drawer-control{
+    line-height: 36px;
+}
+
+
+.ant-checkbox-group{
+    line-height: 28px;
+}

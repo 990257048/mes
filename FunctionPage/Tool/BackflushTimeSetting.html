@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BackflushTimeSetting</title>
+
+    <link href="../../css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../css/font-awesome.css" rel="stylesheet" />
+    <link href="../../css/animate.css" rel="stylesheet" />
+    <link href="../../css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="../../css/plugins/bootstrapDateTimePicker/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <style>
+    </style>
+</head>
+<body class="full-height">
+    <div class="panel-heading bg-primary">
+        <h3><i class="glyphicon glyphicon-tags"></i><span style="padding-left:10px;" set-lan="html:BackflushTimeSetting">BackflushTimeSetting</span></h3>
+    </div>
+    <div class="panel-body full-height form-horizontal">
+        <div id="divSettingConditions" class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
+            <div id="divStartTime">
+                <div class="form-group">
+                    <label class="col-xs-4 col-sm-4 col-md-4 col-lg-4 control-label ">StartTime:</label>
+                    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                        <input id="inputStartTime" type="text" class="form-control" set-lan="attr:placeholder=placeholderStartTime">
+                    </div>                    
+                </div>
+            </div>
+            <div id="divEndTime">
+                <div class="form-group">
+                    <label class="col-xs-4 col-sm-4 col-md-4 col-lg-4 control-label">EndTime:</label>
+                    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                        <input id="inputEndTime" type="text" class="form-control" set-lan="attr:placeholder=placeholderEndTime">
+                    </div>
+                </div>
+            </div>
+            <div id="divBackflushData">
+                <div class="form-group">
+                    <label class="col-xs-4 col-sm-4 col-md-4 col-lg-4 control-label">BackflushDate:</label>
+                    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                        <input id="inputBackflushDate" type="text" class="form-control" set-lan="attr:placeholder=placeholderBackflushDate">
+                    </div>
+                </div>
+            </div>
+            <div id="divSubmit">
+                <div class="form-group">
+                    <label class="col-xs-4 col-sm-4 col-md-4 col-lg-4 control-label"></label>
+                    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                        <button id="btnSave" type="button" class="btn btn-primary"><i class="fa fa-pencil"></i> <lan set-lan="html:save">Save</lan></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="../../Scripts/jquery.min.js?v=2.1.4"></script>
+    <script src="../../Scripts/jquery.cookie.js"></script>
+    <script src="../../Scripts/bootstrap.min.js"></script>
+    <script src="../../Scripts/plugins/JSON/json2.js"></script>
+
+    <!-- 第三方插件 -->
+    <script src="../../Scripts/plugins/layer/layer.min.js"></script>
+    <script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapDateTimePicker/bootstrap-datetimepicker.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapDateTimePicker/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table-zh-TW.min.js"></script>
+
+    <script src="../../Scripts/global.js"></script>
+    <script src="../../Scripts/MesClient.UI.js"></script>
+    <script src="../../Scripts/MesClient.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {   
+            $("#inputStartTime").datetimepicker({
+                format: 'yyyy-mm-dd hh:ii:00',//选择年月日時分秒
+                language: 'zh-CN',
+                weekStart: 0,//一周从哪一天开始。0（星期日）到6（星期六）
+                todayBtn: 0,//显示‘今日’按钮
+                autoclose: true,//当选择一个日期之后是否立即关闭此日期时间选择器
+                todayHighlight: true,//如果为true, 高亮当前日期。
+                startView: 2,//日期时间选择器打开之后首先显示的视图 0-hour,1-day,2-month,3-year,4-decade
+                minView: 0,  //Number, String. 默认值：0, 'hour'，日期时间选择器所能够提供的最精确的时间选择视图。   
+                minuteStep: 1,
+                clearBtn: false,//清除按钮
+                forceParse: true,//当选择器关闭的时候，是否强制解析输入框中的值。也就是说，当用户在输入框中输入了不正确的日期
+                                 //，选择器将会尽量解析输入的值，并将解析后的正确值按照给定的格式format设置到输入框中。
+                keyboardNavigation: true //是否允许通过方向键改变日期
+            });
+            $("#inputEndTime").datetimepicker({
+                format: 'yyyy-mm-dd hh:ii:00',//选择年月日時分秒yyyy-mm-dd hh:ii:ss
+                language: 'zh-CN',              
+                autoclose: true,
+                todayHighlight: true,
+                startView: 2,
+                minView: 0,
+                minuteStep: 1
+            });
+            $("#inputBackflushDate").datetimepicker({
+                format: 'yyyy-mm-dd',//选择年月日時分秒
+                language: 'zh-CN',
+                autoclose: true,
+                todayHighlight: true,
+                startView: 2,
+                minView: 2               
+            });
+            $("#btnSave").on("click", function () {
+                var startTime = $("#inputStartTime").val().replace(/^\s+|\s+$/g, "");
+                var endTime = $("#inputEndTime").val().replace(/^\s+|\s+$/g, "");
+                var backflushDate = $("#inputBackflushDate").val().replace(/^\s+|\s+$/g, "");
+
+                if (startTime == "" || startTime == undefined) {
+                    layer.msg("Please input start time", {
+                        icon: 2,
+                        time: 3000
+                    }, function () { });
+                    $("#inputStartTime").focus();
+                    return;
+                }
+
+                if (endTime == "" || endTime == undefined) {
+                    layer.msg("Please input end time", {
+                        icon: 2,
+                        time: 3000
+                    }, function () { });
+                    $("#inputEndTime").focus();
+                    return;
+                }
+
+                if (backflushDate == "" || backflushDate == undefined) {
+                    layer.msg("Please input backflush date", {
+                        icon: 2,
+                        time: 3000
+                    }, function () { });
+                    $("#inputBackflushDate").focus();
+                    return;
+                }
+                var data = { StartTime: startTime, EndTime: endTime, BackflushDate: backflushDate };
+                self.parent.client.CallFunction("MESStation.Config.CControl", "SetBackflushTime", data, function (e) {
+                    if (e.Status == "Pass") {
+                        swal({
+                            title: "",
+                            text: e.Message,
+                            type: "success",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        setTimeout(function () {
+                            $("#txtAddWorkClass").val("");
+                            $("#txtAddClassEndTime").val("");
+                            $("#txtAddClassStartTime").val("");
+                            $("#txtAddWorkClass").focus;
+                            $("#txtAddWorkClass").select();
+                        }, 2001);
+                    } else {
+                        swal({
+                            title: "",
+                            text: e.Message,
+                            type: "warning",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        return;
+                    }
+                });
+            });
+        })
+
+    </script>
+</body>
+</html>

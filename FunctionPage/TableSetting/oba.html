@@ -1,0 +1,1325 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ADF 物料设置</title>  <!-- ADF 物料设置 GCH 2018/11/29 ADD-->
+    <base target="_blank"></base>
+</head>
+
+<!--<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-table.min.css" />
+
+<script src="js/jquery-1.9.1.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/layer/layer.min.js"></script>-->
+
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background: #fff;
+        zoom:.65;
+    }
+    body::-webkit-scrollbar-thumb {
+            background:#337ab7;
+        }
+        body::-webkit-scrollbar {
+            width:5px;
+            background-color:#fff;
+        }
+    .layui-layer .layui-layer-content::-webkit-scrollbar-thumb {
+        background:#337ab7;
+    }
+    .layui-layer .layui-layer-content::-webkit-scrollbar {
+        width:5px;
+        background-color:#fff;
+    }
+    .title {
+        width: 100%;
+        height: 54px;
+        padding: 10px 15px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+        line-height: 33px;
+    }
+
+    .list {
+        width: 100%;
+        height: 34px;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-top: 25px;
+    }
+
+        .list .btnList {
+            height: 100%;
+            float: left;
+            border: 1px solid #337ab7;
+            border-radius: 3px;
+            border-right: none;
+        }
+
+        /*.list .btnList .btn0 {
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                color: rgb(103,106,108);
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor: pointer;
+            }
+
+                .list .btnList .btn0:hover {
+                    color: #fff;
+                    background: #286090;
+                }
+
+            .list .btnList .btn1,
+            .list .btnList .btn2 {
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                color: rgba(103,106,108,0.6);
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor: no-drop;
+            }
+
+                .list .btnList .btn1:hover,
+                .list .btnList .btn2:hover {
+                    color: #fff;
+                    background: #337ab7;
+                    opacity: 0.6;
+                }*/
+
+        /*.list .btnList .btn11,
+            .list .btnList .btn22 {
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                color: rgb(103, 106, 108);
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor: pointer;
+            }
+
+                .list .btnList .btn11:hover,
+                .list .btnList .btn22:hover {
+                    color: #fff;
+                    background: #286090;
+                }*/
+
+        .list .query {
+            float: right;
+            height: 100%;
+        }
+
+            .list .query .input {
+                float: left;
+                height: 100%;
+                width: 196px;
+                border: 1px solid #337ab7;
+                box-sizing: border-box;
+                border-radius: 5px;
+            }
+
+                .list .query .input input {
+                    width: 100%;
+                    height: 100%;
+                    padding: 6px 12px;
+                    border-radius: 5px;
+                    border: none;
+                    color: #676a6c;
+                    outline: none;
+                }
+
+            .list .query .btnQuery {
+                float: left;
+                height: 100%;
+                padding: 6px 12px;
+                line-height: 20px;
+                border: 1px solid #337ab7;
+                margin-left: 8px;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+
+                .list .query .btnQuery:hover {
+                    color: #fff;
+                    background: #286090;
+                }
+
+    .tab {
+        width: auto;
+        /*border: 1px solid #adadad;*/
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-left: 15px;
+        margin-right: 15px;
+        overflow: auto;
+    }
+
+    #ModifyList, #AddList {
+        position: absolute;
+        width: 100%;
+    }
+
+        #ModifyList label, #AddList label {
+            margin-top: 6px;
+            /*padding: 6px;
+        padding-left: 6px;*/
+            padding-right: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background: #e6e6e6;
+        }
+
+        #ModifyList textarea, #AddList textarea {
+            height: 82px;
+        }
+
+        #ModifyList input[type=checkbox], #AddList input[type=checkbox] {
+            margin-top: 8px;
+        }
+
+
+        #AddList .addBtn, #ModifyList .editBtn {
+            background: #337ab7;
+            color: #fff;
+            font-weight: bold;
+        }
+
+            #AddList .addBtn:hover, #ModifyList .editBtn:hover {
+                background: #337ab7;
+            }
+
+    .hui {
+        background: #F2F4F8;
+    }
+    /*#AddList ul{
+        display: inline-block;
+        float: left;
+
+    }*/
+
+
+    #sonTab {
+        margin: 15px;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:"></span>
+    </div>
+    <div class="list">
+        <div class="btnList"></div>
+        <div class="query">
+            <div class="input">
+                <input type="text" value="" placeholder="请输入LOTNO或PLNO" />
+            </div>
+            <div class="btnQuery" set-lan="html:Query"> Search </div>
+        </div>
+    </div>
+    <div class="tab">
+        <table></table>
+    </div>
+    <!--查詢彈窗-->
+    <div id="SearchList" class="hidden">
+        <div class="panel-body">
+            <div class="row">
+                </br>
+            </div>
+        </div>
+    </div>
+    <!--新增弹窗-->
+    <div id="AddList" class="hidden">
+        <div class="panel-body">
+            <div class="row">
+                </br>
+            </div>
+        </div>
+    </div>
+    <!--修改弹窗-->
+    <div id="ModifyList" class="hidden">
+        <div class="panel-body">
+            <div class="row">
+                </br>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    var report = new ConfigReport({
+        "pageMsg": {
+            "pageName": "特殊oba记录扫描",
+            "setLan": "oba",
+            "btnMsg": [
+                //{
+                //    "id": "btnS",
+                //    "btnName": "Query",
+                //    "icon": "glyphicon glyphicon-search",    //图标样式
+                //    "style": "0",  //任何时候可以点击
+                //    "layerFlag": true    //点击该按钮是否弹出层
+                //},
+                {
+                    "id": "btn0",
+                    "btnName": "New",
+                    "icon": "glyphicon glyphicon-plus",    //图标样式
+                    "style": "0",  //任何时候可以点击
+                    "layerFlag": true    //点击该按钮是否弹出层
+                },
+                {
+                    "id": "btn1",
+                    "btnName": "Open",
+                    "icon": "glyphicon glyphicon-triangle-right",    //图标样式
+                    "style": "1",  
+                    "layerFlag": true    //点击该按钮是否弹出层
+                },
+                //{
+                //    "id": "btn1",
+                //    "btnName": "Edit",
+                //    "icon": "glyphicon glyphicon-pencil",
+                //    "style": "1",  //只选中一条数据可以点击
+                //    "layerFlag": true
+                //},
+                //{
+                //    "id": "btn2",
+                //    "btnName": "Delete",
+                //    "icon": "glyphicon glyphicon-trash",
+                //    "style": "1",  //选中多条数据都可以点击
+                //    "layerFlag": false
+                //}
+            ],
+        },
+        "apiList": {
+            "homePage": {   //首页
+                "className": "MESStation.Config.SpecialOBA",
+                "functionName": "GetByLotNo",
+                "colList": ["LOTNO"],
+                "sendList": [""]
+            },
+            "select": {
+                "className": "MESStation.Config.SpecialOBA",
+                "functionName": "GetByLotNo",
+                "colList": ["LOTNO"]
+            },
+            "add": {
+                "className": "MESStation.Config.SpecialOBA",
+                "functionName": "Upload",
+                "colList": []
+            },
+            //"update": {
+            //    "className": "MESStation.Config.CKpListDF",
+            //    "functionName": "UpdateById",
+            //    "colList": []
+            //},
+            //"delete": {
+            //    "className": "MESStation.Config.CKpListDF",
+            //    "functionName": "DeleteById",
+            //    "colList": []
+            //},
+            //"layer": {
+            //}
+        },
+
+        "tableMsg": {     //表格各列
+            "column": ["LOT_NO", "PALLET_NO", "ATTACH", "DESCRIPTION", "EDIT_EMP", "EDIT_TIME"]
+        },
+        "layerMsg": {    //弹出框各项控件
+            "add": {
+                "showList": [//Upload type:  Lot/PL NO﹕File:  Description﹕lasteditby:
+                    {
+                        "field": "UploadType",    //字段名
+                        "type": "select",     //控件类型（text  select  checkbox  radio  textarea  ）
+                        "disabled": false
+                    },
+                    {
+                        "field": "Lot_PL_NO",
+                        "type": "text",
+                        "disabled": false,
+                    },
+                    {
+                        "field": "File",
+                        "type": "file",
+                        "disabled":false,
+                    },
+                    {
+                        "field": "Description",
+                        "type": "text",
+                        "disabled": false,
+                    },
+                    {
+                        "field": "EDIT_EMP",
+                        "type": "text",
+                        "disabled": true,
+                    }
+                ],
+                "sendList": ["UploadType", "Lot_PL_NO", "File", "Description", "EDIT_EMP"]
+            },
+            "edit": {
+                "showList": [
+                    {
+                        "field": "ID",
+                        "type": "text",
+                        "disabled":true
+                    },
+                    {
+                        "field": "QTY",
+                        "type": "text",
+                        "disabled": true
+                    },
+                    {
+                        "field": "TOTAL_QTY",
+                        "type": "text",
+                        "disabled": true
+                    },
+                    {
+                        "field": "SEQ",
+                        "type": "text",
+                        "disabled": true
+                    },
+                    {
+                        "field": "LOCATION",
+                        "type": "text",
+                        "disabled": true,
+                    },
+                    {
+                        "field": "COLOR",
+                        "type": "text",
+                        "disabled": true,
+                    },
+                    {
+                        "field": "EDIT_EMP",
+                        "type": "text",
+                        "disabled": true,
+                    },
+                    {
+                        "field": "SKUNO",    //字段名
+                        "type": "text",     //控件类型（text  select  checkbox  radio  textarea  ）
+                        "disabled": false
+                    },
+                    {
+                        "field": "MAIN_SKUNO",
+                        "type": "text",
+                        "disabled":false,
+                    },
+                    {
+                        "field": "KP_PARTNO",
+                        "type": "text",
+                        "disabled": false,
+                    },
+                    {
+                        "field": "STATION",
+                        "type": "text",
+                        "disabled": false,
+                    },
+                    {
+                        "field": "PREFIX",
+                        "type": "text",
+                        "disabled": false,
+                    },
+                    {
+                        "field": "SN_LENGTH",
+                        "type": "text",
+                        "disabled": false,
+                    },
+                    {
+                        "field": "CHECK_SKUNO_FLAG",
+                        "type": "text",
+                        "disabled": false,
+                    },
+                    {
+                        "field": "MPN",
+                        "type": "text",
+                        "disabled": false,
+                    },
+                ],
+                "sendList": ["ID","SKUNO", "MAIN_SKUNO", "KP_PARTNO", "STATION", "QTY", "TOTAL_QTY", "SEQ", "LOCATION", "PREFIX", "SN_LENGTH", "COLOR", "CHECK_SKUNO_FLAG", "MPN", "EDIT_EMP"]
+            }
+        },
+        "loadLayerData": []
+    });
+    function ConfigReport(o) {
+        var _this = this;
+        this.pageMsg = o.pageMsg;
+        this.apiList = o.apiList;
+        this.layerMsg = o.layerMsg;
+        this.tableMsg = o.tableMsg;
+        this.layerData = o.loadLayerData;
+        ConfigReport.prototype.Init = function () {
+            //生成报表网页基本结构(包括按钮)
+            this.ReportHTML(this.pageMsg);
+            //接收首页数据，show首页数据，回调
+            self.parent.client.CallFunction(this.apiList["homePage"]["className"], this.apiList["homePage"]["functionName"], this.sendData(this.apiList["homePage"]["colList"], this.apiList["homePage"]["sendList"]), function (e) {
+                if (e.Status == "Pass") {
+                    _this.InitCallback(e.Data);
+                }
+            });
+            //加载弹出层，生成控件，控制样式，
+            this.loadLayer(this.layerMsg);
+            //加载特殊控件内数据（下拉数据等），
+            this.loadLayerData(this.layerData);
+            //事件触发逻辑
+            this.clickEvent();
+        }
+        ConfigReport.prototype.ReportHTML = function (obj) {
+            $(".title span").html(obj.pageName);                          //页面名
+            $(".title span").attr("set-lan", "html:" + obj.setLan);        //多语言
+            this.generateBtn(obj.btnMsg);                                 //生成按钮
+        }
+        ConfigReport.prototype.generateBtn = function (arr) {  //生成按钮
+            var btnContainer = $(".list .btnList");
+            for (var i = 0; i < arr.length; i++) {
+                var div = $("<div id=" + arr[i]["id"] + " ></div>");
+                var oi = $("<i></i>");
+                var span = $("<span set-lan=" + "html:" + arr[i]["btnName"] + "> " + arr[i]["btnName"] + " </span>");
+                oi.attr("class", arr[i]["icon"]);
+                if (arr[i]["style"] == 0) {   //设置按钮初始样式（选择数据后的按钮样式见表格生成处）
+                    div.css({
+                        "height": "100%",
+                        "padding": "6px 17px",
+                        "lineHeight": "22px",
+                        "color": "rgb(103,106,108)",
+                        "float": "left",
+                        "fontSize": "14px",
+                        "borderRight": "1px solid #337ab7",
+                        "cursor": "pointer"
+                    });
+                    div.hover(function () {   //移入
+                        $(this).css({
+                            "color": "#fff",
+                            "background": "#286090"
+                        });
+                    }, function () {           //移出
+                        $(this).css({
+                            "color": "rgb(103,106,108)",
+                            "background": "#fff"
+                        });
+                    });
+                } else {
+                    div.css({
+                        "height": "100%",
+                        "padding": "6px 17px",
+                        "lineHeight": "22px",
+                        "color": "rgba(103,106,108,0.6)",
+                        "float": "left",
+                        "fontSize": "14px",
+                        "borderRight": "1px solid #337ab7",
+                        "cursor": "no-drop"
+                    });
+                    div.hover(function () {   //移入
+                        $(this).css({
+                            "color": "#fff",
+                            "background": "#337ab7",
+                            "opacity": "0.6"
+                        });
+                    }, function () {           //移出
+                        $(this).css({
+                            "color": "rgba(103,106,108,0.6)",
+                            "background": "#fff",
+                            "opacity": "1"
+                        });
+                    });
+                }
+                div.append(oi);
+                div.append(span);
+                btnContainer.append(div);
+            }
+        }
+        ConfigReport.prototype.sendData = function (colList, sendList) {       //生成发送数据
+            var sendData = {};
+            $.each(colList, function (i, val) {
+                sendData[val] = sendList[i];
+            });
+            return sendData;
+        }
+        ConfigReport.prototype.InitCallback = function (e) {
+            //show首页数据
+            $(".tab table").bootstrapTable({
+                data: e,   //e
+                pagination: true,    //分页显示
+                pageSize: 50,         //初始化每一页的数据条数
+                pageList: [50, 100, 200, 500],
+                search: false,        //显示查找框
+                striped: true,        //背景色相间
+                showRefresh: false,   //显示重置按钮
+                clickToSelect: true,   //单击一行内任意单元格选中该行
+                singleSelect: true,  //单选
+                onCheck: function (row) {   //选中
+                    var btn1 = []; //1类按钮
+                    var btn2 = []; //2类按钮
+                    $.each(o.pageMsg["btnMsg"], function (index, val) {
+                        if (val["style"] == 1) {
+                            btn1.push($("#" + val["id"]));
+                        }
+                        if (val["style"] == 2) {
+                            btn2.push($("#" + val["id"]));
+                        }
+                    })
+                    var rows = $('.tab table').bootstrapTable('getAllSelections');  ///getAllSelections
+                    if (rows.length == 1) {   //控制1类btn
+                        $.each(btn1, function (index, ele) {
+                            ele.css({                 //初始
+                                "height": "100%",
+                                "padding": "6px 17px",
+                                "lineHeight": "22px",
+                                "color": "rgb(103, 106, 108)",
+                                "float": "left",
+                                "fontSize": "14px",
+                                "borderRight": "1px solid #337ab7",
+                                "cursor": "pointer"
+                            });
+                            ele.hover(function () {    //移入
+                                $(this).css({
+                                    "color": "#fff",
+                                    "background": "#286090",
+                                    "opacity": "1"
+                                });
+                            }, function () {            //移出
+                                $(this).css({
+                                    "color": "rgb(103, 106, 108)",
+                                    "background": "#fff"
+                                });
+                            });
+                        });
+                    } else {
+                        $.each(btn1, function (index, ele) {
+                            ele.css({                 //初始
+                                "height": "100%",
+                                "padding": "6px 17px",
+                                "lineHeight": "22px",
+                                "color": "rgba(103,106,108,0.6)",
+                                "float": "left",
+                                "fontSize": "14px",
+                                "borderRight": "1px solid #337ab7",
+                                "cursor": "no-drop"
+                            });
+                            ele.hover(function () {    //移入
+                                $(this).css({
+                                    "color": "#fff",
+                                    "background": "#337ab7",
+                                    "opacity": "0.6"
+                                });
+                            }, function () {            //移出
+                                $(this).css({
+                                    "color": "rgba(103,106,108,0.6)",
+                                    "background": "#fff",
+                                    "opacity": "1"
+                                });
+                            });
+                        });
+                    }
+                    if (rows.length > 0) {    //控制2类btn
+                        $.each(btn2, function (index, ele) {
+                            ele.css({                 //初始
+                                "height": "100%",
+                                "padding": "6px 17px",
+                                "lineHeight": "22px",
+                                "color": "rgb(103, 106, 108)",
+                                "float": "left",
+                                "fontSize": "14px",
+                                "borderRight": "1px solid #337ab7",
+                                "cursor": "pointer"
+                            });
+                            ele.hover(function () {    //移入
+                                $(this).css({
+                                    "color": "#fff",
+                                    "background": "#286090",
+                                    "opacity": "1"
+                                });
+                            }, function () {            //移出
+                                $(this).css({
+                                    "color": "rgb(103, 106, 108)",
+                                    "background": "#fff"
+                                });
+                            });
+                        });
+                    } else {
+                        $.each(btn2, function (index, ele) {
+                            ele.css({                 //初始
+                                "height": "100%",
+                                "padding": "6px 17px",
+                                "lineHeight": "22px",
+                                "color": "rgba(103,106,108,0.6)",
+                                "float": "left",
+                                "fontSize": "14px",
+                                "borderRight": "1px solid #337ab7",
+                                "cursor": "no-drop"
+                            });
+                            ele.hover(function () {    //移入
+                                $(this).css({
+                                    "color": "#fff",
+                                    "background": "#337ab7",
+                                    "opacity": "0.6"
+                                });
+                            }, function () {            //移出
+                                $(this).css({
+                                    "color": "rgba(103,106,108,0.6)",
+                                    "background": "#fff",
+                                    "opacity": "1"
+                                });
+                            });
+                        });
+                    }
+                    checkedData = rows;
+                },
+                onPageChange: function () {
+                    $(".tab table").find("td").css({
+                        whiteSpace: "nowrap",
+                        textAlign: "left"
+                    });
+                },
+                onUncheck: function (row) {  //取消选中
+                    var btn1 = []; //1类按钮
+                    var btn2 = []; //2类按钮
+                    $.each(o.pageMsg["btnMsg"], function (index, val) {
+                        if (val["style"] == 1) {
+                            btn1.push($("#" + val["id"]));
+                        }
+                        if (val["style"] == 2) {
+                            btn2.push($("#" + val["id"]));
+                        }
+                    })
+                    var rows = $('.tab table').bootstrapTable('getAllSelections');  ///getAllSelections
+                    if (rows.length == 1) {   //控制1类btn
+                        $.each(btn1, function (index, ele) {
+                            ele.css({                 //初始
+                                "height": "100%",
+                                "padding": "6px 17px",
+                                "lineHeight": "22px",
+                                "color": "rgb(103, 106, 108)",
+                                "float": "left",
+                                "fontSize": "14px",
+                                "borderRight": "1px solid #337ab7",
+                                "cursor": "pointer"
+                            });
+                            ele.hover(function () {    //移入
+                                $(this).css({
+                                    "color": "#fff",
+                                    "background": "#286090",
+                                    "opacity": "1"
+                                });
+                            }, function () {            //移出
+                                $(this).css({
+                                    "color": "rgb(103, 106, 108)",
+                                    "background": "#fff"
+                                });
+                            });
+                        });
+                    } else {
+                        $.each(btn1, function (index, ele) {
+                            ele.css({                 //初始
+                                "height": "100%",
+                                "padding": "6px 17px",
+                                "lineHeight": "22px",
+                                "color": "rgba(103,106,108,0.6)",
+                                "float": "left",
+                                "fontSize": "14px",
+                                "borderRight": "1px solid #337ab7",
+                                "cursor": "no-drop"
+                            });
+                            ele.hover(function () {    //移入
+                                $(this).css({
+                                    "color": "#fff",
+                                    "background": "#337ab7",
+                                    "opacity": "0.6"
+                                });
+                            }, function () {            //移出
+                                $(this).css({
+                                    "color": "rgba(103,106,108,0.6)",
+                                    "background": "#fff",
+                                    "opacity": "1"
+                                });
+                            });
+                        });
+                    }
+                    if (rows.length > 0) {    //控制2类btn
+                        $.each(btn2, function (index, ele) {
+                            ele.css({                 //初始
+                                "height": "100%",
+                                "padding": "6px 17px",
+                                "lineHeight": "22px",
+                                "color": "rgb(103, 106, 108)",
+                                "float": "left",
+                                "fontSize": "14px",
+                                "borderRight": "1px solid #337ab7",
+                                "cursor": "pointer"
+                            });
+                            ele.hover(function () {    //移入
+
+                                $(this).css({
+                                    "color": "#fff",
+                                    "background": "#286090",
+                                    "opacity": "1"
+                                });
+                            }, function () {            //移出
+                                $(this).css({
+                                    "color": "rgb(103, 106, 108)",
+                                    "background": "#fff"
+                                });
+                            });
+                        });
+                    } else {
+                        $.each(btn2, function (index, ele) {
+                            ele.css({                 //初始
+                                "height": "100%",
+                                "padding": "6px 17px",
+                                "lineHeight": "22px",
+                                "color": "rgba(103,106,108,0.6)",
+                                "float": "left",
+                                "fontSize": "14px",
+                                "borderRight": "1px solid #337ab7",
+                                "cursor": "no-drop"
+                            });
+                            ele.hover(function () {    //移入
+                                $(this).css({
+                                    "color": "#fff",
+                                    "background": "#337ab7",
+                                    "opacity": "0.6"
+                                });
+                            }, function () {            //移出
+                                $(this).css({
+                                    "color": "rgba(103,106,108,0.6)",
+                                    "background": "#fff",
+                                    "opacity": "1"
+                                });
+                            });
+                        });
+                    }
+                    checkedData = rows;
+                },
+                columns: this.columns(this.tableMsg["column"])
+            });
+            $(".tab table").find(".bs-checkbox").css({
+                "text-align": "left",
+                "vertical-align": "middle",
+            });
+            $(".tab table").find("td").css({
+                whiteSpace: "nowrap",
+                textAlign: "left"
+            });
+            //配置语言
+            this.setLanguage("oba");
+        }
+        ConfigReport.prototype.setLanguage = function (page) {
+            var client = self.parent.client;
+            var MesUI = new MesClientUI(client);
+            MesUI.SetLanguage(page);
+        }
+        ConfigReport.prototype.columns = function (colList) {   //生成表格关键数据
+            var columns = [];
+            columns.push({
+                align: 'center',
+                valign: 'middle',
+                checkbox: true
+            });
+
+            columns.push({     //添加序号 
+                field: "NO",
+                title: "<label set-lan=" + "html:" + "NO" + ">" + "NO" + "</label>",// item,  
+                align: 'left',
+                valign: 'middle',
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            });
+            $.each(colList, function (i, val) {
+                var title = "<label set-lan=" + "html:" + val + ">" + val + "</label>";
+                var obj = {
+                    field: val,
+                    title: title,
+                    align: 'center',
+                    valign: 'middle'
+                };
+                columns.push(obj);
+            });
+            return columns;
+        }
+        ConfigReport.prototype.loadLayer = function (layerMsg) {
+            var self = this;
+            $.each(this.pageMsg.btnMsg, function (index, obj) {  //遍历按钮
+                if (obj.layerFlag) {
+                    if (obj.btnName == "New") {    //$("#AddList")
+                        //console.log(layerMsg.add.showList,$("#AddList .panel-body .row"));
+                        $.each(layerMsg.add.showList, function (index, control) {
+                            var ele = self.loadControl(control.field, control.type, control.disabled, control.labelList, control.valList);
+                            $("#AddList .panel-body .row").append(ele);
+                        });
+                        var odiv = $("<div></div>");
+                        var label = $("<div></div>");
+                        var div = $("<div class=" + "col-xs-4" + "></div>");
+                        var btn = $("<button>ADD</button>");
+                        btn.attr("class", "form-control addBtn");
+                        label.attr("class", "col-xs-4 control-label text-right");
+                        odiv.attr("class", "ADD form-group col-sm-6 col-md-6 hui");
+                        div.append(btn);
+                        odiv.append(label);
+                        odiv.append(div);
+                        $("#AddList .panel-body .row").append(odiv);
+                    }
+                    if (obj.btnName == "Edit") {    //$("#ModifyList")
+                        $.each(layerMsg.edit.showList, function (index, control) {
+                            var ele = self.loadControl(control.field, control.type, control.disabled, control.labelList, control.valList);
+                            $("#ModifyList .panel-body .row").append(ele);
+                        });
+                        //加入功能按键
+                        var odiv = $("<div></div>");
+                        var label = $("<div></div>");
+                        var div = $("<div class=" + "col-xs-4" + "></div>");
+                        var btn = $("<button>EDIT</button>");
+                        btn.attr("class", "form-control editBtn");
+                        label.attr("class", "col-xs-4 control-label text-right");
+                        odiv.attr("class", "EDIT form-group col-sm-6 col-md-6 hui");
+                        div.append(btn);
+                        odiv.append(label);
+                        odiv.append(div);
+                        $("#ModifyList .panel-body .row").append(odiv);
+                    }
+                }
+            });
+        }
+        ConfigReport.prototype.loadControl = function (name, type, disabled, labelList, valList) {   //加载弹出层控件（单个控件）labelList,valList针对单选框，复选框有用
+            var ele;
+            switch (type) {
+                case "text":
+                    ele = $("<div></div>");
+                    var label = $("<label set-lan=" + "html:" + name + ">" + name + "</label>");
+                    var div = $("<div class=" + "col-xs-8" + "></div>");
+                    var oInput;
+                    if (disabled) {
+                        oInput = $("<input type=" + "text" + " class=" + "form-control" + " id=" + name + " name=" + name + " disabled />");
+                    } else {
+                        oInput = $("<input type=" + "text" + " class=" + "form-control" + " id=" + name + " name=" + name + " />");
+                    }
+                    label.attr("class", "col-xs-4 control-label text-right");
+                    ele.attr("class", "form-group col-sm-6 col-md-6 hui");
+                    div.append(oInput);
+                    ele.append(label);
+                    ele.append(div);
+                    break;
+                case "select":
+                    ele = $("<div></div>");
+                    var label = $("<label set-lan=" + "html:" + name + ">" + name + "</label>");
+                    var div = $("<div class=" + "col-xs-8" + "></div>");
+                    var oSelect = $("<select name=" + name + " id=" + name + " class=" + "form-control" + " ></select>");
+                    label.attr("class", "col-xs-4 control-label text-right");
+                    ele.attr("class", "form-group col-sm-6 col-md-6 hui");
+                    div.append(oSelect);
+                    ele.append(label);
+                    ele.append(div);
+                    break;
+                case "textarea":
+                    ele = $("<div></div>");
+                    var label = $("<label set-lan=" + "html:" + name + ">" + name + "</label>");
+                    var div = $("<div class=" + "col-xs-8" + "></div>");
+                    var oTextarea = $("<textarea name=" + name + " id=" + name + " class=" + "form-control" + " ></textarea>");
+                    label.attr("class", "col-xs-4 control-label text-right");
+                    ele.attr("class", "form-group col-sm-6 col-md-6 hui");
+                    div.append(oTextarea);
+                    ele.append(label);
+                    ele.append(div);
+                    break;
+                case "file":
+                    ele = $("<div></div>");
+                    var label = $("<label set-lan=" + "html:" + name + ">" + name + "</label>");
+                    var div = $("<div class=" + "col-xs-8" + "></div>");
+                    //<input style="outline: none;" class="form-control" id="uploadFiles" type="file" accept=".xlsx,.xls" />
+                    var oInput = $("<input type="+ "file" +" class=" + "form-control" + " name="+ name +" id="+ name +" />");
+                    label.attr("class", "col-xs-4 control-label text-right");
+                    ele.attr("class", "form-group col-sm-6 col-md-6 hui");
+                    div.append(oInput);
+                    ele.append(label);
+                    ele.append(div);
+                    break;
+                case "checkbox":
+                    ele = $("<div></div>");
+                    var label = $("<label set-lan=" + "html:" + name + ">" + name + "</label>");
+                    var div = $("<div class=" + "col-xs-8" + "></div>");
+                    var odiv;
+                    $.each(labelList, function (index, val) {
+                        odiv = $("<div class=" + "col-xs-4" + "></div>");
+                        var span = $("<span>" + val + " : " + "</span>");
+                        var oinput = $("<input type=" + "checkbox" + " value=" + valList[index] + " name=" + name + " />");
+                        odiv.append(span);
+                        odiv.append(oinput);
+                        div.append(odiv);
+                    });
+                    label.attr("class", "col-xs-4 control-label text-right");
+                    ele.attr("class", "form-group col-sm-6 col-md-6 hui");
+                    ele.append(label);
+                    ele.append(div);
+                    break;
+                case "radio":
+                    ele = $("<div></div>");
+                    var label = $("<label set-lan=" + "html:" + name + ">" + name + "</label>");
+                    var div = $("<div class=" + "col-xs-8" + "></div>");
+                    var odiv;
+                    $.each(labelList, function (index, val) {
+                        odiv = $("<div class=" + "col-xs-4" + "></div>");
+                        var span = $("<span>" + val + " : " + "</span>");
+                        var oinput = $("<input type=" + "radio" + " value=" + valList[index] + " name=" + name + " />");
+                        odiv.append(span);
+                        odiv.append(oinput);
+                        div.append(odiv);
+                    });
+                    label.attr("class", "col-xs-4 control-label text-right");
+                    ele.attr("class", "form-group col-sm-6 col-md-6 hui");
+                    ele.append(label);
+                    ele.append(div);
+                    break;
+            }
+            return ele;
+        }
+        ConfigReport.prototype.loadLayerData = function (layerData) {    //加载弹出层数据
+            //console.log(layerData);
+            //console.log(this.layerMsg);
+
+
+            ///////////////////////////////////////////////1//////////////////////////////////////////////////
+            $.each(layerData, function (index, dataObj) {
+                if (dataObj["pri"] == 1 && dataObj["type"] == "select") {      //加载第一优先的下拉数据
+                    var container = $("select[name=" + dataObj.field + "]");   //根据name值找元素
+                    self.parent.client.CallFunction(dataObj["className"], dataObj["functionName"], {}, function (e) {
+                        if (e.Status == "Pass") {
+                            loadSelectData(container, e.Data);
+                        }
+                    })
+                }
+            });
+
+            loadSelectData($("[name=" + "UploadType" + "]"),["LOT_NO","PL_NO"]);
+
+            ////////////////////////////////////////////////2/////////////////////////////////////////////////
+
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////
+            function field_api(field) {    //根据字段（field）找api信息，dataList:配置数据 该函数为非纯函数
+                var obj = {};
+                $.each(layerData, function (index, dataObj) {
+                    if (dataObj["pri"] == 2 && dataObj["field"] == field) {
+                        obj = dataObj;
+                    }
+                });
+                return obj;
+            }
+            function loadSelectData(container, dataList) {
+                //console.log(container, dataList);
+                container.html(" ");
+                $.each(dataList, function (index, val) {
+                    var op = $("<option value=" + val + ">" + val + "</option>");
+                    container.append(op);
+                });
+            }
+        }
+        ConfigReport.prototype.clickEvent = function () {
+            var _this = this;     //_this.layerMsg.add.sendList _this.apiList.add 发送列
+            $.each(this.pageMsg.btnMsg, function (index, btn) {
+                $("#" + btn.id).on("click", function () {
+                    if (btn.btnName == "New") {
+                        layer.open({
+                            type: 1,
+                            skin: "layui-layer-lan",
+                            title: 'New Data',
+                            area: ["80%", "90%"],
+                            scrollbar: false,
+                            content: $("#AddList"),
+                            maxmin: false,
+                            success: function (layero, index) {
+
+                                var lay = layero;
+                                var w = lay.css("width");
+                                var h = lay.css("height");
+                                lay.css({
+                                    position: "fixed",
+                                    left: "50%",
+                                    top: "50%",
+                                    marginTop: -Number(h.match(/\d+/g)) / 2 + "px",
+                                    marginLeft: -Number(w.match(/\d+/g)) / 2 + "px",
+                                });
+                                var nav = lay.children().eq(0);
+                                nav.off("mousedown");
+                                nav.off("mousemove");
+                                nav.off("mouseup");
+                                nav.off("click");
+
+
+                                $("#AddList").removeClass("hidden");        //显示弹出框
+                                fillData(_this.layerMsg.add.sendList, [], $("#AddList"));   //填充数据
+                                var Bas64File = null;
+                                var sendData = null;
+
+                                $("input[name=File]").on("change", function () {  //选择文件，解析文件
+                                    var file = this;
+                                    console.log(file.value);
+                                    var w = new Worker("../../Scripts/Setting/BigFileReader.js");
+                                    w.onmessage = function (e) {
+                                        if (e.data.Status == "Pass") {
+                                            Bas64File = e.data.Bas64File;
+                                            //console.log(Bas64File);
+                                        } else {
+                                            layer.msg(e.data.Message, {
+                                                icon: 2,
+                                                time: 3000
+                                            }, function () {
+                                            });
+                                        }
+                                    };
+                                    w.onerror = function () {
+                                        layer.msg("请选择文件！", {
+                                            icon: 2,
+                                            time: 3000
+                                        }, function () {
+                                        });
+                                    }
+                                    filename = $(this).val();
+                                    filename = filename.substring(filename.lastIndexOf("\\") + 1);
+                                    UseType = filename.substring(filename.lastIndexOf(".") + 1).toUpperCase();
+                                    w.postMessage({ file: file.files[0], filename: filename, UseType: UseType, ExtName: ".txt,.pdf,.cs,.mp3,.mp4,.xlsx,.doc,.ppt,.pptx,.exe" });
+                                });
+
+
+                                $(".ADD button").on("click", function () {    //单击新增数据按钮
+                                    sendData = get_sendData(_this.layerMsg.add.sendList, $("#AddList"));
+                                    if (Bas64File != null) {
+                                        sendData["Bas64File"] = Bas64File;
+                                        console.log(sendData);
+                                        self.parent.client.CallFunction(_this.apiList.add["className"], _this.apiList.add["functionName"], sendData, function (e) {
+                                            //console.log(e);
+                                            if (e.Status == "Pass") {
+                                                layer.msg(e.Message, {
+                                                    icon: 1,
+                                                    time: 2000
+                                                }, function () {
+                                                    location.reload();
+                                                });
+                                            } else {
+                                                layer.msg(e.Message, {
+                                                    icon: 0,
+                                                    time: 2000
+                                                }, function () {
+                                                    location.reload();
+                                                });
+                                            }
+                                        });
+                                    } else {
+                                        layer.msg("请稍等，解析文件中！", {
+                                            icon: 0,
+                                            time: 2000
+                                        }, function () {
+                                        });
+                                    }
+                                });
+                            },
+                            end: function () {
+                                $("#AddList").addClass("hidden");                                       //隐藏弹出框
+                                $(".panel-body").find("input").each(function (index, node) {     //关闭弹出框各项数据置空
+                                    node.value = "";
+                                });
+                            }
+                        });
+                    }
+                    if(btn.btnName == "Open"){
+                        if ($(this).css("cursor") != "no-drop") {
+                            var data = $(".tab table").bootstrapTable("getAllSelections")[0];
+                            $(this).attr({ "target": "_blank", "href": "../../File/Upload/" + data["ATTACH"] });
+                            console.log(data, this);
+                            var href = "../../File/Upload/" + data["ATTACH"];
+                            location.href = href;
+                        }
+                    }
+                    if (btn.btnName == "Edit") {
+                        //console.log($(this).css("cursor") == "no-drop");
+                        if ($(this).css("cursor") != "no-drop") {   //可交互状态
+                            layer.open({
+                                type: 1,
+                                skin: "layui-layer-lan",
+                                title: 'Edit Data',
+                                area: ["80%", "90%"],
+                                scrollbar: false,
+                                content: $("#ModifyList"),
+                                maxmin: false,
+                                success: function (layero, index) {
+
+                                    var lay = layero;
+                                    var w = lay.css("width");
+                                    var h = lay.css("height");
+                                    lay.css({
+                                        position: "fixed",
+                                        left: "50%",
+                                        top: "50%",
+                                        marginTop: -Number(h.match(/\d+/g)) / 2 + "px",
+                                        marginLeft: -Number(w.match(/\d+/g)) / 2 + "px",
+                                    });
+                                    var nav = lay.children().eq(0);
+                                    nav.off("mousedown");
+                                    nav.off("mousemove");
+                                    nav.off("mouseup");
+                                    nav.off("click");
+
+                                    //显示弹出框
+                                    $("#ModifyList").removeClass("hidden");
+                                    fillData(_this.layerMsg.edit.sendList, $(".tab table").bootstrapTable("getAllSelections")[0], $("#ModifyList"));
+                                    ////点击修改数据
+                                    $(".EDIT button").on("click", function () {
+                                        var sendData = get_sendData(_this.layerMsg.edit.sendList, $("#ModifyList"));
+                                        self.parent.client.CallFunction(_this.apiList["update"]["className"], _this.apiList["update"]["functionName"], sendData, function (e) {
+                                            if (e.Status == "Pass") {
+                                                layer.msg("已修改1条数据!", {
+                                                    icon: 1,
+                                                    time: 2000
+                                                }, function () {
+                                                    location.reload();
+                                                });
+                                            } else {
+                                                layer.msg("修改数据失败!", {
+                                                    icon: 0,
+                                                    time: 2000
+                                                }, function () {
+                                                    location.reload();
+                                                });
+                                            }
+                                        });
+                                    });
+                                    //函数
+                                },
+                                end: function () {
+                                    $("#ModifyList").addClass("hidden");                                       //隐藏弹出框
+                                    $(".panel-body").find("input").each(function (index, node) {     //关闭弹出框各项数据置空
+                                        node.value = "";
+                                    });
+                                    //$("#sonTab").html("<table></table>");
+                                }
+                            });
+                        }
+                    }
+                    if (btn.btnName == "Delete") {
+                        if ($(this).css("cursor") != "no-drop") {   //可交互状态
+                            layer.open({                          //确定是否删除?
+                                title: 'Warning',
+                                btn: ['Delete', 'Cancel'],
+                                content: "Delete operation cannot be rolled back! </br> Are you sure you want to delete these records?",
+                                yes: function (index) {      //确定删除
+                                    layer.close(index);        //关闭该选择layer框
+                                    var checkedData = $('.tab table').bootstrapTable('getAllSelections');
+                                    console.log(checkedData);
+                                    console.log();
+                                    self.parent.client.CallFunction(_this.apiList.delete["className"], _this.apiList.delete["functionName"], { "ID": checkedData[0]["ID"] }, function (e) {
+                                        if (e.Status == "Pass") {
+                                            layer.msg("已删除1条数据!", {
+                                                icon: 1,
+                                                time: 2000
+                                            }, function () {
+                                                location.reload();
+                                            });
+                                        } else {
+                                            layer.msg("删除数据失败!", {
+                                                icon: 0,
+                                                time: 2000
+                                            }, function () {
+                                                location.reload();
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+
+                    }
+                });
+            });
+            //查询
+            $(".btnQuery").on("click", function () {
+                console.log($(".query input").val());
+                self.parent.client.CallFunction(_this.apiList.select["className"], _this.apiList.select["functionName"], { "LOTNO": $(".query input").val() }, function (e) {
+                    if (e.Status == "Pass") {
+                        $(".tab table").bootstrapTable("load", e.Data);
+                        $(".tab table").find(".bs-checkbox").css({
+                            "text-align": "left",
+                            "vertical-align": "middle",
+                        });
+                        $(".tab table").find("td").css({
+                            whiteSpace: "nowrap",
+                            textAlign: "left"
+                        });
+                    }
+                });
+            });
+            //函数（处理数据）
+            function fillData(fields, dataList, container) {   //填充数据
+                $.each(fields, function (index,val) {
+                    if (dataList[val]) {
+                        container.find("[name=" + val + "]")[0].value = dataList[val];
+                    }
+                    if(val == "EDIT_EMP"){
+                        container.find("[name=" + val + "]")[0].value = self.parent.client.UserInfo["EMP_NO"];
+                    }
+                });
+            }
+            function get_sendData(fields, container) {     //用于生成发送数据
+                var sendData = {};
+                $.each(fields, function (index, val) {
+                    if (container.find("[name=" + val + "]").length > 0) {
+                        sendData[val] = container.find("[name=" + val + "]")[0].value;
+                        if (container.find("[name=" + val + "]")[0].tagName == "TEXTAREA") {
+                            var valList = container.find("[name=" + val + "]")[0].value.split(/ +|,+|\n+/m);
+                            var newVal = [];
+                            $.each(valList, function (index, value) {
+                                if (value != "") {
+                                    newVal.push(value);
+                                }
+                            });
+                            sendData[val] = newVal;
+                        }
+                    } else {
+                        sendData[val] = self.parent.client.UserInfo[val];
+                    }
+                });
+                return sendData;
+                //var val = container.find("[name=" + field + "]").val();
+                //console.log(container.find("[name=" + field + "]")[0].tagName, val);
+                //if (container.find("[name=" + field + "]")[0].tagName == "TEXTAREA" && val != null) {    //处理TEXTAREA框内数据，字符串变数组
+                //    val = val.split(/ +|,+|\n+/m);
+                //    var newVal = [];
+                //    $.each(val, function (index, value) {
+                //        if (value != "") {
+                //            newVal.push(value);
+                //        }
+                //    });
+                //    val = newVal;
+                //}
+                //return val;
+            }
+        };
+        this.Init();
+    }
+</script>
+</html>

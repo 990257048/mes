@@ -1,0 +1,348 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>FIFO</title>  <!-- GCH 2019/03/11 ADD-->
+</head>
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+<link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+<script src="../../Scripts/Report/MesClient.ReportConfig.js"></script>        <!--gch 20190311 add-->
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background: #fff;
+        zoom:.65;
+    }
+
+     body::-webkit-scrollbar-thumb {
+            background:#337ab7;
+        }
+        body::-webkit-scrollbar {
+            width:5px;
+            background-color:#fff;
+        }
+    .layui-layer .layui-layer-content::-webkit-scrollbar-thumb {
+        background:#337ab7;
+    }
+    .layui-layer .layui-layer-content::-webkit-scrollbar {
+        width:5px;
+        background-color:#fff;
+    }
+
+    .title {
+        width: 100%;
+        height: 54px;
+        padding: 10px 15px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+        line-height: 33px;
+    }
+
+    .list {
+        width: 100%;
+        height: 34px;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-top: 25px;
+    }
+
+        .list .btnList {
+            height: 100%;
+            float: left;
+            border: 1px solid #337ab7;
+            border-radius: 3px;
+            border-right: none;
+        }
+
+        .list .query {
+            float: right;
+            height: 100%;
+        }
+
+            .list .query .input {
+                float: left;
+                height: 100%;
+                width: 396px;
+                border: 1px solid #337ab7;
+                box-sizing: border-box;
+                border-radius: 15px;
+            }
+
+                .list .query .input input {
+                    width: 100%;
+                    height: 100%;
+                    padding: 6px 12px;
+                    border-radius: 15px;
+                    border: none;
+                    color: #676a6c;
+                    outline: none;
+                }
+
+            .list .query .btnQuery {
+                float: left;
+                height: 100%;
+                padding: 6px 12px;
+                line-height: 20px;
+                border: 1px solid #337ab7;
+                margin-left: 8px;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+
+                .list .query .btnQuery:hover {
+                    color: #fff;
+                    background: #286090;
+                }
+
+    .tab {
+        width: auto;
+        /*border: 1px solid #adadad;*/
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-left: 15px;
+        margin-right: 15px;
+        overflow: auto;
+    }
+
+    .hui {
+        border-radius: 10px;
+    }
+
+    .panel-body label {
+        padding: 6px;
+        background: #f0f0f0;
+        border-radius: 10px;
+        box-shadow: 5px 5px 8px #aaa;
+        position: relative;
+        top: -8px;
+    }
+
+    /*.panel-body input, .panel-body select, .panel-body textarea {
+        border-radius: 15px;
+    }
+
+    .layui-layer {
+        border-radius: 25px;
+        box-shadow: 5px 5px 21px #222;
+    }
+
+    .layui-layer-title {
+        border-radius: 25px;
+        border-bottom-left-radius: unset;
+        border-bottom-right-radius: unset;
+    }*/
+    /*.layui-layer-setwin {
+        color:#fff;
+    }*/
+    #sonTab {
+        margin: 15px;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:"></span>
+    </div>
+    <div class="list">
+        <div class="btnList"></div>
+        <div class="query">
+            <div class="input">
+                <input type="text" value="" placeholder="" />
+            </div>
+        </div>
+    </div>
+    <div class="tab">
+        <table></table>
+    </div>
+</body>
+<script>
+    var report = new ConfigReport({
+        "pageMsg": {
+            "pageName": "FIFO",
+            "setLan": "FIFO",
+            "queryTip": "请输入PALLET",
+            "btnMsg": [
+                {
+                    "id": "btn0",
+                    "btnName": "New",
+                    "layerBtnName": "Add",
+                    "icon": "glyphicon glyphicon-plus",    //图标样式
+                    "style": "0",
+                    "layerFlag": true    //点击该按钮是否弹出层(如修改数据弹窗)
+                },
+                  {
+                      "id": "btn1",
+                      "btnName": "Edit",     //按钮显示名字，点击该按钮后弹出层的id名（Edit加上Layer ===> EditLayer）注意：需要和layerMsg,apiList,btnClick下的名字一致(非常重要)
+                      "layerBtnName":"Update",    //点击该按钮后弹出层的功能按钮名字及该按钮的类名
+                      "icon": "glyphicon glyphicon-pencil",
+                      "style": "1",  //只选中一条数据可以点击
+                      "layerFlag": true
+                  },
+                  {
+                      "id": "btn2",
+                      "btnName": "Delete",     //按钮显示名字，点击该按钮后弹出层的id名（Edit加上Layer ===> EditLayer）注意：需要和layerMsg,apiList,btnClick下的名字一致(非常重要)
+                      "icon": "glyphicon glyphicon-trash",
+                      "style": "1",  //只选中一条数据可以点击
+                      "layerFlag": false
+                  },
+            ],
+        },
+        "apiList": {                         //homePage select 都是固定的写法，除此之外名称全部与按钮名称一致
+            "homePage": {   //首页
+                "className": "MESStation.Config.R_FifoConfig",
+                "functionName": "GetFiFoDetail",
+                "colList": ["PALLET"],
+                "sendList": [""]
+            },
+            "select": {     //查询框
+                "className": "MESStation.Config.R_FifoConfig",
+                "functionName": "GetFiFoDetail",
+                "colList": ["PALLET"]   //必填
+            },
+          "New": {
+              "className": "MESStation.Config.R_FifoConfig",
+              "functionName": "AddFiFo",
+              "colList": [""]     
+          },
+            "Edit": {
+                "className": "MESStation.Config.R_FifoConfig",
+                "functionName": "UpdateById",
+                "colList": [""]     //点击该按钮弹出大框，发送的字段集合在layerMsg里面配置，这里的colList无效
+            },
+            "Delete": {
+                "className": "MESStation.Config.R_FifoConfig",
+                "functionName": "DeleteById",
+                "colList": ["ID"]
+            },
+        },
+        "tableMsg": {     //表格各列   //ID  PALLET  EDIT_EMP  EDIT_TIME
+            "column": [ "PALLET", "EDIT_EMP", "EDIT_TIME"]
+        },
+        "layerMsg": {    //弹出框各项控件(针对弹出大框)
+            "New": {
+                "showList": [
+                    {
+                        "field": "PALLET",
+                        "type": "text",
+                        "disabled": false,
+                        "fillFlag": false
+                    },
+                    {
+                        "field": "EDIT_EMP",
+                        "type": "text",
+                        "disabled": true,
+                        "fillFlag": true
+                    },
+                ],
+                "sendList": ["PALLET", "EDIT_EMP"]
+            },
+            "Edit": {
+                "showList": [
+                    {
+                        "field": "ID",      //字段名,控件name,控件id(不允许存在空格),语言配置名（重要）
+                        "type": "text",  //控件类型（text  select  checkbox  radio  textarea  ）
+                        "disabled": true,    //是否不可编辑
+                        "fillFlag":true       //弹出框后是否填充数据
+                    },
+                  {
+                      "field": "PALLET",
+                      "type": "text",
+                      "disabled": false,
+                      "fillFlag": true
+                  },
+                  {
+                      "field": "EDIT_EMP",
+                      "type": "text",
+                      "disabled": true,
+                      "fillFlag": true
+                  }
+              ],
+                "sendList": ["ID","PALLET", "EDIT_EMP"]       //用于生成发送数据
+            }
+        },
+        "loadLayerData": {     //针对大框（大框内特殊控件数据加载）
+            "New": function (loadSelect) {
+
+            },
+            "Edit": function (loadSelect) {     //loadSelect：生成下拉数据方法，this为当前弹出框（jquery对象），键与按钮名称一致       loadSelect（sleect控件，数组）
+                //this.find("select[name=CONFIRM]")
+                var arr = [
+                    "vsfvwerfwerfwefwefefw",
+                    "dwqdqwwdjlkwdjhwkuydh",
+                    "fdqwudhkwqydiuqwyud"
+                ];
+            }
+        },
+        "btnClick": {        //对弹出大框无效
+            "New": {
+                "retSendData": function (sendData) {                                    //点击按钮执行（二次处理数据，sendData：第一次处理的发送数据 this：弹出框）     
+                    return sendData;                                                              //返回的数据为最终发送的数据 重要！！！
+                },
+                "callBackPass": function (e, msgTip, $table, $layerBtn) {          //接收的数据pass后的操作（this：弹出框 e：接收的数据 msgTip：提示函数，不包含刷新页面，$table：表格节点，$layerBtn：弹出框的按钮集合）
+                    msgTip();                                                                      //提示信息
+                    //$table.eq(1).bootstrapTable("load", e.Data);                      //二次加载表数据
+                    //$table.find(".bs-checkbox").css({                                    //选择框居中
+                    //    "text-align": "center",
+                    //    "vertical-align": "middle",
+                    //});
+                    $layerBtn[0].click();                                                        //关闭弹出框
+                    //location.reload();                                                             //刷新整个页面
+                },
+                "callBackFail": function (e, msgTip, $table, $layerBtn) {             //请求失败后的操作，参数上同
+                    msgTip();
+                    //console.log(this, msgTip, $table);
+                    //$table.eq(1).bootstrapTable("load", e.Data);
+                }
+            },
+            "Edit": {
+                "retSendData": function (sendData) {                                    //点击按钮执行（二次处理数据，sendData：第一次处理的发送数据 this：弹出框）     
+                    return sendData;                                                              //返回的数据为最终发送的数据 重要！！！
+                },
+                "callBackPass": function (e, msgTip, $table, $layerBtn) {          //接收的数据pass后的操作（this：弹出框 e：接收的数据 msgTip：提示函数，不包含刷新页面，$table：表格节点，$layerBtn：弹出框的按钮集合）
+                    msgTip();                                                                      //提示信息
+                    //$table.eq(1).bootstrapTable("load", e.Data);                      //二次加载表数据
+                    //$table.find(".bs-checkbox").css({                                    //选择框居中
+                    //    "text-align": "center",
+                    //    "vertical-align": "middle",
+                    //});
+                    $layerBtn[0].click();                                                        //关闭弹出框
+                    //location.reload();                                                             //刷新整个页面
+                },
+                "callBackFail": function (e, msgTip, $table, $layerBtn) {             //请求失败后的操作，参数上同
+                    msgTip();
+                    //console.log(this, msgTip, $table);
+                    //$table.eq(1).bootstrapTable("load", e.Data);
+                }
+            },
+            "Delete": function (chData, fun1, fun2) {
+                fun2();
+            }
+        }
+    });
+
+</script>
+</html>

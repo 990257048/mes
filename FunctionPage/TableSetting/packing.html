@@ -1,0 +1,350 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<!--<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-table.min.css" />-->
+<!--<script src="js/jquery-1.9.1.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/layer/layer.min.js"></script>-->
+<!--<script src="js/report.js"></script>-->
+
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/highcharts.js"></script>
+<script src="../../Scripts/echarts.min.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background: #fff;
+        padding:15px;
+    }
+
+    .title {
+        width: 100%;
+        height: 42px;
+        padding: 10px 15px;
+        color: #fff;
+        font-size: 1.6rem;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+    }
+
+    #container1, #container2 {
+        width:100%;
+        margin-top:15px;
+    }
+    #container2 {
+        height:500px;
+        background:#d3eaff;
+    }
+
+
+    .hidden {
+        display: none;
+    }
+
+      body::-webkit-scrollbar {
+            width:10px;
+            height:10px;
+    }
+           body::-webkit-scrollbar-track {
+                background:#eee;
+            }
+    body::-webkit-scrollbar-thumb {
+        background:#227ab7;
+        border-radius:5px;
+    }
+
+
+
+</style>
+
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:SMT">packing看板</span>
+    </div>
+    <div id="container1"><p style="text-align:center; font-size:1.8rem;font-weight:600;">Packing每日產出效率電子看板</p><table></table></div>
+    <div id="container2"></div>
+    
+</body>
+
+<script>
+
+    $(document).ready(function () {
+        $.fn.setWidth = function (widthArr) {  //只能设置一行
+            this.each(function (index, ele) {
+                $(this).css("width", widthArr[index] + "%");
+            });
+            return this;   //this:jQuery对象
+        }
+
+        self.parent.client.CallFunction("MESStation.Config.RPACKING_RATE_DETAIL", "GetProShowTable", {}, function (e) {   //表1
+            if (e.Status == "Pass") {
+                drawTable($("#container1").find("table"), e.Data, getFields(e.Data[0]));
+            }
+            $([$("#container1").find("tr")[3]].concat($("#container1").find("tr")[0], $("#container1").find("tr")[6], $("#container1").find("tr")[9])).css({
+                "background": "#7db9f1",
+                "fontWeight": "600",
+                "fontSize":"1.5rem"
+            });
+            function getFields(obj) {
+                var fields = [];
+                for (var prop in obj) {
+                    fields.push(prop);
+                }
+                return fields;
+            }
+        });
+
+        self.parent.client.CallFunction("MESStation.Config.RPACKING_RATE_DETAIL", "GetProShowPic", {}, function (e) {    //统计图
+            if (e.Status == "Pass") {
+                $.each(e.Data.series, function (index, obj) {
+                    e.Data.series[index].data = str_num(obj.data);
+                });
+                //highChart($("#container2"), e.Data);
+
+                var myCharts = echarts.init($("#container2")[0]);    //20190813 ad by gch
+
+                var option = {
+                    title: {
+                        text: e.Data.title,
+                        //subtext: '数据虛構',
+                        x: 'center',
+                        top: 15,
+                        textStyle: {
+                            fontSize: 18,
+                        }
+                    },
+                    legend: {
+                        //orient: 'vertical',
+                        bottom: 10,
+                        data: [e.Data.series[0].name,e.Data.series[1].name] //['PCBA', 'MODULE']
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            dataView: { show: true, readOnly: false },
+                            magicType: { show: true, type: ['line', 'bar'] },
+                            restore: { show: true },
+                            saveAsImage: { show: true }
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow'
+                        },
+                        //formatter:"{b}:<br />机种{a0}:{c0}（个）<br />机种{a1}:{c1}（个）",
+                        //{a} : 系列名   moudle1 moudle2
+                        //{b} : 类目名   BU1 BU2 BU3 BU4
+                        //{C} : 数据值
+                        //triggerOn:'click',
+
+                        //formatter: function (params, ticket, callback) {
+                        //    return retTipHTML(params, "个");
+                        //},
+                        padding: 10,
+                    },
+                    toolbox: {
+                        show: true,
+                    },
+                    grid: {
+                        top: '18%',
+                        left: '8%',
+                        right: '8%',
+                        bottom: '10%',
+                        containLabel: true
+                    },
+                    yAxis: {
+                        name: e.Data.yAxis.title,
+                        type: 'value',
+                        boundaryGap: [0, 0.01],
+                        nameTextStyle: {
+                            fontSize: 14
+                        },
+                        axisLabel: {
+                            fontWeight: 800
+                        }
+                    },
+                    xAxis: {
+                        name: e.Data.xAxis.title,
+                        type: 'category',
+                        data: e.Data.xAxis.categories, // ['BU1', 'BU2', 'BU3', 'BU4'],
+                        nameTextStyle: {
+                            fontSize: 14
+                        },
+                        axisLabel: {
+                            fontWeight: 800
+                        }
+                    },
+                    series: [
+                        {
+                            name: e.Data.series[0].name,  //"PCBA"
+                            type: 'bar',
+                            label: {
+                                show: true,
+                                position: 'inside',
+                                fontSize: 12,
+                            },
+                            itemStyle: {
+                                color: '#337ab7',
+                            },
+                            barWidth: 38,
+                            data: e.Data.series[0].data // moduleData [18203, 23489, 29034, 104970]
+                        },
+                        {
+                            name: e.Data.series[1].name, //'MODULE',
+                            type: 'bar',
+                            label: {
+                                show: true,
+                                position: 'inside',
+                                fontSize: 12,
+                            },
+                            itemStyle: {
+                                color: '#61a0a8',
+                            },
+                            barWidth: 38,
+                            data: e.Data.series[1].data // [19325, 23438, 31000, 121594]
+                        }
+                    ]
+                };
+
+                myCharts.setOption(option);
+                console.log(option);
+
+
+
+            }
+        });
+
+        function str_num(arr) {  //把字符串数组变成数字数组
+            var _arr = [];
+            $.each(arr, function (i,str) {
+                _arr.push(Number(str));
+            });
+            return _arr;
+        }
+
+        function drawTable($ele,data,fieldArr) {
+            $ele.bootstrapTable({
+                data: data,   //e
+                pagination: false,    //分页显示
+                pageSize: 10,         //初始化每一页的数据条数
+                pageList: [10, 25, 50, 100],
+                search: false,        //显示查找框
+                striped: false,        //背景色相间
+                showRefresh: false,   //显示重置按钮
+                columns: columns(fieldArr)
+            });
+            function columns(colList) {   //生成表格关键数据
+                var columns = [];
+                //columns.push({    //选择按钮
+                //    align: 'center',
+                //    valign: 'middle',
+                //    checkbox: true
+                //});
+                $.each(colList, function (i, val) {
+                    var title = "<label set-lan=" + "html:" + val + ">" + val + "</label>";
+                    var obj = {
+                        field: val,
+                        title: title,
+                        align: 'center',
+                        valign: 'middle'
+                    };
+                    columns.push(obj);
+                });
+                return columns;
+            }
+
+        }
+
+        function highChart(control,data) {    //绘制直方图
+            var chart = {
+                type: data["type"],   //column  bar
+                height:"35%"
+            };
+            var title = {
+                text: data["title"]
+            };
+            var subtitle = {
+                text: data["subtitle"]
+            };
+            var xAxis = {
+                categories: data["xAxis"]["categories"],         // ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                title: {
+                    text: data["xAxis"]["title"],
+                    align: 'high'    //high
+                },
+                crosshair: true
+            };
+            var yAxis = {
+                min: 0,
+                title: {
+                    text: data["yAxis"]["title"],
+                    align: 'high'    //high
+                },
+                lineWidth: "1"
+            };
+            var company = data["yAxis"]["title"].match(/\(.+?\)/g)[0];
+            company = company.substr(1, company.length - 2);
+            var tooltip = {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                   '<td style="padding:0"><b>{point.y:.1f} '+ company +'</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            };
+            var plotOptions = {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            };
+            var credits = {
+                enabled: false
+            };
+            var series = data["series"];
+            var json = {};
+            json.chart = chart;
+            json.title = title;
+            json.subtitle = subtitle;
+            json.tooltip = tooltip;
+            json.xAxis = xAxis;
+            json.yAxis = yAxis;
+            json.series = series;
+            json.plotOptions = plotOptions;
+            json.credits = credits;
+            control.highcharts(json);
+        }
+
+        
+
+
+
+    });
+
+</script>
+
+</html>

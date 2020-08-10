@@ -1,0 +1,316 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>点击率</title>
+	<meta charset="utf-8" />
+</head>
+<link href="../../css/bootstrap.min.css" rel="stylesheet" />
+<link href="../../css/font-awesome.css" rel="stylesheet" />
+<style>
+    * {
+        padding:0;
+        margin:0;
+        box-sizing:border-box;
+    }
+    html, body {
+        width:100%;
+        height:100%;
+    }
+    body {
+        padding:10px;
+        font-size:16px;
+    }
+    .title {
+        width:100%;
+        height:40px;
+        padding:0px 15px;
+        line-height:40px;
+        color:#fff;
+        background:#337ab7;
+        margin-bottom:10px;
+        border-radius:5px;
+        font-weight:500;
+    }
+    .main {
+        width:100%;
+        height:calc(100% - 60px);
+        background:#d3eaff;
+    }
+    .left-main,.right-main {
+        width:50%;
+        height:100%;
+        float:left;
+        padding:10px;
+        /*border:1px solid #000;*/
+    }
+    .right-main {
+        border-left:1px solid #000;
+    }
+</style>
+<body>
+    <div class="title fa fa-tags">MES系統各模塊點擊量排行榜</div>
+    <div class="main">
+        <div class="left-main"></div>
+        <div class="right-main"></div>
+    </div>
+</body>
+<script src="../../Scripts/jquery-1.9.1.js"></script>
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+<script src="../../Scripts/echarts.min.js"></script>
+<script src="../../Scripts/echarts-gl.js"></script>
+<script>
+    $(document).ready(function () {
+        console.log(echarts);
+        var myCharts1 = echarts.init($(".left-main")[0]);
+        var myCharts2 = echarts.init($(".right-main")[0]);
+        
+        self.parent.client.CallFunction("MESStation.Config.MesLogConfig", "GetItemClickRate", { TYPE: "Report",n:"all" }, function (e) {
+            console.log(e);
+
+            if (e.Status == "Pass") {
+                var data = [['amount', 'product']];
+                $.each(e.Data, function (index, o) {
+                    data.push([o.S,o.FUNCTION_NAME.match(/\.(\w+)\s*$/)[1]]);
+                });
+
+                var option1 = {
+                    title: {
+                        text: '查詢報表點擊率排行榜',
+                        //subtext: '数据虛構',
+                        //x: 'left',
+                        top: 10,
+                        x: 'center',
+                        textStyle: {
+                            fontSize: 18,
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow',
+                            label: {
+                                show: true
+                            },
+                            formatter: '{b0}: {c0}<br />{b1}: {c1}'
+                        }
+                    },
+                    dataset: {
+                        source: data
+                        //    [
+                        //    ['amount', 'product'],
+                        //    [101852, 'Lemon Juice'],
+                        //    [91852, 'Orange Juice'],
+                        //    [79146, 'Tea'],
+                        //    [78254, 'Milk Tea'],
+                        //    [58212, 'Matcha Latte'],
+                        //    [41032, 'Cheese Cocoa'],
+                        //    [20145, 'Matcha Cocoa'],
+                        //    [20112, 'Walnut Brownie'],
+                        //     [12755, 'Cheese Brownie'],
+                        //]
+                    },
+                    grid: {
+                        containLabel: false,
+                        top: '18%',
+                        left: '18%',
+                        right: '18%',
+                        bottom: '18%',
+
+                    },
+                    xAxis: {
+                        name: '點擊量（次）',
+                        position: 'top',
+
+                    },
+                    yAxis: {
+                        name: '查詢報表名稱',
+                        type: 'category',
+                        inverse: true,
+                    },
+                    visualMap: {
+                        orient: 'horizontal',
+                        left: 'center',
+                        bottom: '6%',
+                        min: data[data.length - 1][0],
+                        max: data[1][0],
+                        text: ['高點擊量', '低點擊量'],
+                        dimension: 0,
+                        inRange: {
+                            color: ['#D7DA8B', '#E15457']
+                        }
+                    },
+                    series: [
+                        {
+                            type: 'bar',
+                            encode: {
+                                x: 'amount',
+                                y: 'product'
+                            },
+                            label: {
+                                show: true,
+                                position: 'inside',
+                                fontSize: 8,
+                            },
+                        }
+                    ],
+                    dataZoom: [      //放縮
+                            {
+                                show: false,
+                                start: 0,
+                                end: 100
+                            },
+                            {
+                                type: 'inside',
+                                start: 0,
+                                end: 100
+                            },
+                            {
+                                show: true,
+                                yAxisIndex: 0,
+                                filterMode: 'empty',
+                                width: 40,
+                                height: '50%',
+                                showDataShadow: true,
+                                start: 0,
+                                end:10,
+                                top: '26%',
+                                left: '88%'
+                            }
+                    ],
+                };
+
+
+                myCharts1.setOption(option1);
+            }
+
+
+            
+
+        });
+
+        self.parent.client.CallFunction("MESStation.Config.MesLogConfig", "GetItemClickRate", { TYPE: "Station", n: "all" }, function (e) {
+            console.log(e);
+
+            if (e.Status == "Pass") {
+                var data = [['amount', 'product']];
+                $.each(e.Data, function (index, o) {
+                    data.push([o.S, o.FUNCTION_NAME]);
+                });
+
+                var option2 = {
+                    title: {
+                        text: '工站點擊量排行榜',
+                        //subtext: '数据虛構',
+                        //x: 'left',
+                        top: 10,
+                        x: 'center',
+                        textStyle: {
+                            fontSize: 18,
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow',
+                            label: {
+                                show: true
+                            },
+                            formatter: '{b0}: {c0}<br />{b1}: {c1}'
+                        }
+                    },
+                    dataset: {
+                        source: data
+                        //    [
+                        //    ['amount', 'product'],
+                        //    [101852, 'Lemon Juice'],
+                        //    [91852, 'Orange Juice'],
+                        //    [79146, 'Tea'],
+                        //    [78254, 'Milk Tea'],
+                        //    [58212, 'Matcha Latte'],
+                        //    [41032, 'Cheese Cocoa'],
+                        //    [20145, 'Matcha Cocoa'],
+                        //    [20112, 'Walnut Brownie'],
+                        //     [12755, 'Cheese Brownie'],
+                        //]
+                    },
+                    grid: {
+                        containLabel: false,
+                        top: '18%',
+                        left: '18%',
+                        right: '18%',
+                        bottom: '18%',
+
+                    },
+                    xAxis: {
+                        name: '點擊量（次）',
+                        position: 'top',
+
+                    },
+                    yAxis: {
+                        name: '工站名稱',
+                        type: 'category',
+                        inverse: true,
+                    },
+                    visualMap: {
+                        orient: 'horizontal',
+                        left: 'center',
+                        bottom: '6%',
+                        min: data[data.length - 1][0],
+                        max: data[1][0],
+                        text: ['高點擊量', '低點擊量'],
+                        dimension: 0,
+                        inRange: {
+                            color: ['#D7DA8B', '#E15457']
+                        }
+                    },
+                    series: [
+                        {
+                            type: 'bar',
+                            encode: {
+                                x: 'amount',
+                                y: 'product'
+                            },
+                            label: {
+                                show: true,
+                                position: 'inside',
+                                fontSize: 8,
+                            },
+                        }
+                    ],
+                    dataZoom: [      //放縮
+                            {
+                                show: false,
+                                start: 0,
+                                end: 100
+                            },
+                            {
+                                type: 'inside',
+                                start: 0,
+                                end: 100
+                            },
+                            {
+                                show: true,
+                                yAxisIndex: 0,
+                                filterMode: 'empty',
+                                width: 40,
+                                height: '50%',
+                                showDataShadow: true,
+                                start: 0,
+                                end: 10,
+                                top: '26%',
+                                left: '88%'
+                            }
+                    ],
+                };
+
+                myCharts2.setOption(option2);
+            }
+
+        });
+
+    });
+</script>
+</html>

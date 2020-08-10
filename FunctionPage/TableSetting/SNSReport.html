@@ -1,0 +1,1178 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SN S Report</title>  <!-- SN 批量查询 GCH 2018/12/03 ADD-->
+</head>
+
+<!--<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-table.min.css" />-->
+
+<!--<script src="js/jquery-1.9.1.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/layer/layer.min.js"></script>
+<script src="js/plugins/excel/xlsx.full.min.js"></script>-->
+<!--<script src="js/plugins/excel/import_excel_2_json.js"></script>-->
+
+
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/plugins/excel/xlsx.full.min.js"></script>
+<script src="../../Scripts/plugins/excel/import_excel_2_json.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background: #fff;
+    }
+
+    .title {
+        width: 100%;
+        height: 54px;
+        padding: 10px 15px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+        line-height: 33px;
+    }
+
+    .list {
+        width: 100%;
+        height: 34px;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-top: 25px;
+    }
+
+        .list .btnList {
+            height: 100%;
+            float: left;
+            border: 1px solid #337ab7;
+            border-radius: 3px;
+            border-right: none;
+        }
+
+            .list .btnList .btn0 {
+            	display: inline-block;
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                color:#fff;
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor: pointer;
+                background: #337ab7;
+                
+            }
+            .list .btnList .upload {
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor: pointer;
+                
+                
+            }
+
+                .list .btnList .btn0:hover,
+                 .list .btnList .upload:hover{
+                    color: #fff;
+                    background: #286090;
+                }
+
+            .list .btnList .btn1,
+            .list .btnList .btn2 {
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                color: rgba(103,106,108,0.6); /*rgba(103,106,108,0.6)*/
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor: no-drop; /*no-drop*/
+            }
+
+                .list .btnList .btn1:hover,
+                .list .btnList .btn2:hover {
+                    color: #fff;
+                    background: #337ab7;
+                    opacity: 0.6;
+                }
+
+            .list .btnList .btn11,
+            .list .btnList .btn22 {
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                color: rgb(103, 106, 108);
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor: pointer;
+            }
+
+                .list .btnList .btn11:hover,
+                .list .btnList .btn22:hover {
+                    color: #fff;
+                    background: #286090;
+                }
+
+        .list .query {
+            float: right;
+            height: 100%;
+        }
+
+            .list .query .input {
+                float: left;
+                height: 100%;
+                width: 196px;
+                border: 1px solid #337ab7;
+                box-sizing: border-box;
+                border-radius: 5px;
+            }
+
+                .list .query .input input {
+                    width: 100%;
+                    height: 100%;
+                    padding: 6px 12px;
+                    border-radius: 5px;
+                    border: none;
+                    color: #676a6c;
+                    outline: none;
+                }
+
+            .list .query .btnQuery {
+                float: left;
+                height: 100%;
+                padding: 6px 12px;
+                line-height: 20px;
+                border: 1px solid #337ab7;
+                margin-left: 8px;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+
+                .list .query .btnQuery:hover {
+                    color: #fff;
+                    background: #286090;
+                }
+
+    .tab {
+        width: auto;
+        /*border: 1px solid #adadad;*/
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-left: 15px;
+        margin-right: 15px;
+        overflow: auto;
+    }
+
+    #ModifyList, #AddList {
+        position: absolute;
+    }
+
+        #AddList .addBtn, #ModifyList .editBtn {
+            background: #337ab7;
+            color: #fff;
+            font-weight: bold;
+        }
+
+            #AddList .addBtn:hover, #ModifyList .editBtn:hover {
+                background: #337ab7;
+            }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:SN S Report">SN S Report</span> 
+    </div>
+    <div class="list">
+        <div class="btnList">
+            <!--<div class="btn0"><i class="glyphicon glyphicon-plus"></i><span set-lan="html:New">New</span></div>
+            <div id="btn1" class="btn1" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i><span set-lan="html:Edit">Edit</span></div>
+            <div id="btn2" class="btn2"><i class="glyphicon glyphicon-trash"></i><span set-lan="html:Delete">Delete</span></div>-->
+        	<div class="btn0" >
+        		<input style="outline: none;" id="uploadFiles" type="file" accept=".xlsx,.xls" />
+        	</div>
+        	<div id="Upload" class="upload"><i class="glyphicon glyphicon-open"></i><span set-lan="html:Upload">Upload</span></div>
+		</div>
+        <div class="query">
+            <div class="input">
+                <input type="text" value="" placeholder="请输入SN" />
+            </div>
+            <div class="btnQuery" set-lan="html:Query">
+                Search
+            </div>
+        </div>
+    </div>
+    <div class="tab">
+        <table></table>
+    </div>
+    <!--新增弹窗-->
+    <div id="AddList" class="hidden">
+        <div class="panel-body">
+            <div class="row">
+               </br>
+            </div>
+        </div>
+    </div>
+    <!--修改弹窗-->
+    <div id="ModifyList" class="hidden">
+        <div class="panel-body">
+            <div class="row">
+               </br>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+
+	$(document).on("ready",function (){
+	    var getData = null;
+	    var checkedData = null;
+	    var apiList = {
+	    	"select":{
+	    	    "className": "MESStation.Config.R_FifoConfig",
+	    	    "functionName": "GetAOIStopByPALLET"
+	    	},
+	    	"new":{
+	    	    "className": "MESStation.Config.R_FifoConfig",
+	    	    "functionName": "AddCodeName"
+	    	},
+	    	"edit":{
+	    	    "className": "MESStation.Config.R_FifoConfig",
+	    	    "functionName": "UpdateById"
+	    	},
+	    	"delete":{
+	    	    "className": "MESStation.Config.R_FifoConfig",
+	    	    "functionName": "DeleteById"
+	    	},
+	    	"other":{
+	    		"upload":{
+	    		    "className": "MESStation.Config.RSnStationDetail",
+	    		    "functionName": "GetBySN"
+	    		}
+	    	}
+	    };
+	    
+		var tableData = [
+			{
+				"ID":"xxxxxxxxxxxx",
+				"PALLET":"xxxxxxxxxxxx",
+				"EMP_PASSWORD":"xxxxxxxxxxxx",
+				"STATION_NAME":"xxxxxxxxxxxx",
+				"STATION_ITEM":"xxxxxxxxxxxx",
+				"MAC_ADDRESS":"xxxxxxxxxxxx",
+				"EDIT_EMP":"xxxxxxxxxxxx",
+				"EDIT_TIME":"xxxxxxxxxxxx"
+			},
+			{
+				"ID":"xxxxxxxxxxxx",
+				"EMP_NO":"xxxxxxxxxxxx",
+				"EMP_PASSWORD":"xxxxxxxxxxxx",
+				"STATION_NAME":"xxxxxxxxxxxx",
+				"STATION_ITEM":"xxxxxxxxxxxx",
+				"MAC_ADDRESS":"xxxxxxxxxxxx",
+				"EDIT_EMP":"xxxxxxxxxxxx",
+				"EDIT_TIME":"xxxxxxxxxxxx"
+			},
+			{
+				"ID":"xxxxxxxxxxxx",
+				"EMP_NO":"xxxxxxxxxxxx",
+				"EMP_PASSWORD":"xxxxxxxxxxxx",
+				"STATION_NAME":"xxxxxxxxxxxx",
+				"STATION_ITEM":"xxxxxxxxxxxx",
+				"MAC_ADDRESS":"xxxxxxxxxxxx",
+				"EDIT_EMP":"xxxxxxxxxxxx",
+				"EDIT_TIME":"xxxxxxxxxxxx"
+			},
+			{
+				"ID":"xxxxxxxxxxxx",
+				"EMP_NO":"xxxxxxxxxxxx",
+				"EMP_PASSWORD":"xxxxxxxxxxxx",
+				"STATION_NAME":"xxxxxxxxxxxx",
+				"STATION_ITEM":"xxxxxxxxxxxx",
+				"MAC_ADDRESS":"xxxxxxxxxxxx",
+				"EDIT_EMP":"xxxxxxxxxxxx",
+				"EDIT_TIME":"xxxxxxxxxxxx"
+			},
+			{
+				"ID":"xxxxxxxxxxxx",
+				"EMP_NO":"xxxxxxxxxxxx",
+				"EMP_PASSWORD":"xxxxxxxxxxxx",
+				"STATION_NAME":"xxxxxxxxxxxx",
+				"STATION_ITEM":"xxxxxxxxxxxx",
+				"MAC_ADDRESS":"xxxxxxxxxxxx",
+				"EDIT_EMP":"xxxxxxxxxxxx",
+				"EDIT_TIME":"xxxxxxxxxxxx"
+			},
+			{
+				"ID":"xxxxxxxxxxxx",
+				"EMP_NO":"xxxxxxxxxxxx",
+				"EMP_PASSWORD":"xxxxxxxxxxxx",
+				"STATION_NAME":"xxxxxxxxxxxx",
+				"STATION_ITEM":"xxxxxxxxxxxx",
+				"MAC_ADDRESS":"xxxxxxxxxxxx",
+				"EDIT_EMP":"xxxxxxxxxxxx",
+				"EDIT_TIME":"xxxxxxxxxxxx"
+			},
+			{
+				"ID":"xxxxxxxxxxxx",
+				"EMP_NO":"xxxxxxxxxxxx",
+				"EMP_PASSWORD":"xxxxxxxxxxxx",
+				"STATION_NAME":"xxxxxxxxxxxx",
+				"STATION_ITEM":"xxxxxxxxxxxx",
+				"MAC_ADDRESS":"xxxxxxxxxxxx",
+				"EDIT_EMP":"xxxxxxxxxxxx",
+				"EDIT_TIME":"xxxxxxxxxxxx"
+			},
+			{
+				"ID":"xxxxxxxxxxxx",
+				"EMP_NO":"xxxxxxxxxxxx",
+				"EMP_PASSWORD":"xxxxxxxxxxxx",
+				"STATION_NAME":"xxxxxxxxxxxx",
+				"STATION_ITEM":"xxxxxxxxxxxx",
+				"MAC_ADDRESS":"xxxxxxxxxxxx",
+				"EDIT_EMP":"xxxxxxxxxxxx",
+				"EDIT_TIME":"xxxxxxxxxxxx"
+			},
+			{
+				"ID":"xxxxxxxxxxxx",
+				"EMP_NO":"xxxxxxxxxxxx",
+				"EMP_PASSWORD":"xxxxxxxxxxxx",
+				"STATION_NAME":"xxxxxxxxxxxx",
+				"STATION_ITEM":"xxxxxxxxxxxx",
+				"MAC_ADDRESS":"xxxxxxxxxxxx",
+				"EDIT_EMP":"xxxxxxxxxxxx",
+				"EDIT_TIME":"xxxxxxxxxxxx"
+			},
+			{
+				"ID":"xxxxxxxxxxxx",
+				"EMP_NO":"xxxxxxxxxxxx",
+				"EMP_PASSWORD":"xxxxxxxxxxxx",
+				"STATION_NAME":"xxxxxxxxxxxx",
+				"STATION_ITEM":"xxxxxxxxxxxx",
+				"MAC_ADDRESS":"xxxxxxxxxxxx",
+				"EDIT_EMP":"xxxxxxxxxxxx",
+				"EDIT_TIME":"xxxxxxxxxxxx"
+			},
+			{
+				"ID":"xxxxxxxxxxxx",
+				"EMP_NO":"xxxxxxxxxxxx",
+				"EMP_PASSWORD":"xxxxxxxxxxxx",
+				"STATION_NAME":"xxxxxxxxxxxx",
+				"STATION_ITEM":"xxxxxxxxxxxx",
+				"MAC_ADDRESS":"xxxxxxxxxxxx",
+				"EDIT_EMP":"xxxxxxxxxxxx",
+				"EDIT_TIME":"xxxxxxxxxxxx"
+			},
+			{
+				"ID":"xxxxxxxxxxxx",
+				"EMP_NO":"xxxxxxxxxxxx",
+				"EMP_PASSWORD":"xxxxxxxxxxxx",
+				"STATION_NAME":"xxxxxxxxxxxx",
+				"STATION_ITEM":"xxxxxxxxxxxx",
+				"MAC_ADDRESS":"xxxxxxxxxxxx",
+				"EDIT_EMP":"xxxxxxxxxxxx",
+				"EDIT_TIME":"xxxxxxxxxxxx"
+			}
+		];
+
+//		self.parent.client.CallFunction(apiList["select"]["className"], apiList["select"]["functionName"] , { "PALLET": "" }, function (e) {
+//		    if(e.Status == "Pass"){   	//Pass
+//		        getData = e.Data;  		//e.Data
+//		        init(getData);
+//		    }
+//		});
+		init();
+		function init(data) {  //入口
+		    console.log("init");
+		    var btnMsg = [
+		    	{
+		    		"idName":"btn0",
+		    		"className":"btn0",
+		    		"iconClass":"glyphicon glyphicon-plus",
+		    		"name":"New",
+		    		"setLan":"New",
+		    		"fun":function (ev){
+		    			console.log("add");
+		    			layer.open({
+		    			    type: 1,
+		    			    skin: "layui-layer-lan",
+		    			    title: 'New Data',
+		    			    area: ["80%", "80%"],
+		    			    scrollbar: false,
+		    			    content: $("#AddList"),
+		    			    maxmin: true,
+		    			    success: function (layero, index) {
+		    			        $("#AddList").removeClass("hidden");        //显示弹出框
+		    			        var inputList = $("#AddList .panel-body").find(".addList");
+                                //显示已有数据
+		    			        inputList[1].value = self.parent.client.UserInfo.EMP_NO;
+
+		    			        $(".addBtn").on("click", function () {   	//点击 新增数据  //ID  PALLET  EDIT_EMP  EDIT_TIME
+		    			            var colNameList = ["PALLET","EDIT_EMP"];    //列名
+		    			            var sendData = {};    					//待发送的数据 
+		    			            var flag = true;
+		    			            inputList.each(function (i,node) {    	//i为下标
+		    			                sendData[colNameList[i]] = node.value;
+		    			                if (inputList[i].value == "") {
+		    			                    flag = false;
+		    			                }
+		    			            });
+		    			            if (flag) {
+		    			                console.log(sendData);
+		    			                //self.parent.client.CallFunction(apiList["new"]["className"], apiList["new"]["functionName"] , sendData, function (e) {
+		    			                //    if (e.Status == "Pass") {      //Pass
+		    			                //        console.log(sendData);
+		    			                //        layer.msg("已新增1条数据!", {
+		    			                //            icon: 1,
+		    			                //            time: 1000
+		    			                //        }, function () {
+		    			                //            location.reload();
+		    			                //        });
+		    			                //    }
+		    			                //});
+		    			            } else {
+		    			                layer.msg("请补全数据!", {
+		    			                    icon: 0,
+		    			                    time: 1000
+		    			                }, function () {
+		    			                });
+		    			            }
+		    			        });
+		    			    },
+		    			    end: function () {
+		    			        $("#AddList").addClass("hidden");                                       //隐藏弹出框
+		    			        $(".panel-body").find(".addList").each(function (index, node) {     //关闭弹出框各项数据置空
+		    			            node.value = "";
+		    			        });
+		    			    }
+		    			});
+		    		}
+		    	},
+		    	{
+		    		"idName":"btn1",
+		    		"className":"btn1",
+		    		"iconClass":"glyphicon glyphicon-pencil",
+		    		"name":"Edit",
+		    		"setLan":"Edit",
+		    		"fun":function (ev){  ////////////////////////////////////////////////////////////////////////////////////////
+		    		    console.log("edit!");
+		    		    if ($(this).attr("class") == "btn11") {
+		    		        var checkedData = $('.tab table').bootstrapTable('getAllSelections');
+		    		        console.log(checkedData);
+		    		        //弹出layer框
+		    		        layer.open({
+		    		            type: 1,
+		    		            skin: "layui-layer-lan",
+		    		            title: 'Edit Data',
+		    		            area: ["80%", "80%"],
+		    		            scrollbar: false,
+		    		            content: $("#ModifyList"),
+		    		            maxmin: true,
+		    		            success: function (layero, index) {
+		    		                $("#ModifyList").removeClass("hidden");        //显示弹出框
+		    		                var colNameList = ["ID","PALLET","EDIT_EMP"];    //列名
+		    		                var inputList = $("#ModifyList .panel-body").find(".editList");
+		    		                $.each(inputList, function (i, node) {  //给各项赋值
+		    		                    node.value = checkedData[0][colNameList[i]];
+		    		                });
+		    		                inputList[2].value = self.parent.client.UserInfo.EMP_NO;
+		    		                $(".editBtn").on("click", function () {   //点击 修改数据
+		    		                    var sendData = {};    //待发送的数据
+		    		                    var flag = false;
+		    		                    inputList.each(function (i, node) {      //i为下标
+		    		                        sendData[colNameList[i]] = node.value;
+		    		                        if (String(node.value) != String(checkedData[0][colNameList[i]])) {
+		    		                            //console.log(node.value =="undefined", checkedData[0][colNameList[i]] == undefined);
+		    		                            flag = true;
+		    		                        }
+		    		                    });
+		    		                    if (flag) {
+		    		                        console.log(sendData);
+		    		                        self.parent.client.CallFunction(apiList["edit"]["className"], apiList["edit"]["functionName"] , sendData, function (e) {
+		    		                            console.log(e);
+		    		                            if (e.Status == "Pass") {      //Pass
+		    		                                console.log(sendData);
+		    		                                layer.msg("已修改1条数据!", {
+		    		                                    icon: 1,
+		    		                                    time: 1000
+		    		                                }, function () {
+		    		                                    location.reload();
+		    		                                });
+		    		                            }
+		    		                        });
+		    		                    } else {
+		    		                        console.log(0);
+		    		                        layer.msg("请修改数据!", {
+		    		                            icon: 0,
+		    		                            time: 1000
+		    		                        }, function () {
+		    		                        });
+		    		                    }
+		    		                });
+		    		            },
+		    		            end: function () {
+		    		                $("#ModifyList").addClass("hidden");                                     //隐藏弹出框
+		    		                $(".panel-body").find(".editList").each(function (index, node) {  //关闭弹出框各项数据置空
+		    		                    node.value = "";
+		    		                });
+		    		            }
+		    		        });
+		    		    }
+		    		}
+		    	},
+		    	{
+		    		"idName":"btn2",
+		    		"className":"btn2",
+		    		"iconClass":"glyphicon glyphicon-trash",
+		    		"name":"Delete",
+		    		"setLan":"Delete",
+		    		"fun":function (ev){
+		    		    if ($(this).attr("class") == "btn22") {
+		    		        layer.open({                          //确定是否删除?
+		    		            title: 'Warning',
+		    		            btn: ['Delete', 'Cancel'],
+		    		            content: "Delete operation cannot be rolled back! </br> Are you sure you want to delete these records?",
+		    		            yes: function (index) {      //确定删除
+		    		                layer.close(index);        //关闭该选择layer框
+		    		                var checkedData = $('.tab table').bootstrapTable('getAllSelections');
+		    		                console.log(checkedData);
+		    		                var successCount = 0;     //成功数量
+		    		                $.each(checkedData, function (i) {
+		    		                    var currentVal = checkedData[i]["ID"];  //xxx
+		    		                    console.log(currentVal);
+		    		                    self.parent.client.CallFunction(apiList["delete"]["className"], apiList["delete"]["functionName"] , { "ID": currentVal }, function (e) {
+		    		                        console.log(e);
+		    		                        if (e.Status == "Pass") {   // Pass
+		    		                            successCount++;
+		    		                            if (successCount == checkedData.length) {
+		    		                                layer.msg("已删除" + checkedData.length + "条数据!", {
+		    		                                    icon: 1,
+		    		                                    time: 1000
+		    		                                }, function () {
+		    		                                    console.log("deleteSuccess!");
+		    		                                    location.reload();
+		    		                                });
+		    		                            }
+		    		                        }
+		    		                    });
+		    		                });
+		    		                if(successCount == 0){
+		    		                    layer.msg("删除失败!", {
+		    		                        icon: 0,
+		    		                        time: 1000
+		    		                    }, function () {
+		    		                        console.log("deleteFail!");
+		    		                        location.reload();
+		    		                    });
+		    		                }
+		    		            }
+		    		        });
+		    		    }
+		    		}
+		    	}
+		    ];
+		    var layerContent = {  //ID  PALLET  EDIT_EMP  EDIT_TIME
+		        "add": [
+                    
+		    		{
+		    			"type":"input",
+		    			"name":"PALLET",
+		    			"setLan":"PALLET",
+		    			"idName":"PALLET",
+		    			"className":"form-control addList",
+		    			"enable":true
+		    		},
+		    		{
+		    			"type":"input",
+		    			"name":"EDIT_EMP",
+		    			"setLan":"EDIT_EMP",
+		    			"idName":"EDIT_EMP",
+		    			"className":"form-control addList",
+		    			"enable":false
+		    		}
+		    	],
+		        "edit": [
+                    {
+                        "type": "input",
+                        "name": "ID",
+                        "setLan": "ID",
+                        "idName": "ID",
+                        "className": "form-control editList",
+                        "enable": false
+                    },
+		    		{
+		    			"type":"input",
+		    			"name":"PALLET",
+		    			"setLan":"PALLET",
+		    			"idName":"PALLET",
+		    			"className":"form-control editList",
+		    			"enable":true
+		    		},
+		    		{
+		    			"type":"input",
+		    			"name":"EDIT_EMP",
+		    			"setLan":"EDIT_EMP",
+		    			"idName":"EDIT_EMP",
+		    			"className":"form-control editList",
+		    			"enable":false
+		    		}
+		    	]
+		    };
+
+		    //loadLayer(layerContent);    //加载layer弹出层（跳出新增，修改层）
+		    //createBtns(btnMsg);    		//生成按钮
+		    showData(data);     		//show数据
+		    //setLanguage("FIFO");     			//设置多语言
+		    clickOperation();     		//事件集合
+		}
+        //////////////////////////////////////////////////////////
+        //生成按鈕
+//      [													//btnMsg规范
+//      	{
+//				"idName":"btn0",						 	//按钮id名
+//				"className":"new"                     		//按钮类名
+//      		"iconClass":"glyphicon glyphicon-plus", 	//图标样式(bootstrap内置)
+//      		"name":"New",                        		//按钮名称
+//				"setLan":"New",                      		//多语言标签名
+//				"fun":function (){},						//按钮绑定的点击事件
+//      		"type":"1"                           		//按钮交互样式(暂时没用)（1：一直可以交互   2：只选中一条数据能交互  3：选中数据即可交互 ）
+//      	},
+//      	。。。
+//      ]
+
+        //生成layer弹出层内容(传入值规范)
+        //类型 input 下拉框(select) 节流框(throttle) 单选框(radio) 复选框(checkBox)
+//      {
+//      	"add":[
+//      		{
+//      			"type":"input",						//控件类型
+//      			"name":"SKUNO",						//控件名
+//      			"setLan":"SKUNO",                   //语言标签名
+//      			"idName":"SKUNO"                    //控件id
+//      			"className":""						//控件类名
+//      			"enable":true,                      //是否可编辑
+//      		},
+//      		...
+//      	],
+//
+//      	"edit":{
+//      		...
+//      	}
+//      }
+
+        //生成按钮
+        function createBtns (btnMsg){   // array
+        	var btnList = $(".list .btnList");
+			var len = btnMsg.length;
+
+			//show按钮
+			for(var i = 0; i < len; i++){
+				btnList.append($(createDiv (btnMsg[i]["idName"],btnMsg[i]["className"],btnMsg[i]["iconClass"],btnMsg[i]["setLan"],btnMsg[i]["name"])));
+			}
+
+			//为按钮绑定事件
+			for(var j = 0; j < len; j++){
+				(function (ele,functionName){
+					$(ele).on("click",functionName);
+				})(document.getElementById(btnMsg[j]["idName"]),btnMsg[j]["fun"]);
+			}
+
+			function createDiv (idName,className,iconClass,setLan,name){
+				var div = document.createElement("div");
+				div.setAttribute("id",idName);
+				div.setAttribute("class",className);
+				div.appendChild(createI(iconClass));
+				div.appendChild(createSpan(setLan,name));
+				return div;
+				function createI (iconClass){
+					var i = document.createElement("i");
+					i.setAttribute("class",iconClass);
+					return i;
+				}
+				function createSpan (setLan,name){
+					var span = document.createElement("span");
+					span.setAttribute("set-lan","html:"+setLan);
+					span.innerHTML = name;
+					return span;
+				}
+			}
+		}
+	    //show数据
+		function showData(data) {
+		    $(".tab table").bootstrapTable({
+		        data: data,
+		        pagination: true,    //分页显示
+		        pageSize: 10,         //初始化每一页的数据条数
+		        pageList: [10, 25, 50, 100],
+		        search: false,        //显示查找框
+		        striped: true,        //背景色相间
+		        showRefresh: false,   //显示重置按钮
+		        clickToSelect: true,   //单击一行内任意单元格选中该行
+		        singleSelect: true,  //单选
+		        onCheck: function (row) {
+		            //"ID", "R_SN_ID", "SN", "SKUNO", "WORKORDERNO", "PLANT", "CLASS_NAME", "ROUTE_ID", "LINE", "STARTED_FLAG", "START_TIME", "PACKED_FLAG", "PACKED_TIME", "COMPLETED_FLAG", "COMPLETED_TIME", "SHIPPED_FLAG", "SHIPDATE", "REPAIR_FAILED_FLAG", "CURRENT_STATION", "NEXT_STATION", "KP_LIST_ID", "PO_NO", "CUST_ORDER_NO", "CUST_PN", "BOXSN", "DEVICE_NAME", "STATION_NAME", "SCRAPED_FLAG", "SCRAPED_TIME", "PRODUCT_STATUS", "REWORK_COUNT", "VALID_FLAG", "EDIT_EMP", "EDIT_TIME"
+		            var rows = $('.tab table').bootstrapTable('getAllSelections');  ///getAllSelections
+		            //console.log(rows);
+		            if (rows.length == 1) {
+		                $("#btn1").attr("class", "btn11");
+		            } else {
+		                $("#btn1").attr("class", "btn1");
+		            }
+		            if (rows.length > 0) {
+		                $("#btn2").attr("class", "btn22");
+		            } else {
+		                $("#btn2").attr("class", "btn2");
+		            }
+		            checkedData = rows;
+		        },
+		        onUncheck: function (row) {
+		            var rows = $('.tab table').bootstrapTable('getAllSelections');  ///getAllSelections
+		            //console.log(rows);
+		            if (rows.length == 1) {
+		                $("#btn1").attr("class", "btn11");
+		            } else {
+		                $("#btn1").attr("class", "btn1");
+		            }
+		            if (rows.length > 0) {
+		                $("#btn2").attr("class", "btn22");
+		            } else {
+		                $("#btn2").attr("class", "btn2");
+		            }
+		            checkedData = rows;
+		        },
+		        columns: [{
+		            align: 'center',
+		            valign: 'middle',
+		            checkbox: true
+		        },
+                //{    //"ID","R_SN_ID","SN","SKUNO","WORKORDERNO","PLANT","CLASS_NAME","ROUTE_ID","LINE","STARTED_FLAG","START_TIME","PACKED_FLAG","PACKED_TIME","COMPLETED_FLAG",
+		        //    field: 'ID',
+		        //    title: '<label set-lan="html:ID">ID</label>',
+		        //    align: 'center',
+                //    valign: 'middle'
+                //},
+                {
+		            field: 'R_SN_ID',
+		            title: '<label set-lan="html:R_SN_ID">R_SN_ID</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'SN',
+		            title: '<label set-lan="html:SN">SN</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'SKUNO',
+		            title: '<label set-lan="html:SKUNO">SKUNO</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'WORKORDERNO',
+		            title: '<label set-lan="html:WORKORDERNO">WORKORDERNO</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'PLANT',
+		            title: '<label set-lan="html:PLANT">PLANT</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'CLASS_NAME',
+		            title: '<label set-lan="html:CLASS_NAME">CLASS_NAME</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'ROUTE_ID',
+		            title: '<label set-lan="html:ROUTE_ID">ROUTE_ID</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'LINE',
+		            title: '<label set-lan="html:LINE">LINE</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'STARTED_FLAG',
+		            title: '<label set-lan="html:STARTED_FLAG">STARTED_FLAG</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'START_TIME',
+		            title: '<label set-lan="html:START_TIME">START_TIME</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'PACKED_FLAG',
+		            title: '<label set-lan="html:PACKED_FLAG">PACKED_FLAG</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'PACKED_TIME',
+		            title: '<label set-lan="html:PACKED_TIME">PACKED_TIME</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'COMPLETED_FLAG',
+		            title: '<label set-lan="html:COMPLETED_FLAG">COMPLETED_FLAG</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {//"COMPLETED_TIME","SHIPPED_FLAG","SHIPDATE","REPAIR_FAILED_FLAG","CURRENT_STATION","NEXT_STATION","KP_LIST_ID","PO_NO","CUST_ORDER_NO","CUST_PN","BOXSN","DEVICE_NAME",
+		            field: 'COMPLETED_TIME',
+		            title: '<label set-lan="html:COMPLETED_TIME">COMPLETED_TIME</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'SHIPPED_FLAG',
+		            title: '<label set-lan="html:SHIPPED_FLAG">SHIPPED_FLAG</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'SHIPDATE',
+		            title: '<label set-lan="html:SHIPDATE">SHIPDATE</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'REPAIR_FAILED_FLAG',
+		            title: '<label set-lan="html:REPAIR_FAILED_FLAG">REPAIR_FAILED_FLAG</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'CURRENT_STATION',
+		            title: '<label set-lan="html:CURRENT_STATION">CURRENT_STATION</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'NEXT_STATION',
+		            title: '<label set-lan="html:NEXT_STATION">NEXT_STATION</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'KP_LIST_ID',
+		            title: '<label set-lan="html:KP_LIST_ID">KP_LIST_ID</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'PO_NO',
+		            title: '<label set-lan="html:PO_NO">PO_NO</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'CUST_ORDER_NO',
+		            title: '<label set-lan="html:CUST_ORDER_NO">CUST_ORDER_NO</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'CUST_PN',
+		            title: '<label set-lan="html:CUST_PN">CUST_PN</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'BOXSN',
+		            title: '<label set-lan="html:BOXSN">BOXSN</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'DEVICE_NAME',
+		            title: '<label set-lan="html:DEVICE_NAME">DEVICE_NAME</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {//"STATION_NAME","SCRAPED_FLAG","SCRAPED_TIME","PRODUCT_STATUS","REWORK_COUNT","VALID_FLAG","EDIT_EMP","EDIT_TIME"
+		            field: 'STATION_NAME',
+		            title: '<label set-lan="html:STATION_NAME">STATION_NAME</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'SCRAPED_FLAG',
+		            title: '<label set-lan="html:SCRAPED_FLAG">SCRAPED_FLAG</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'SCRAPED_TIME',
+		            title: '<label set-lan="html:SCRAPED_TIME">SCRAPED_TIME</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'PRODUCT_STATUS',
+		            title: '<label set-lan="html:PRODUCT_STATUS">PRODUCT_STATUS</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'REWORK_COUNT',
+		            title: '<label set-lan="html:REWORK_COUNT">REWORK_COUNT</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'VALID_FLAG',
+		            title: '<label set-lan="html:VALID_FLAG">VALID_FLAG</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'EDIT_EMP',
+		            title: '<label set-lan="html:EDIT_EMP">EDIT_EMP</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'EDIT_TIME',
+		            title: '<label set-lan="html:EDIT_TIME">EDIT_TIME</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }],
+		    });
+		    $(".tab table").find(".bs-checkbox").css({
+		        "text-align": "center",
+		        "vertical-align": "middle",
+		    });
+		}
+        //加载layer弹出层内容
+        function loadLayer(layerContent){  //layerContent：layer弹出框内容信息： obj
+        	var addLen = layerContent["add"].length;
+        	var editLen = layerContent["edit"].length;
+        	var addList = $("#AddList").find(".row");
+        	var editList = $("#ModifyList").find(".row");
+        	if(layerContent["add"]){
+        		for(var i = 0; i < addLen; i++){
+        			addLayer(layerContent["add"][i]);
+        		}
+        		addList[0].appendChild(createBtn("ADD","ADD","ADD","addBtn"));  //添加ADD按钮
+        	}
+        	if(layerContent["edit"]){
+        		for(var j = 0; j < editLen; j++){
+        			editLayer(layerContent["edit"][j]);
+        		}
+        		editList[0].appendChild(createBtn("EDIT","EDIT","EDIT","editBtn"));  //添加EDIT按钮
+        	}
+
+        	function addLayer (addContent){  //obj
+        		addList[0].appendChild(createControl(addContent["type"],addContent["name"],addContent["setLan"],addContent["idName"],addContent["className"],addContent["enable"]));
+        	}
+
+        	function editLayer(editContent){
+        		editList[0].appendChild(createControl(editContent["type"],editContent["name"],editContent["setLan"],editContent["idName"],editContent["className"],editContent["enable"]));
+        	}
+
+			function createBtn (name,setLan,divClass,btnClass){
+				var oDiv = document.createElement("div");
+				var label = document.createElement("label");
+				var div = document.createElement("div");
+				var btn = document.createElement("button");
+				
+				oDiv.setAttribute("class",divClass+" col-sm-6 col-md-6");
+				label.setAttribute("class","col-xs-3 control-label text-right");
+				div.setAttribute("class","col-xs-8");
+				btn.setAttribute("class",btnClass+" form-control");
+				btn.setAttribute("set-lan","html:"+setLan);
+				btn.innerHTML = name;
+				
+				div.appendChild(btn);
+				oDiv.appendChild(label);
+				oDiv.appendChild(div);
+				return oDiv;
+			}
+			
+        	function createControl(type,name,setLan,idName,className,enable){  //生成控件
+        		var oDiv = document.createElement("div");
+        		oDiv.setAttribute("class","form-group col-sm-6 col-md-6");
+        		oDiv.appendChild(createLabel(setLan,name));
+        		oDiv.appendChild(createDiv(type,idName,className,enable));
+        		return oDiv;
+
+        		function createLabel(setLan,name){
+        			var label = document.createElement("label");
+        			label.setAttribute("class","col-xs-3 control-label text-right");
+        			label.setAttribute("set-lan",setLan);
+        			label.innerHTML = name;
+        			return label;
+        		}
+        		function createDiv(type,idName,className,enable){
+					var div = document.createElement("div");
+        			div.setAttribute("class","col-xs-8");
+
+        			switch(type){
+        				case "input":
+        					div.appendChild(createInput(idName,className,enable));
+        				break;
+        			}
+        			return div;
+
+        			function createInput(idName,className,enable){
+        				var oInput = document.createElement("input");
+        				oInput.setAttribute("id",idName);
+        				oInput.setAttribute("class",className);
+        				if(!enable){
+        					oInput.setAttribute("disabled","disabled");
+        				}
+        				return oInput;
+        			}
+        		}
+        	}
+        
+        	
+        }
+        //设置多语言
+		function setLanguage(pageMsg) {
+		    var client = self.parent.client;
+		    var MesUI = new MesClientUI(client);
+		    MesUI.SetLanguage(pageMsg);
+		}
+
+        //////////////////////////////////////////////////////////
+        //点击操作
+		function clickOperation() {
+		    
+		    //选择文件
+//		    var reader = new FileReader();
+//		    $("#uploadFiles").on("change",function (){
+//		    	reader.readAsArrayBuffer(this.files[0]);
+//				reader.onload = function (){
+//					var data = new Uint8Array(reader.result);
+//					var wb = XLSX.read(data, { type: 'array' });
+//					console.log(wb["Sheets"][wb["SheetNames"][0]]);	
+//					
+//				}
+//		    });
+		    
+//		    readXlsx($("#uploadFiles"),1,["A1","B1","C1"],function (dataObj,fiels){
+//		    	//console.log(dataObj[fiels[]]);
+//		    	//var fielsArr = [];
+//		    	var newData = {};
+//		    	$.each(fiels,function (index,val){
+//		    		//fielsArr.push(dataObj[val]["h"]);
+//		    		newData[dataObj[val]["h"]] = [];
+//		    	});
+//		    	for(var prop in dataObj){
+//		    		$.each(fiels,function (index,val){
+//		    			if(prop[0] == val[0]){
+//		    				newData[dataObj[val]["h"]].push(dataObj[prop]);
+//		    			}
+//		    		})
+////		    		switch(prop[0]){
+////		    			case "A" : 
+////		    				newData[fielsArr[0]].push(dataObj[prop]);
+////		    				break;
+////		    			case ""
+////		    		}
+//					
+//
+//		    	}
+//		    	console.log(newData);
+////		    	{
+////		    		"":["","",""],
+////		    		"":["","",""]
+////		    	}
+//		    })
+		    
+		    
+		    
+		    readXlsx($("#uploadFiles"),1,["A1"],function(data){
+		    	$("#Upload").on("click",function (){
+		    		$(".tab")[0].innerHTML = "";
+		        	var table = $("<table></table>");
+		        	$(".tab").append(table);
+		        	console.log(data);
+		        	//showData(tableData);
+		    		self.parent.client.CallFunction(apiList["other"]["upload"]["className"],apiList["other"]["upload"]["functionName"],data,function (e){
+                        console.log(e);
+		    		    if (e.Status == "Pass") {   // Pass
+
+		    			    showData(e.Data);
+		    				//setLanguage("FIFO");
+		    			}
+		    			
+		    		});
+		    	});
+		    });
+		    
+		    //读取xlsx档
+		    function readXlsx(ele,sheetIndex,fieldArr,callback){
+		    	var reader = new FileReader();
+		    	ele.on("change",function (){
+		    		reader.readAsArrayBuffer(this.files[0]);
+		    		reader.onload = function (){
+		    			var data = new Uint8Array(reader.result);
+		    			var wb = XLSX.read(data, { type: 'array' });   //包含excel档的内容*
+		    			var dataObj = wb["Sheets"][wb["SheetNames"][sheetIndex - 1]];
+		    			
+		    			var newData = {};
+		    			$.each(fieldArr,function (index,val){
+		    				newData[dataObj[val]["h"]] = [];      //生成空数组
+		    			});
+		    			for(var prop in dataObj){
+		    				$.each(fieldArr,function (index,val){
+		    					if(prop[0] == val[0]){
+		    						newData[dataObj[val]["h"]].push(dataObj[prop]["v"]);     //对数组push
+		    					}
+		    				});
+		    			}
+		    			$.each(fieldArr,function (index,val){
+		    				newData[dataObj[val]["h"]].shift();      //删掉数组第一项
+		    			});
+		    			callback(newData);    
+		    		}
+		    	});
+		    }
+		    
+		    
+		    
+		    /*			
+		     * 			ele：选择文件按钮
+		     *			sheetIndex:第几张表
+		     * 			fieldArr:字段数组
+		     * 			
+		     * 
+		     * */
+		    
+		    
+		    //查询
+		    $(".query .btnQuery").on("click", function () {
+		        var val = $(".query .input input")[0].value;
+		        $(".tab")[0].innerHTML = "";
+		        var table = $("<table></table>");
+		        $(".tab").append(table);
+		        console.log(val);
+		        self.parent.client.CallFunction(apiList["other"]["upload"]["className"], apiList["other"]["upload"]["functionName"] , { "SN": [val] }, function (e) {
+		            console.log(e);
+		            if (e.Status == "Pass") {    //Pass
+		                //console.log(e.Data);
+		                showData(e.Data);     //e.Data
+		                //setLanguage("FIFO");
+		            }
+		        });
+		    });
+		}
+	});
+
+
+</script>
+
+
+</html>

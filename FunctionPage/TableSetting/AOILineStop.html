@@ -1,0 +1,1537 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>AOI停线</title>  <!-- GCH 2019/03/08 ADD-->
+</head>
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+<link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="../../Scripts/highcharts.js"></script>
+<script src="../../Scripts/exporting.js"></script>
+<script src="../../Scripts/export-csv.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/tableExport.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table-export.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+<!--<script src="../../Scripts/Report/MesClient.ReportConfig.js"></script>-->        <!--gch 20190311 add-->
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background: #fff;
+        zoom:.65;
+    }
+
+    body::-webkit-scrollbar-thumb {
+            background:#337ab7;
+        }
+        body::-webkit-scrollbar {
+            width:5px;
+            background-color:#fff;
+        }
+    .layui-layer .layui-layer-content::-webkit-scrollbar-thumb {
+        background:#337ab7;
+    }
+    .layui-layer .layui-layer-content::-webkit-scrollbar {
+        width:5px;
+        background-color:#fff;
+    }
+
+    .title {
+        width: 100%;
+        height: 54px;
+        padding: 10px 15px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+        line-height: 33px;
+    }
+
+    .list {
+        width: 100%;
+        height: 34px;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-top: 25px;
+    }
+
+        .list .btnList {
+            height: 100%;
+            float: left;
+            border: 1px solid #337ab7;
+            border-radius: 3px;
+            border-right: none;
+        }
+
+        .list .query {
+            float: right;
+            height: 100%;
+        }
+
+            .list .query .input {
+                float: left;
+                height: 100%;
+                width: 296px;
+                border: 1px solid #337ab7;
+                box-sizing: border-box;
+                border-radius: 15px;
+                z-index:1000;
+            }
+
+                .list .query .input input {
+                    width: 100%;
+                    height: 85%;
+                    margin-top:1%;
+                    padding: 6px 12px;
+                    border-radius: 15px;
+                    border: none;
+                    color: #676a6c;
+                    outline: none;
+                }
+
+            .list .query .btnQuery {
+                float: left;
+                height: 100%;
+                padding: 6px 12px;
+                line-height: 20px;
+                border: 1px solid #337ab7;
+                margin-left: 8px;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+
+                .list .query .btnQuery:hover {
+                    color: #fff;
+                    background: #286090;
+                }
+
+    .tab {
+        width: auto;
+        /*border: 1px solid #adadad;*/
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-left: 15px;
+        margin-right: 15px;
+        overflow: auto;
+    }
+
+    .hui {
+        border-radius: 10px;
+    }
+
+    /*.panel-body label {
+        padding: 6px;
+        background: #f0f0f0;
+        border-radius: 10px;
+        box-shadow: 5px 5px 8px #aaa;
+        position: relative;
+        top: -8px;
+    }
+
+    .panel-body input, .panel-body select, .panel-body textarea {
+        border-radius: 15px;
+    }
+
+    .layui-layer {
+        border-radius: 25px;
+        box-shadow: 5px 5px 21px #222;
+    }*/
+
+    /*.layui-layer-title {
+        border-radius: 25px;
+        border-bottom-left-radius: unset;
+        border-bottom-right-radius: unset;
+    }*/
+    /*.layui-layer-setwin {
+        color:#fff;
+    }*/
+    #sonTab {
+        margin: 15px;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:"></span>
+    </div>
+    <div class="list">
+        <div class="btnList"></div>
+        <div class="query">
+            <div class="input">
+                <input type="text" value="" placeholder="" />
+            </div>
+        </div>
+    </div>
+    <div class="tab">
+        <table></table>
+    </div>
+</body>
+<script>
+    //var report = new ConfigReport({
+    //    "pageMsg": {
+    //        "pageName": "AOI Line Stop",
+    //        "setLan": "AOILineStop",
+    //        "queryTip":"请输入SKUNO",
+    //        "btnMsg": [
+    //            {
+    //                "id": "btn0",
+    //                "btnName": "Close",    
+    //                "icon": "glyphicon glyphicon-trash",    //图标样式
+    //                "style": "1",       
+    //                "layerFlag": false    //点击该按钮是否弹出层(如修改数据弹窗)
+    //            },
+    //              {
+    //                  "id": "btn1",
+    //                  "btnName": "Edit",     //按钮显示名字，点击该按钮后弹出层的id名（Edit加上Layer ===> EditLayer）注意：需要和layerMsg,apiList,btnClick下的名字一致(非常重要)
+    //                  "layerBtnName":"Update",    //点击该按钮后弹出层的功能按钮名字及该按钮的类名
+    //                  "icon": "glyphicon glyphicon-pencil",
+    //                  "style": "1",  //只选中一条数据可以点击
+    //                  "layerFlag": true
+    //              },
+    //        ],
+    //    },
+    //    "apiList": {                         //homePage select 都是固定的写法，除此之外名称全部与按钮名称一致
+    //        "homePage": {   //首页
+    //            "className": "MESStation.Config.AOIStopConfig",
+    //            "functionName": "GetAOIStopBySKUNO",
+    //            "colList": ["SKUNO"],
+    //            "sendList": [""]
+    //        },
+    //        "select": {     //查询框
+    //            "className": "MESStation.Config.AOIStopConfig",
+    //            "functionName": "GetAOIStopBySKUNO",
+    //            "colList": ["SKUNO"]   //必填
+    //        },
+    //      "Close": {
+    //          "className": "MESStation.Config.AOIStopConfig",
+    //          "functionName": "ChangeByID",
+    //          "colList": ["ID"]      //必填
+    //      },
+    //        "Edit": {
+    //            "className": "MESStation.Config.AOIStopConfig",
+    //            "functionName": "Update",
+    //            "colList": []     //点击该按钮弹出大框，发送的字段集合在layerMsg里面配置，这里的colList无效
+    //        }
+    //    },
+    //    "tableMsg": {     //表格各列
+    //        "column": ["SKUNO","LINE","STATION","CHECK_DATE","CHECK_TIME","STOP_DESCRIPTION","STOP_PROGRESS","DPPM","STOP_CAUSE","CONFIRM","CORRECTED","CONFIRM_EMP","CONFIRM_TIME","EDIT_EMP","EDIT_TIME"]
+    //    },
+    //    "layerMsg": {    //弹出框各项控件(针对弹出大框)
+    //        "Edit": {
+    //            "showList": [
+    //                {
+    //                    "field": "ID",
+    //                    "type": "text",  //控件类型（text  select  checkbox  radio  textarea  ）
+    //                    "fillFlag":true,
+    //                    "disabled":true
+    //                },
+    //              {
+    //                  "field": "CHECK_DATE",
+    //                  "type": "text",
+    //                  "fillFlag": true,
+    //                  "disabled":true
+    //              },
+    //              {
+    //                  "field": "SKUNO",
+    //                  "type": "text",
+    //                  "fillFlag": true,
+    //                  "disabled": true
+    //              },
+    //              {
+    //                  "field": "LINE",
+    //                  "type": "text",
+    //                  "fillFlag": true,
+    //                  "disabled": true
+    //              },
+    //              {
+    //                  "field": "STATION",
+    //                  "type": "text",
+    //                  "fillFlag": true,
+    //                  "disabled": true
+    //              },
+    //              {
+    //                  "field": "CHECK_TIME",
+    //                  "type": "text",
+    //                  "fillFlag": true,
+    //                  "disabled": true,
+    //              },
+    //              {
+    //                  "field": "DPPM",
+    //                  "type": "text",
+    //                  "fillFlag": true,
+    //                  "disabled": true,
+    //              },
+    //              {
+    //                  "field": "CORRECTED",
+    //                  "type": "select",
+    //                  "fillFlag": true,
+    //                  "disabled": true,
+    //              },
+    //              {
+    //                  "field": "STOP_CAUSE",
+    //                  "type": "textarea",
+    //                  "fillFlag": true,
+    //                  "disabled": true,
+    //              },
+    //              {
+    //                  "field": "STOP_PROGRESS",
+    //                  "type": "textarea",
+    //                  "fillFlag": true,
+    //                  "disabled": true,
+    //              },
+    //              {
+    //                  "field": "STOP_DESCRIPTION",
+    //                  "type": "textarea",
+    //                  "fillFlag": true,
+    //                  "disabled": true,
+    //              },
+    //              {
+    //                  "field": "CONFIRM",
+    //                  "type": "textarea",
+    //                  "fillFlag": true,
+    //                  "disabled": true,
+    //              },
+    //              {
+    //                  "field": "CONFIRM_EMP",
+    //                  "type": "text",
+    //                  "fillFlag": false,
+    //                  "disabled": true,
+    //              }
+    //          ],
+    //            "sendList": ["ID","CHECK_DATE", "SKUNO", "LINE", "STATION", "CHECK_TIME", "DPPM", "CORRECTED", "CONFIRM_EMP", "STOP_CAUSE", "STOP_PROGRESS", "STOP_DESCRIPTION", "CONFIRM"]
+    //        }
+    //    },
+    //    "loadLayerData": {
+    //        "Edit": function (loadSelect) {     //loadSelect：生成下拉数据方法，this为当前弹出框（jquery对象），键与按钮名称一致       loadSelect（sleect控件，数组）
+    //            //this.find("select[name=CONFIRM]")
+    //            console.log(self.parent.document.getElementById("userLevel_Show").innerHTML);
+    //            var name = self.parent.document.getElementById("userLevel_Show").innerHTML;
+    //            if (/(IPQC|IT)/g.test(name)) {
+    //                this.find("textarea[name=CONFIRM]").removeAttr("disabled");
+    //                //this.find("input[name=CORRECTED]").removeAttr("disabled");
+    //                this.find("input[name=CONFIRM_EMP]").val(self.parent.client.UserInfo.EMP_NO);
+    //                loadSelect(this.find("input[name=CORRECTED]"),["Open","Close"]);
+    //            } else { 
+    //                this.find("textarea[name=CONFIRM]").attr("disabled", "disabled");
+    //            }
+    //        }
+    //    },
+    //    "btnClick": {        //对弹出大框无效
+    //        "Close": function (chData, fun1, fun2) {      //chData : 选中的数据  fun1:不需要提示框  fun2：需要提示框  this：按钮（jquery对象）
+    //            fun2();   //需要弹出提示框
+    //        },
+    //        "Edit": function () {
+    //        }
+    //    }
+    //});
+    
+
+    var report = new ConfigReport({
+        "pageMsg": {
+            "pageName": "AOI Line Stop",                    //title名
+            "setLan": "AOILineStop",                          //该网页的多语言标签名
+            "queryTip": "请输入SKUNO",             //查询框的提示信息
+            "btnMsg": [
+                //{
+                //    "id": "btn0",
+                //    "btnName": "Close",
+                //    "icon": "glyphicon glyphicon-trash",    //图标样式
+                //    "style": "1",
+                //    "layerFlag": false    //点击该按钮是否弹出层(如修改数据弹窗)
+                //},
+                  {
+                      "id": "btn1",
+                      "btnName": "Edit",     //按钮显示名字，点击该按钮后弹出层的id名（Edit加上Layer ===> EditLayer）注意：需要和layerMsg,apiList,btnClick下的名字一致(非常重要)
+                      "layerBtnName": "Update",    //点击该按钮后弹出层的功能按钮名字及该按钮的类名
+                      "icon": "glyphicon glyphicon-pencil",
+                      "style": "1",  //只选中一条数据可以点击
+                      "layerFlag": true
+                  }
+            ],
+        },
+        "apiList": {                                                                 //该网页的重要操作对应的前端与后台交互的api（homePage select 都是固定的写法，除此之外名称全部与按钮名称一致） 
+            "homePage": {   //首页
+                "className": "MESStation.Config.AOIStopConfig",
+                "functionName": "GetAOIStopBySKUNO",
+                "colList": ["SKUNO"],
+                "sendList": [""]
+            },
+            "select": {     //查询框
+                "className": "MESStation.Config.AOIStopConfig",
+                "functionName": "GetAOIStopBySKUNO",
+                "colList": ["SKUNO"]   //必填
+            },
+            "Close": {
+                "className": "MESStation.Config.AOIStopConfig",
+                "functionName": "ChangeByID",
+                "colList": ["ID"]      //必填
+            },
+            "Edit": {
+                "className": "MESStation.Config.AOIStopConfig",
+                "functionName": "Update",
+                "colList": []     //点击该按钮弹出大框，发送的字段集合在layerMsg里面配置，这里的colList无效
+            }
+        },
+        "tableMsg": {                                                           //该表的各字段集合  
+            "column": ["SKUNO", "LINE", "STATION", "CORRECTED", "CHECK_DATE", "CHECK_TIME", "STOP_DESCRIPTION", "STOP_PROGRESS", "DPPM", "STOP_CAUSE", "CONFIRM", "CONFIRM_EMP", "CONFIRM_TIME", "EDIT_EMP", "EDIT_TIME"]
+        },
+        "layerMsg": {                                                           //弹出框（针对大框）各个控件的配置
+            "Edit": {
+                "showList": [
+                    {
+                        "field": "ID",
+                        "type": "text",  //控件类型（text  select  checkbox  radio  textarea  ）
+                        "fillFlag": true,
+                        "disabled": true
+                    },
+                  {
+                      "field": "CHECK_DATE",
+                      "type": "text",
+                      "fillFlag": true,
+                      "disabled": true
+                  },
+                  {
+                      "field": "SKUNO",
+                      "type": "text",
+                      "fillFlag": true,
+                      "disabled": true
+                  },
+                  {
+                      "field": "LINE",
+                      "type": "text",
+                      "fillFlag": true,
+                      "disabled": true
+                  },
+                  {
+                      "field": "STATION",
+                      "type": "text",
+                      "fillFlag": true,
+                      "disabled": true
+                  },
+                  {
+                      "field": "CHECK_TIME",
+                      "type": "text",
+                      "fillFlag": true,
+                      "disabled": true,
+                  },
+                  {
+                      "field": "DPPM",
+                      "type": "text",
+                      "fillFlag": true,
+                      "disabled": true,
+                  },
+                  {
+                      "field": "CORRECTED",
+                      "type": "select",
+                      "fillFlag": true,
+                      "disabled": true,
+                  },
+
+                  {
+                      "field": "STOP_CAUSE",
+                      "type": "textarea",
+                      "fillFlag": true,
+                      "disabled": true,
+                  },
+                  {
+                      "field": "STOP_PROGRESS",
+                      "type": "textarea",
+                      "fillFlag": true,
+                      "disabled": true,
+                  },
+                  {
+                      "field": "STOP_DESCRIPTION",
+                      "type": "textarea",
+                      "fillFlag": true,
+                      "disabled": true,
+                  },
+                  {
+                      "field": "CONFIRM",
+                      "type": "textarea",
+                      "fillFlag": true,
+                      "disabled": true,
+                  },
+                  {
+                      "field": "CONFIRM_EMP",
+                      "type": "text",
+                      "fillFlag": false,
+                      "disabled": true,
+                  }
+                ],
+                "sendList": ["ID", "CHECK_DATE", "SKUNO", "LINE", "STATION", "CHECK_TIME", "DPPM", "CORRECTED", "CONFIRM_EMP", "STOP_CAUSE", "STOP_PROGRESS", "STOP_DESCRIPTION", "CONFIRM"]
+            }
+        },
+        "loadLayerData": {                                              //弹出框的控件的所有操作（大框内特殊控件数据加载[加载完页面数据后自动执行]）
+            "Edit": function (loadSelect, generatTable) {   //createToobar
+                var _this = this;
+                var name = self.parent.document.getElementById("userLevel_Show").innerHTML;
+                loadSelect(this.find("select[name=CORRECTED]"), ["Open", "Closed"]);
+                //this.find("input[name=CONFIRM_EMP]").val(self.parent.client.UserInfo.EMP_NO);
+                $("#btn1").on("click", function () {
+                    if ($(this).css("cursor") != "no-drop") {
+                        var checkedData = $(".tab table").bootstrapTable("getAllSelections")[0];
+                        _this.find("select[name=CORRECTED]").val(checkedData["CORRECTED"]);
+                        if (/(IPQC|IT)/g.test(name)) {
+                            _this.find("textarea[name=CONFIRM]").removeAttr("disabled");
+                            _this.find("select[name=CORRECTED]").removeAttr("disabled");
+                            _this.find("input[name=CONFIRM_EMP]").val(self.parent.client.UserInfo.EMP_NO);
+                        } else {
+                            _this.find("select[name=CORRECTED]").attr("disabled", "disabled");
+                            _this.find("textarea[name=CONFIRM]").attr("disabled", "disabled");
+                            _this.find("input[name=CONFIRM_EMP]").val(self.parent.client.UserInfo.EMP_NO);
+                        }
+                    }
+                });
+            }
+        },
+        "btnClick": {                                                       //点击按钮及后续所有操作（所有弹出框都要配置，大框动态变化，处理特殊控件（如表格），处理数据[用于发送至后台]，返回数据）
+            "Close": function (chData, fun1, fun2) {            //小框（chData：选中的数据 fun1：不弹出框直接执行[与后台交互] fun2：弹出小框后确定操作再执行）
+                fun2();
+            },
+            "Edit": {
+                "retSendData": function (sendData) {                                    //点击按钮执行（二次处理数据，sendData：第一次处理的发送数据 this：弹出框）     
+                    return sendData;                                                              //返回的数据为最终发送的数据 重要！！！
+                },
+                "callBackPass": function (e, msgTip, $table, $layerBtn) {          //接收的数据pass后的操作（this：弹出框 e：接收的数据 msgTip：提示函数，不包含刷新页面，$table：表格节点，$layerBtn：弹出框的按钮集合）
+                    msgTip();                                                                      //提示信息
+                    $table.eq(1).bootstrapTable("load", e.Data);                      //二次加载表数据
+                    $table.find(".bs-checkbox").css({                                    //选择框居中
+                        "text-align": "center",
+                        "vertical-align": "middle",
+                    });
+                    $layerBtn[2].click();                                                        //关闭弹出框
+                    location.reload();                                                             //刷新整个页面
+                },
+                "callBackFail": function (e, msgTip, $table, $layerBtn) {             //请求失败后的操作，参数上同
+                    msgTip();
+                    console.log(this, msgTip, $table);
+                    $table.eq(1).bootstrapTable("load", e.Data);
+                }
+            }
+        }
+    });
+
+
+    function ConfigReport(o) {
+        var _this = this;
+        this.pageMsg = o.pageMsg;
+        this.apiList = o.apiList;
+        this.layerMsg = o.layerMsg;
+        this.tableMsg = o.tableMsg;
+        this.layerData = o.loadLayerData;
+        this.btnClick = o.btnClick;
+        ConfigReport.prototype.Init = function () {
+            //生成报表网页基本结构(包括按钮,弹出层结构)
+            this.ReportHTML(this.pageMsg);
+            //接收首页数据，show首页数据，回调
+            self.parent.client.CallFunction(this.apiList["homePage"]["className"], this.apiList["homePage"]["functionName"], this.sendData(this.apiList["homePage"]["colList"], this.apiList["homePage"]["sendList"]), function (e) {
+                if (e.Status == "Pass") {
+                    _this.InitCallback(e.Data);
+                } else {
+                    _this.InitCallback([]);
+                }
+            });
+            //加载弹出层，生成控件，控制样式，
+            this.loadLayer(this.layerMsg);
+            //加载特殊控件内数据（下拉数据等），
+            this.loadLayerData(this.layerData);
+            //事件触发逻辑
+            this.clickEvent();
+        }
+        ConfigReport.prototype.ReportHTML = function (obj) {
+            $(".title span").html(obj.pageName);                                  //页面名
+            $(".title span").attr("set-lan", "html:" + obj.setLan);            //多语言
+            $(".query input").attr("placeholder", obj.queryTip);               //显示提示信息
+            this.generateBtn(obj.btnMsg);                                              //生成按钮
+            this.generateLayerHTML(obj.btnMsg);                                   //生成弹出框结构
+        }
+        ConfigReport.prototype.generateBtn = function (arr) {  //生成按钮
+            var btnContainer = $(".list .btnList");
+            for (var i = 0; i < arr.length; i++) {
+                var div = $("<div id=" + arr[i]["id"] + " ></div>");
+                var oi = $("<i></i>");
+                var span = $("<span set-lan=" + "html:" + arr[i]["btnName"] + "> " + arr[i]["btnName"] + " </span>");
+                oi.attr("class", arr[i]["icon"]);
+                if (arr[i]["style"] == 0) {   //设置按钮初始样式（选择数据后的按钮样式见表格生成处）
+                    div.css({
+                        "height": "100%",
+                        "padding": "6px 17px",
+                        "lineHeight": "22px",
+                        "color": "rgb(103,106,108)",
+                        "float": "left",
+                        "fontSize": "14px",
+                        "borderRight": "1px solid #337ab7",
+                        "cursor": "pointer"
+                    });
+                    div.hover(function () {   //移入
+                        $(this).css({
+                            "color": "#fff",
+                            "background": "#286090"
+                        });
+                    }, function () {           //移出
+                        $(this).css({
+                            "color": "rgb(103,106,108)",
+                            "background": "#fff"
+                        });
+                    });
+                } else {
+                    div.css({
+                        "height": "100%",
+                        "padding": "6px 17px",
+                        "lineHeight": "22px",
+                        "color": "rgba(103,106,108,0.6)",
+                        "float": "left",
+                        "fontSize": "14px",
+                        "borderRight": "1px solid #337ab7",
+                        "cursor": "no-drop"
+                    });
+                    div.hover(function () {   //移入
+                        $(this).css({
+                            "color": "#fff",
+                            "background": "#337ab7",
+                            "opacity": "0.6"
+                        });
+                    }, function () {           //移出
+                        $(this).css({
+                            "color": "rgba(103,106,108,0.6)",
+                            "background": "#fff",
+                            "opacity": "1"
+                        });
+                    });
+                }
+                div.append(oi);
+                div.append(span);
+                btnContainer.append(div);
+            }
+        }
+        ConfigReport.prototype.generateLayerHTML = function (arr) {    //生成弹出框结构
+            $.each(arr, function (index, btn) {    //遍历按钮
+                if (btn.layerFlag) {
+                    var id = btn.btnName + "Layer";
+                    var lay = $("<div id = " + id + " class = " + "hidden" + "></div>");
+                    var panel = $("<div class = " + "panel-body" + "></div>");
+                    var row = $("<div class = " + "row" + "></div>");
+                    var br = $("<br>");
+                    row.append(br);
+                    panel.append(row);
+                    lay.append(panel);
+                    //弹出框样式    
+                    lay.css({
+                        "position": "absolute",
+                        "width": "100%"
+                    });
+                    $(document.body).append(lay);
+                }
+            });
+        }
+        ConfigReport.prototype.sendData = function (colList, sendList) {       //生成发送数据
+            var sendData = {};
+            $.each(colList, function (i, val) {
+                sendData[val] = sendList[i];
+            });
+            return sendData;
+        }
+        ConfigReport.prototype.InitCallback = function (e) {
+            //show首页数据
+            $(".tab table").bootstrapTable({
+                data: e,   //e
+                pagination: true,    //分页显示
+                pageSize: 50,         //初始化每一页的数据条数
+                pageList: [50, 100,200,500],
+                search: false,        //显示查找框
+                striped: true,        //背景色相间
+                showRefresh: false,   //显示重置按钮
+                clickToSelect: true,   //单击一行内任意单元格选中该行
+                singleSelect: true,  //单选
+                showExport: true,
+                exportDataType: "all",
+                onCheck: function (row) {   //选中
+                    var btn1 = []; //1类按钮
+                    var btn2 = []; //2类按钮
+                    $.each(o.pageMsg["btnMsg"], function (index, val) {
+                        if (val["style"] == 1) {
+                            btn1.push($("#" + val["id"]));
+                        }
+                        if (val["style"] == 2) {
+                            btn2.push($("#" + val["id"]));
+                        }
+                    })
+                    var rows = $('.tab table').bootstrapTable('getAllSelections');  ///getAllSelections
+                    if (rows.length == 1) {   //控制1类btn
+                        $.each(btn1, function (index, ele) {
+                            ele.css({                 //初始
+                                "height": "100%",
+                                "padding": "6px 17px",
+                                "lineHeight": "22px",
+                                "color": "rgb(103, 106, 108)",
+                                "float": "left",
+                                "fontSize": "14px",
+                                "borderRight": "1px solid #337ab7",
+                                "cursor": "pointer"
+                            });
+                            ele.hover(function () {    //移入
+                                $(this).css({
+                                    "color": "#fff",
+                                    "background": "#286090",
+                                    "opacity": "1"
+                                });
+                            }, function () {            //移出
+                                $(this).css({
+                                    "color": "rgb(103, 106, 108)",
+                                    "background": "#fff"
+                                });
+                            });
+                        });
+                    } else {
+                        $.each(btn1, function (index, ele) {
+                            ele.css({                 //初始
+                                "height": "100%",
+                                "padding": "6px 17px",
+                                "lineHeight": "22px",
+                                "color": "rgba(103,106,108,0.6)",
+                                "float": "left",
+                                "fontSize": "14px",
+                                "borderRight": "1px solid #337ab7",
+                                "cursor": "no-drop"
+                            });
+                            ele.hover(function () {    //移入
+                                $(this).css({
+                                    "color": "#fff",
+                                    "background": "#337ab7",
+                                    "opacity": "0.6"
+                                });
+                            }, function () {            //移出
+                                $(this).css({
+                                    "color": "rgba(103,106,108,0.6)",
+                                    "background": "#fff",
+                                    "opacity": "1"
+                                });
+                            });
+                        });
+                    }
+                    if (rows.length > 0) {    //控制2类btn
+                        $.each(btn2, function (index, ele) {
+                            ele.css({                 //初始
+                                "height": "100%",
+                                "padding": "6px 17px",
+                                "lineHeight": "22px",
+                                "color": "rgb(103, 106, 108)",
+                                "float": "left",
+                                "fontSize": "14px",
+                                "borderRight": "1px solid #337ab7",
+                                "cursor": "pointer"
+                            });
+                            ele.hover(function () {    //移入
+                                $(this).css({
+                                    "color": "#fff",
+                                    "background": "#286090",
+                                    "opacity": "1"
+                                });
+                            }, function () {            //移出
+                                $(this).css({
+                                    "color": "rgb(103, 106, 108)",
+                                    "background": "#fff"
+                                });
+                            });
+                        });
+                    } else {
+                        $.each(btn2, function (index, ele) {
+                            ele.css({                 //初始
+                                "height": "100%",
+                                "padding": "6px 17px",
+                                "lineHeight": "22px",
+                                "color": "rgba(103,106,108,0.6)",
+                                "float": "left",
+                                "fontSize": "14px",
+                                "borderRight": "1px solid #337ab7",
+                                "cursor": "no-drop"
+                            });
+                            ele.hover(function () {    //移入
+                                $(this).css({
+                                    "color": "#fff",
+                                    "background": "#337ab7",
+                                    "opacity": "0.6"
+                                });
+                            }, function () {            //移出
+                                $(this).css({
+                                    "color": "rgba(103,106,108,0.6)",
+                                    "background": "#fff",
+                                    "opacity": "1"
+                                });
+                            });
+                        });
+                    }
+                    checkedData = rows;
+                },
+                onUncheck: function (row) {  //取消选中
+                    var btn1 = []; //1类按钮
+                    var btn2 = []; //2类按钮
+                    $.each(o.pageMsg["btnMsg"], function (index, val) {
+                        if (val["style"] == 1) {
+                            btn1.push($("#" + val["id"]));
+                        }
+                        if (val["style"] == 2) {
+                            btn2.push($("#" + val["id"]));
+                        }
+                    })
+                    var rows = $('.tab table').bootstrapTable('getAllSelections');  ///getAllSelections
+                    if (rows.length == 1) {   //控制1类btn
+                        $.each(btn1, function (index, ele) {
+                            ele.css({                 //初始
+                                "height": "100%",
+                                "padding": "6px 17px",
+                                "lineHeight": "22px",
+                                "color": "rgb(103, 106, 108)",
+                                "float": "left",
+                                "fontSize": "14px",
+                                "borderRight": "1px solid #337ab7",
+                                "cursor": "pointer"
+                            });
+                            ele.hover(function () {    //移入
+                                $(this).css({
+                                    "color": "#fff",
+                                    "background": "#286090",
+                                    "opacity": "1"
+                                });
+                            }, function () {            //移出
+                                $(this).css({
+                                    "color": "rgb(103, 106, 108)",
+                                    "background": "#fff"
+                                });
+                            });
+                        });
+                    } else {
+                        $.each(btn1, function (index, ele) {
+                            ele.css({                 //初始
+                                "height": "100%",
+                                "padding": "6px 17px",
+                                "lineHeight": "22px",
+                                "color": "rgba(103,106,108,0.6)",
+                                "float": "left",
+                                "fontSize": "14px",
+                                "borderRight": "1px solid #337ab7",
+                                "cursor": "no-drop"
+                            });
+                            ele.hover(function () {    //移入
+                                $(this).css({
+                                    "color": "#fff",
+                                    "background": "#337ab7",
+                                    "opacity": "0.6"
+                                });
+                            }, function () {            //移出
+                                $(this).css({
+                                    "color": "rgba(103,106,108,0.6)",
+                                    "background": "#fff",
+                                    "opacity": "1"
+                                });
+                            });
+                        });
+                    }
+                    if (rows.length > 0) {    //控制2类btn
+                        $.each(btn2, function (index, ele) {
+                            ele.css({                 //初始
+                                "height": "100%",
+                                "padding": "6px 17px",
+                                "lineHeight": "22px",
+                                "color": "rgb(103, 106, 108)",
+                                "float": "left",
+                                "fontSize": "14px",
+                                "borderRight": "1px solid #337ab7",
+                                "cursor": "pointer"
+                            });
+                            ele.hover(function () {    //移入
+
+                                $(this).css({
+                                    "color": "#fff",
+                                    "background": "#286090",
+                                    "opacity": "1"
+                                });
+                            }, function () {            //移出
+                                $(this).css({
+                                    "color": "rgb(103, 106, 108)",
+                                    "background": "#fff"
+                                });
+                            });
+                        });
+                    } else {
+                        $.each(btn2, function (index, ele) {
+                            ele.css({                 //初始
+                                "height": "100%",
+                                "padding": "6px 17px",
+                                "lineHeight": "22px",
+                                "color": "rgba(103,106,108,0.6)",
+                                "float": "left",
+                                "fontSize": "14px",
+                                "borderRight": "1px solid #337ab7",
+                                "cursor": "no-drop"
+                            });
+                            ele.hover(function () {    //移入
+                                $(this).css({
+                                    "color": "#fff",
+                                    "background": "#337ab7",
+                                    "opacity": "0.6"
+                                });
+                            }, function () {            //移出
+                                $(this).css({
+                                    "color": "rgba(103,106,108,0.6)",
+                                    "background": "#fff",
+                                    "opacity": "1"
+                                });
+                            });
+                        });
+                    }
+                    checkedData = rows;
+                },
+                onPageChange:function (){
+                    $(".tab table").find("td").css({
+                        whiteSpace: "nowrap",
+                        textAlign: "left"
+                    });
+                },
+                columns: this.columns(this.tableMsg["column"])
+            });
+            $(".tab table").find("td").css({
+                whiteSpace: "nowrap",
+                textAlign: "left"
+            });
+            //配置语言
+            this.setLanguage(_this.pageMsg.setLan);
+        }
+        ConfigReport.prototype.setLanguage = function (page) {
+            var client = self.parent.client;
+            var MesUI = new MesClientUI(client);
+            MesUI.SetLanguage(page);
+        }
+        ConfigReport.prototype.columns = function (colList) {   //生成表格关键数据
+            var columns = [];
+            columns.push({
+                align: 'center',
+                valign: 'middle',
+                checkbox: true
+            });
+            columns.push({     //添加序号 
+                field: "NO",
+                title: "<label set-lan=" + "html:" + "NO" + ">" + "NO" + "</label>",// item,  
+                align: 'left',
+                valign: 'middle',
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            });
+            $.each(colList, function (i, val) {
+                var title = "<label set-lan=" + "html:" + val + ">" + val + "</label>";
+                var obj = {
+                    field: val,
+                    title: title,
+                    align: 'left',
+                    valign: 'middle'
+                };
+                columns.push(obj);
+            });
+            return columns;
+        }
+        ConfigReport.prototype.loadLayer = function (layerMsg) {
+            var self = this;
+            $.each(this.pageMsg.btnMsg, function (index, obj) {  //遍历按钮
+                if (obj.layerFlag) {
+                    var layerNode = $("#" + obj.btnName + "Layer" + " .panel-body .row");
+                    $.each(layerMsg[obj.btnName].showList, function (index, control) {
+                        var ele = self.loadControl(control.field, control.type, control.disabled, control.labelList, control.valList);
+                        layerNode.append(ele);
+                    });
+                    layerBtn(layerNode, obj.layerBtnName);
+                    //弹出框内部功能按钮样式，内部特殊控件样式
+                    layerNode.find("label").css({
+                        "marginTop": "6px",
+                        "paddingRight": "6px",
+                        "whiteSpace": "nowrap",
+                        "overflow": "hidden",
+                        "textOverflow": "ellipsis"
+                    });
+                    layerNode.find("textarea").css("height", "82px");
+
+                    layerNode.find("input[type=radio]").css({
+                        "marginTop": "7px",
+                        "width": "20px",
+                        "height": "20px"
+                    });
+                    layerNode.find("input[type=radio]").prev().css({
+                        "display": "inline-block",
+                        "height": "34px",
+                        "lineHeight": "34px",
+                        "position": "relative",
+                        "top": "-5px"
+                    });
+                    layerNode.find("input[type=radio]").parent().css({
+                        "lineHeight": "34px"
+                    });
+                    layerNode.find("input[type=checkbox]").css({
+                        "marginTop": "7px",
+                        "width": "20px",
+                        "height": "20px"
+                    });
+                    layerNode.find("input[type=checkbox]").prev().css({
+                        "display": "inline-block",
+                        "height": "34px",
+                        "lineHeight": "34px",
+                        "position": "relative",
+                        "top": "-5px"
+                    });
+                    layerNode.find("input[type=checkbox]").parent().css({
+                        "lineHeight": "34px"
+                    });
+                    //console.log(layerNode.find("input[type=radio]").prev());
+                    layerNode.find("." + obj.layerBtnName + " button").css({
+                        "background": "#337ab7",
+                        "fontWeight": "bold",
+                        "color": "#fff",
+                        "borderRadius": "15px",
+                        "boxShadow": "5px 5px 10px #aaa"
+                    });
+                    layerNode.find("." + obj.layerBtnName + " button").hover(function () {    //移入
+                        $(this).css("background", "#286090");
+                    }, function () {     //移出
+                        $(this).css("background", "#337ab7");
+                    });
+                }
+                function layerBtn($fatherNode, name) {    //生成弹出层内功能按钮（如ADD EDIT）
+                    var odiv = $("<div></div>");
+                    var label = $("<div></div>");
+                    var div = $("<div class=" + "col-xs-4" + "></div>");
+                    var btn = $("<button>" + name + "</button>");
+                    btn.attr("class", "form-control " + name);
+                    label.attr("class", "col-xs-4 control-label text-right");
+                    odiv.attr("class", name + " form-group col-sm-6 col-md-6 hui");
+                    div.append(btn);
+                    odiv.append(label);
+                    odiv.append(div);
+                    $fatherNode.append(odiv);
+                }
+            });
+        }
+        ConfigReport.prototype.loadControl = function (name, type, disabled, labelList, valList) {   //加载弹出层控件（单个控件）labelList,valList针对单选框，复选框有用
+            var ele;
+            switch (type) {
+                case "text":
+                    ele = $("<div></div>");
+                    var label = $("<label set-lan=" + "html:" + name + ">" + name + "</label>");
+                    var div = $("<div class=" + "col-xs-8" + "></div>");
+                    var oInput;
+                    if (disabled) {
+                        oInput = $("<input type=" + "text" + " class=" + "form-control" + " id=" + name + " name=" + name + " disabled />");
+                    } else {
+                        oInput = $("<input type=" + "text" + " class=" + "form-control" + " id=" + name + " name=" + name + " />");
+                    }
+                    label.attr("class", "col-xs-4 control-label text-right");
+                    ele.attr("class", "form-group col-sm-6 col-md-6 hui");
+                    div.append(oInput);
+                    ele.append(label);
+                    ele.append(div);
+                    break;
+                case "select":
+                    ele = $("<div></div>");
+                    var label = $("<label set-lan=" + "html:" + name + ">" + name + "</label>");
+                    var div = $("<div class=" + "col-xs-8" + "></div>");
+                    var oSelect = $("<select name=" + name + " id=" + name + " class=" + "form-control" + " ></select>");
+                    label.attr("class", "col-xs-4 control-label text-right");
+                    ele.attr("class", "form-group col-sm-6 col-md-6 hui");
+                    div.append(oSelect);
+                    ele.append(label);
+                    ele.append(div);
+                    break;
+                case "textarea":
+                    ele = $("<div></div>");
+                    var label = $("<label set-lan=" + "html:" + name + ">" + name + "</label>");
+                    var div = $("<div class=" + "col-xs-8" + "></div>");
+                    var oTextarea = $("<textarea name=" + name + " id=" + name + " class=" + "form-control" + " ></textarea>");
+                    label.attr("class", "col-xs-4 control-label text-right");
+                    ele.attr("class", "form-group col-sm-6 col-md-6 hui");
+                    div.append(oTextarea);
+                    ele.append(label);
+                    ele.append(div);
+                    break;
+                case "file":
+                    ele = $("<div></div>");
+                    var label = $("<label set-lan=" + "html:" + name + ">" + name + "</label>");
+                    var div = $("<div class=" + "col-xs-8" + "></div>");
+                    //<input style="outline: none;" class="form-control" id="uploadFiles" type="file" accept=".xlsx,.xls" />
+                    var oInput = $("<input type=" + "file" + " class=" + "form-control" + " name=" + name + " id=" + name + " />");
+                    label.attr("class", "col-xs-4 control-label text-right");
+                    ele.attr("class", "form-group col-sm-6 col-md-6 hui");
+                    div.append(oInput);
+                    ele.append(label);
+                    ele.append(div);
+                    break;
+                case "checkbox":
+                    ele = $("<div></div>");
+                    var label = $("<label set-lan=" + "html:" + name + ">" + name + "</label>");
+                    var div = $("<div class=" + "col-xs-8" + "></div>");
+                    var odiv;
+                    $.each(labelList, function (index, val) {
+                        odiv = $("<div class=" + "col-xs-4" + "></div>");
+                        var span = $("<span>" + val + " : " + "</span>");
+                        var oinput = $("<input type=" + "checkbox" + " value=" + valList[index] + " name=" + name + " />");
+                        odiv.append(span);
+                        odiv.append(oinput);
+                        div.append(odiv);
+                    });
+                    label.attr("class", "col-xs-4 control-label text-right");
+                    ele.attr("class", "form-group col-sm-6 col-md-6 hui");
+                    ele.append(label);
+                    ele.append(div);
+                    break;
+                case "radio":
+                    ele = $("<div></div>");
+                    var label = $("<label set-lan=" + "html:" + name + ">" + name + "</label>");
+                    var div = $("<div class=" + "col-xs-8" + "></div>");
+                    var odiv;
+                    $.each(labelList, function (index, val) {
+                        odiv = $("<div class=" + "col-xs-4" + "></div>");
+                        var span = $("<span>" + val + " ： " + "</span>");
+                        var oinput = $("<input type=" + "radio" + " value=" + valList[index] + " name=" + name + " />");
+                        odiv.append(span);
+                        odiv.append(oinput);
+                        div.append(odiv);
+                    });
+                    label.attr("class", "col-xs-4 control-label text-right");
+                    ele.attr("class", "form-group col-sm-6 col-md-6 hui");
+                    ele.append(label);
+                    ele.append(div);
+                    break;
+            }
+            return ele;
+        }
+        ConfigReport.prototype.loadLayerData = function (layerData) {    //加载弹出层内特殊控件数据，弹出层的所有操作，弹出层所有事件触发逻辑！！！非常重要！！！
+            $.each(layerData, function (key, fun) {
+                var layNode = $("#" + key + "Layer");
+                var args = [loadSelectData, generatLayerTable.bind(layNode)];
+                fun.apply(layNode, args);    //生成下拉框的方法,生成表格的方法,后续再补充功能，this为当前弹出层！！！
+            });
+            function generatLayerTable(tabObj) {        //生成弹出框内的表格(tableName: name,id field:字段集合 tableData:表数据)   //tableName, fields, tableData, eventOb
+                var tableName = tabObj.tableName;       //表的类名
+                var fields = tabObj.fields;                     //表字段集合
+                var tableData = tabObj.tableData;           //表数据
+                var eventObj = tabObj.eventObj;            //表格的事件
+                var btnArr = tabObj.btnArr;                   //按钮的配置数据
+                var $prev = tabObj.$prev;                    //按钮行的上一个控件，用来插入按钮行
+
+                var btnList = creatToobar(btnArr);         //按钮行节点（jquery对象）
+                $prev.after(btnList);                           //插入生成的按钮行
+
+                ////生成表格
+                var lastNode = this.find(".row").children().last();                  //弹出框的最后一个控件，用来插入表格
+                var tabDiv = $("<div class = " + tableName + "></div>");    //表格父容器
+                var table = $("<table></table>");
+                tabDiv.css({
+                    margin: "15px"
+                });
+                tabDiv.append(table);
+                lastNode.before(tabDiv);
+                table.bootstrapTable({
+                    data: tableData,   //e
+                    pagination: true,    //分页显示
+                    pageSize: 10,         //初始化每一页的数据条数
+                    pageList: [10, 25, 50, 100],
+                    search: false,        //显示查找框
+                    striped: false,        //背景色相间
+                    showRefresh: false,   //显示重置按钮
+                    clickToSelect: true,   //单击一行内任意单元格选中该行
+                    singleSelect: true,  //单选
+                    onCheck: function (row) {   //选中
+                        //var rows = $('.tab table').bootstrapTable('getAllSelections');  ///getAllSelections
+                        //按钮样式控制
+                        var $btns = btnList.find("div");
+                        $.each(btnArr, function (index, btnO) {
+                            if (btnO.style != 0) {
+                                $btns.eq(index).css({
+                                    color: "#000",
+                                    opacity: "1",
+                                    cursor: "pointer"
+                                });
+                                $btns.eq(index).hover(function () {    //鼠标移入
+                                    $(this).css({
+                                        background: "#337ab7",
+                                        color: "#fff"
+                                    });
+                                }, function () {      //鼠标移出
+                                    $(this).css({
+                                        background: "#fff",
+                                        color: "#000"
+                                    });
+                                });
+                            }
+                        });
+                        //传入选中的数据，该表格的功能按钮，this为该表（jquery对象）
+                        eventObj.onCheck.apply(table, [row]);
+                    },
+                    onUncheck: function (row) {  //取消选中
+                        //按钮样式控制
+                        var $btns = btnList.find("div");
+                        console.log(btnArr, btnList.find("div"));
+                        $.each(btnArr, function (index, btnO) {
+                            if (btnO.style != 0) {
+                                $btns.eq(index).css({
+                                    cursor: "no-drop",
+                                    color: "#aaa"
+                                });
+                                $btns.eq(index).hover(function () {        //移入
+                                    $(this).css({
+                                        color: "#fff",
+                                        background: "#337ab7",
+                                        opacity: "0.7"
+                                    });
+                                }, function () {                //移出
+                                    $(this).css({
+                                        color: "#aaa",
+                                        background: "#fff",
+                                        opacity: "1"
+                                    });
+                                });
+                            }
+                        });
+                        eventObj.onUncheck.apply(table);
+                    },
+                    columns: columns(fields)
+                });
+                table.find(".bs-checkbox").css({
+                    "text-align": "center",
+                    "vertical-align": "middle",
+                });
+                function columns(colList) {   //生成表格关键数据
+                    var columns = [];
+                    columns.push({
+                        align: 'center',
+                        valign: 'middle',
+                        checkbox: true
+                    });
+                    $.each(colList, function (i, val) {
+                        var title = "<i set-lan=" + "html:" + val + ">" + val + "</i>";
+                        var obj = {
+                            field: val,
+                            title: title,
+                            align: 'center',
+                            valign: 'middle'
+                        };
+                        columns.push(obj);
+                    });
+                    return columns;
+                }
+            }
+            function creatToobar(btnArr) {   //生成按钮，用于操作表格（与弹出框表格配合使用）
+                var div = $("<div class='form-group col-sm-12 col-md-12 hui'></div>");
+                $.each(btnArr, function (index, btnO) {
+                    var iDiv = $("<div class=" + "lay" + btnO.btnName + "Btn" + "></div>");
+                    iDiv.css({
+                        display: "inline-block",
+                        padding: "5px 10px",
+                        border: "1px solid #337ab7",
+                        borderRight: "none",
+                        cursor: "pointer"
+                    });
+                    if (index == btnArr.length - 1) {
+                        iDiv.css({
+                            borderRight: "1px solid #337ab7"
+                        });
+                    }
+                    var i = $("<i></i>");
+                    i.attr("class", btnO.icon);
+                    var span = $("<span set-lan=" + "html:" + btnO.btnName + ">" + btnO.btnName + "</span>");
+                    iDiv.append(i);
+                    iDiv.append(span);
+                    div.append(iDiv);
+                    //iDiv(按钮)样式控制
+                    if (btnO.style == 0) {
+                        iDiv.hover(function () {   //鼠标移入
+                            $(this).css({
+                                background: "#337ab7",    //40 96 144
+                                color: "#fff"
+                            });
+                        }, function () {     //鼠标移出
+                            $(this).css({
+                                background: "#fff",
+                                color: "#000"
+                            });
+                        });
+                    } else {                    //选中一条数据才能操作的按钮的样式
+                        iDiv.css({
+                            cursor: "no-drop",
+                            color: "#aaa"
+                        });
+                        iDiv.hover(function () {        //移入
+                            $(this).css({
+                                color: "#fff",
+                                background: "#337ab7",
+                                opacity: "0.7"
+                            });
+                        }, function () {                //移出
+                            $(this).css({
+                                color: "#aaa",
+                                background: "#fff",
+                                opacity: "1"
+                            });
+                        });
+                    }
+                });
+                return div;
+            }
+            function field_api(field) {    //根据字段（field）找api信息，dataList:配置数据 该函数为非纯函数
+                var obj = {};
+                $.each(layerData, function (index, dataObj) {
+                    if (dataObj["pri"] == 2 && dataObj["field"] == field) {
+                        obj = dataObj;
+                    }
+                });
+                return obj;
+            }
+            function loadSelectData(container, dataList) {
+                container.html(" ");
+                $.each(dataList, function (index, val) {
+                    var op = $("<option>" + val + "</option>");
+                    op.val(val)
+                    container.append(op);
+                });
+            }
+        }
+        ConfigReport.prototype.clickEvent = function () {
+            var _this = this;
+            $.each(this.pageMsg.btnMsg, function (index, btn) {//分成兩批，一批彈出大層，一批彈出小層或不彈出層
+                var layNode = $("#" + btn.btnName + "Layer");
+                if (btn.layerFlag) {    //需要弹出大层
+                    $("#" + btn.id).on("click", function () {
+                        if ($(this).css("cursor") != "no-drop") {   //按钮是可交互状态
+                            layer.open({
+                                type: 1,
+                                skin: "layui-layer-lan",
+                                title: btn.btnName + " Data",
+                                area: ["80%", "90%"],
+                                scrollbar: false,
+                                content: layNode,    //该弹出层节点
+                                maxmin: true,
+                                success: function (layero, index) {
+                                    layNode.removeClass("hidden");//显示弹出框
+                                    fillData(_this.layerMsg[btn.btnName].showList, $(".tab table").bootstrapTable("getAllSelections")[0], layNode);    //填充数据
+                                    var b = $("." + btn.layerBtnName).find("button");   //功能按钮
+                                    var tableNode = $(".tab table");
+                                    var layerBtn = $(".layui-layer-setwin").find("a");
+                                    b.on("click", function () {
+                                        var tempSendData = get_sendData(_this.layerMsg[btn.btnName].sendList, layNode);     //第一次处理后的发送数据
+                                        var sendData = _this.btnClick[btn.btnName]["retSendData"].apply(layNode, [tempSendData]);             //点击按钮后二次处理待发送的数据(this:大弹框节点 传入的参数：第一次处理的发送数据 )  非常重要！！！
+                                        //sendData用于点击功能按钮时发送给后台的数据
+                                        self.parent.client.CallFunction(_this.apiList[btn.btnName]["className"], _this.apiList[btn.btnName]["functionName"], sendData, function (e) {
+                                            if (e.Status == "Pass") {
+                                                _this.btnClick[btn.btnName]["callBackPass"].apply(layNode, [e, msg, tableNode, layerBtn]);   //弹出框 接收的数据 提示信息方法 表节点 弹出框按钮集合
+                                                function msg() {
+                                                    layer.msg(e.Message, {
+                                                        icon: 1,
+                                                        time: 2000
+                                                    }, function () {
+                                                        //location.reload();
+                                                    });
+                                                }
+                                            } else {
+                                                _this.btnClick[btn.btnName]["callBackFail"].apply(layNode, [e, msg, tableNode, layerBtn]);    //弹出框 接收的数据 提示信息方法 表节点 弹出框按钮集合
+                                                function msg() {
+                                                    layer.msg(e.Message, {
+                                                        icon: 0,
+                                                        time: 2000
+                                                    }, function () {
+                                                        //location.reload();
+                                                    });
+                                                }
+                                            }
+                                        });
+                                    });
+
+                                    var lay = layNode.parents().eq(1);
+                                    var w = lay.css("width");
+                                    var h = lay.css("height");
+
+                                    lay.css({
+                                        position: "fixed",
+                                        left: "50%",
+                                        top: "50%",
+                                        marginTop: -Number(h.match(/\d+/g)) / 2 + "px",
+                                        marginLeft: -Number(w.match(/\d+/g)) / 2 + "px",
+                                    });
+                                    var nav = lay.children().eq(0);
+                                    nav.off("mousedown");
+                                    nav.off("mousemove");
+                                    nav.off("mouseup");
+                                    nav.off("click");
+                                },
+                                end: function () {
+                                    layNode.addClass("hidden");                                       //隐藏弹出框
+                                    layNode.find("input").each(function (index, node) {     //关闭弹出框各项数据置空
+                                        node.value = "";
+                                    });
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    $("#" + btn.id).on("click", function () {     //不需要弹出大层
+                        if ($(this).css("cursor") != "no-drop") {   //按钮是可交互状态
+                            var chData = $(".tab table").bootstrapTable("getAllSelections")[0];
+                            var sendData = {};
+                            if (chData) {
+                                $.each(_this.apiList[btn.btnName]["colList"], function (index, field) {
+                                    sendData[field] = chData[field];
+                                });
+                            }
+                            var CallFunction = function () {
+                                self.parent.client.CallFunction(_this.apiList[btn.btnName]["className"], _this.apiList[btn.btnName]["functionName"], sendData, function (e) {
+                                    if (e.Status == "Pass") {
+                                        layer.msg(e.Message, {
+                                            icon: 1,
+                                            time: 2000
+                                        }, function () {
+                                            location.reload();
+                                        });
+                                    } else {
+                                        layer.msg(e.Message, {
+                                            icon: 0,
+                                            time: 2000
+                                        }, function () {
+                                        });
+                                    }
+                                });
+                            }
+                            var smallLayer = function () {
+                                layer.open({                          //确定是否删除?
+                                    title: btn.btnName,
+                                    btn: [btn.btnName, 'Cancel'],
+                                    content: "确认此操作?",
+                                    yes: function (index) {      //确定删除
+                                        layer.close(index);        //关闭该选择layer框
+                                        CallFunction();
+                                    }
+                                });
+                            }
+                            //选中的数据，发送数据（封装）,小弹窗
+                            _this.btnClick[btn.btnName].apply($(this), [chData, CallFunction, smallLayer]);     //CallFunction:不需要提示    smallLayer：需要提示
+                        }
+                    })
+                }
+            });
+            //節流查询
+            $(".query input").on("input", throttle(function () {
+                var val = $(this).val();
+                console.log(val);
+                var sendData = {};
+                var key = _this.apiList.select["colList"][0];
+                sendData[key] = val;
+                self.parent.client.CallFunction(_this.apiList.select["className"], _this.apiList.select["functionName"], sendData, function (e) {
+                    if (e.Status == "Pass") {
+                        $(".tab table").bootstrapTable("load", e.Data);
+                        $(".tab table").find(".bs-checkbox").css({
+                            "text-align": "center",
+                            "vertical-align": "middle",
+                        });
+                        $(".tab table").find("td").css({
+                            whiteSpace: "nowrap",
+                            textAlign: "left"
+                        });
+                        layer.msg(e.Message, {
+                            icon: 1,
+                            time: 2000
+                        }, function () {
+                        });
+                    } else {
+                        layer.msg(e.Message, {
+                            icon: 0,
+                            time: 2000
+                        }, function () {
+                        });
+                    }
+                });
+            }, 1000));
+            //函数（处理数据）
+            function fillData(fields, dataList, container) {   //填充数据
+                //console.log(fields, dataList, container);
+                $.each(fields, function (index, o) {
+                    if (o.fillFlag) {
+                        var node = container.find("[name=" + o.field + "]");
+                        if (dataList) {
+                            node[0].value = dataList[o.field];
+                        }
+                        if (o.field == "EDIT_EMP") {
+                            node[0].value = self.parent.client.UserInfo["EMP_NO"];
+                        }
+                    }
+                });
+            }
+            function get_sendData(fields, container) {     //用于生成发送数据
+                var sendData = {};
+                $.each(fields, function (index, val) {
+                    var $node = container.find("[name=" + val + "]");
+                    if ($node.length > 0) {
+                        sendData[val] = $node[0].value;
+                        if ($node[0].type == "radio") {       //兼容单选框，复选框
+                            $node.each(function (index, node) {
+                                if (node.checked) {
+                                    sendData[val] = node.value;
+                                }
+                            });
+                        }
+                        if ($node[0].type == "checkbox") {
+                            sendData[val] = [];
+                            $node.each(function (index, node) {
+                                if (node.checked) {
+                                    sendData[val].push(node.value);
+                                }
+                            });
+                        }
+                        //if (container.find("[name=" + val + "]")[0].tagName == "TEXTAREA") {
+                        //    var valList = container.find("[name=" + val + "]")[0].value.split(/ +|,+|\n+/m);
+                        //    var newVal = [];
+                        //    $.each(valList, function (index, value) {
+                        //        if (value != "") {
+                        //            newVal.push(value);
+                        //        }
+                        //    });
+                        //    sendData[val] = newVal;
+                        //}
+                    } else {
+                        sendData[val] = self.parent.client.UserInfo[val];
+                    }
+                });
+                return sendData;
+            }
+            function throttle(fn, wait) {    //节流
+                var timer;
+                return function () {
+                    clearTimeout(timer);
+                    var _this = this;
+                    var args = arguments;
+                    timer = setTimeout(function () {
+                        fn.apply(_this, args);
+                    }, wait);
+                }
+            }
+        };
+        this.Init();
+    }
+
+
+</script>
+</html>

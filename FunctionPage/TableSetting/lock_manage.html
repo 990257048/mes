@@ -1,0 +1,862 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>testReport</title>  <!-- GCH 2019/10/21 ADD-->
+</head>
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+<link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+<link href="../../css/ReportConfig.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+<script src="../../Scripts/Report/MesClient.ReportConfig.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    .query-wrap {
+        position: absolute;
+        width: 700px;
+        height: auto;
+        background: #FFF;
+        z-index: 10000;
+        top: 120px;
+        padding: 20px;
+        padding-bottom: 0;
+        border: 1px solid #337ab7;
+        border-radius: 10px;
+        box-shadow: 5px 5px 15px #000;
+    }
+
+    .ctr-wrap {
+        width: 100%;
+        height: 50px;
+        padding-bottom: 15px;
+    }
+
+    .ctr-wrap-max {
+        width: 100%;
+        height: 200px;
+        padding-bottom: 15px;
+    }
+
+    .lab, .ctr {
+        height: 100%;
+        line-height: 35px;
+        float: left;
+    }
+
+    .lab {
+        width: 30%;
+        padding: 0px 20px;
+        background: #ddd;
+        text-align: right;
+        border-bottom: 2px solid #337ab7;
+        box-sizing: border-box;
+    }
+
+    .ctr {
+        width: 70%;
+        padding: 0px 20px;
+        /*background:blue;*/
+    }
+
+    .ctr-max {
+        width: 70%;
+        height: 100%;
+        float: left;
+        padding: 0px 20px;
+        box-sizing: border-box;
+    }
+
+        .ctr-max textarea {
+            width: 100%;
+            height: 100%;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+
+    .ctr select, .ctr input {
+        width: 100%;
+        height: 100%;
+        padding: 5px 15px;
+    }
+
+    .ctr-wrap .submit {
+        width: 36%;
+        height: 100%;
+        text-align: center;
+        background: #337ab7;
+        line-height: 35px;
+        margin-left: 32%;
+        color: #fff;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+        .ctr-wrap .submit:hover {
+            background: #003f75;
+        }
+
+
+    .lock-wrap {
+        width: 1000px;
+        height: 620px;
+        background: #f5f5f5;
+        border: 1px solid #337ab7;
+        position: absolute;
+        top: 120px;
+        left: 15px;
+        z-index: 100;
+        border-radius: 10px;
+        box-shadow: 5px 5px 15px #000;
+    }
+
+    .lock-top {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        padding: 0px 10px;
+        background: #337ab7;
+        color: #fff;
+    }
+
+    .msg-tip {
+        width: 100%;
+        height: 40px;
+        padding: 0px 10px;
+        line-height: 40px;
+    }
+
+    .list-wrap {
+        width: 100%;
+        height: calc(100% - 40px);
+    }
+
+    .list-left, .list-right {
+        width: 50%;
+        height: 100%;
+        float: left;
+    }
+
+    .list-left {
+        padding: 0px 5px 10px 10px;
+    }
+
+    .list-right {
+        padding: 0px 10px 10px 5px;
+    }
+
+    .sn-list-unlock, .sn-list-lock {
+        width: 100%;
+        height: 100%;
+        padding: 8px;
+        border: 1px solid #337ab7;
+    }
+
+    .sn-tip {
+        width: 100%;
+        height: 30px;
+        line-height: 30px;
+    }
+
+    .sn-unlock-contain, .sn-lock-contain {
+        width: 100%;
+        height: 220px;
+        border: 1px solid #337ab7;
+        padding: 8px;
+        background: #f5f5f5;
+    }
+
+    .sn-unlock-describe, .sn-lock-describe {
+        width: 100%;
+        height: 80px;
+        border: 1px solid #337ab7;
+        padding: 8px;
+        background: #f5f5f5;
+    }
+
+    .mkd-flag, .lock-station {
+        width: 100%;
+        height: 40px;
+        padding: 5px;
+    }
+
+    .mkd-lab, .lock-station-lab {
+        width: 30%;
+        height: 100%;
+        line-height: 30px;
+        float: left;
+    }
+
+    input.mkd[type=checkbox] {
+        width: 30px;
+        height: 30px;
+    }
+
+    select[name=lock-station], select[name=unlock-station] {
+        width: 70%;
+        height: 30px;
+        float: left;
+    }
+
+    .btn-wrap {
+        width: 100%;
+        height: 40px;
+        padding: 5px;
+    }
+
+    .lock-btn, .unlock-btn {
+        width: 40%;
+        height: 100%;
+        text-align: center;
+        line-height: 30px;
+        margin-left: 30%;
+        background: #337ab7;
+        color: #fff;
+    }
+</style>
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:"></span>
+    </div>
+    <div class="list">
+        <div class="btnList"></div>
+        <div class="query">
+            <div class="input">
+                <input type="text" value="" placeholder="" />
+            </div>
+        </div>
+        <div class="query-wrap">
+            <div class="ctr-wrap">
+                <div class="lab">Type</div>
+                <div class="ctr">
+                    <select name="Type">
+                        <option value="WO">WO</option>
+                        <option value="PL">PL</option>
+                        <option value="LOT">LOT</option>
+                        <option value="SN">SN</option>
+                    </select>
+                </div>
+            </div>
+            <div class="ctr-wrap">
+                <div class="lab">Value</div>
+                <div class="ctr">
+                    <input type="text" name="Value" placeholder="请输入Type对应内容（WO/PL/LOT/SN）" value="" />
+                </div>
+            </div>
+
+            <div class="ctr-wrap-max">
+                <div class="lab">SN</div>
+                <div class="ctr-max">
+                    <textarea name="sn" placeholder="请输入sn（sn之间以空格，逗号，换行隔开都可以）"></textarea>
+                </div>
+            </div>
+
+            <div class="ctr-wrap">
+                <div class="lab">Status</div>
+                <div class="ctr">
+                    <select name="Status">
+                        <option value="ALL">NoLock（未锁板）</option><!--完全没锁过的-->
+                        <option value="1">Lock（已锁板）</option><!--已经锁的-->
+                        <option value="0">UnLock（已解锁）</option><!--锁定后解锁的-->
+                    </select>
+                </div>
+            </div>
+            <div class="ctr-wrap">
+                <div class="submit glyphicon glyphicon-search">Submit</div>
+            </div>
+        </div>
+
+        <div class="lock-wrap">
+            <!--<div class="lock-top">Lock / UnLock</div>-->
+            <div class="msg-tip">選中數據：0個SN</div>
+            <div class="list-wrap">
+                <div class="list-left">
+                    <div class="sn-list-unlock">
+                        <div class="unlock-sn-tip">未鎖SN，共計0個！（該文本框操作無效）</div>
+                        <textarea class="sn-unlock-contain"></textarea>
+                        <div class="sn-tip">鎖板描述：</div>
+                        <textarea class="sn-unlock-describe"></textarea>
+                        <div class="mkd-flag">
+                            <div class="mkd-lab">MKD_FLAG：</div>
+                            <input class="unlock-mkd" type="checkbox" value="mkd" />
+                        </div>
+                        <div class="lock-station">
+                            <div class="lock-station-lab">Station：</div>
+                            <select name="unlock-station"></select>
+                        </div>
+                        <div class="btn-wrap">
+                            <button class="lock-btn">Lock</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-right">
+                    <div class="sn-list-lock">
+                        <div class="lock-sn-tip">已鎖SN，共計0個！（該文本框操作無效）</div>
+                        <textarea class="sn-lock-contain"></textarea>
+                        <div class="sn-tip">解鎖描述：</div>
+                        <textarea class="sn-lock-describe"></textarea>
+                        <div class="mkd-flag">
+                            <div class="mkd-lab">MKD_FLAG:</div>
+                            <input class="lock-mkd" type="checkbox" value="mkd" />
+                        </div>
+                        <div class="lock-station">
+                            <div class="lock-station-lab">Station：</div>
+                            <select name="lock-station"></select>
+                        </div>
+                        <div class="btn-wrap">
+                            <button class="unlock-btn">UnLock</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="tab">
+        <table></table>
+    </div>
+</body>
+<script>
+    //var bu = $.MES.getQueryString("bu");
+    //var type = $.MES.getQueryString("type");
+    //console.log(bu, type);
+    //alert(bu, type);
+    var report = new ConfigReport({
+        "pageMsg": {
+            "pageName": "Lock Manage",                    //title名
+            "setLan": "LockManage",                          //该网页的多语言标签名
+            "queryTip": "暫時沒用",             //查询框的提示信息
+            "multiSelect":true,                        //是否多選（默認為false）
+            "btnMsg": [
+                  {
+                      "id": "btn1",
+                      "btnName": "Query",
+                      "icon": "glyphicon glyphicon-search",
+                      "style": "0",
+                      "layerFlag": false
+                  },
+                  {
+                      "id": "btn2",
+                      "btnName": "Lock-UnLock",
+                      "icon": "glyphicon glyphicon-lock",
+                      "style": "2",
+                      "layerFlag": false
+                  },
+                  {
+                      "id": "btn3",
+                      "btnName": "NoQuery-Lock-Unlock",
+                      "icon": "glyphicon glyphicon-lock",
+                      "layerBtnName": "Lock-Unlock",                      //点击该按钮弹出窗口的功能按钮名（大框需要，小框不需要）
+                      "style": "0",
+                      "layerFlag": true
+                  }
+                  //{
+                  //    "id": "btn3",
+                  //    "btnName": "UnLock",
+                  //    "icon": "glyphicon glyphicon-unlock",
+                  //    "style": "2",
+                  //    "layerFlag": false
+                  //}
+            ],
+        },
+        "apiList": {                                                                 //该网页的重要操作对应的前端与后台交互的api（homePage select 都是固定的写法，除此之外名称全部与按钮名称一致）
+            "homePage": {                                                       //首页的api（homePage：固定写法，用于加载首页表数据）
+                "className": "MESStation.Config.LockBoardManager",   //该api对应的后台的类路径
+                "functionName": "GetSelectTypeByUnlockInfo",                                  //该api名称（方法名称）
+                "colList": ["Type", "Value", "Status"],                                 //后台接收数据的键的集合（大框操作不需要配置，下同；其它情况此项必填，下同）
+                "sendList": ["", "", ""]                                                 //后台接收数据的值的集合（与键一一对应）
+            },
+            "select": {                                                            //查询框(select:固定写法，用于快速查询表数据)
+                "className": "MESStation.Config.xxxx",
+                "functionName": "xxxx",
+                "colList": ["SKUNO"]
+            },
+            "Query": {   //该按钮不弹出框，也不是删除按钮，需要自定义事件 ，此处不需要配置
+                "className": "MESStation.Config.LockBoardManager",
+                "functionName": "xxx",
+                "colList": ["ID"]      //
+            },
+            "Lock-UnLock": {   //该按钮不弹出框，也不是删除按钮，需要自定义事件 ，此处不需要配置
+                "className": "MESStation.Config.LockBoardManager",
+                "functionName": "xxx",
+                "colList": ["LOT_NO","STATE"]      //
+            },
+            "NoQuery-Lock-Unlock": {
+                "className": "MESStation.Config.LockBoardManager",
+                "functionName": "LockWOANDUnLock",
+                "colList": ["LOT_NO", "STATE"]      //
+            }
+            //"UnLock": {   //该按钮不弹出框，也不是删除按钮，需要自定义事件 ，此处不需要配置
+            //    "className": "MESStation.Config.UNLOCK",
+            //    "functionName": "xxx",
+            //    "colList": ["LOT_NO", "STATE"]      //
+            //}
+        },
+        "tableMsg": {                                                           //该表的各字段集合
+
+            //"LOCK_LOT": null,
+            //"SN": "RW-FCW2151002Y",
+            //"TYPE": null,
+            //"WORKORDERNO": null,
+            //"LOCK_STATION": null,
+            //"LOCK_STATUS": null,
+            //"LOCK_REASON": null,
+            //"UNLOCK_REASON": null,
+            //"LOCK_EMP": null,
+            //"LOCK_TIME": null,
+            //"CURRENT_STATION": "ORT",
+            //"NEXT_STATION": "PACKING",
+            //"STRTYPE": "WO"
+
+            "column": ["SN", "WORKORDERNO", "LOCK_LOT", "LOCK_STATION", "LOCK_STATUS", "LOCK_REASON", "UNLOCK_REASON", "LOCK_EMP", "LOCK_TIME", "CURRENT_STATION", "NEXT_STATION","TYPE"]
+        },
+        "layerMsg": {                                                           //弹出框（针对大框）各个控件的配置
+            "NoQuery-Lock-Unlock": {
+                "showList": [
+                    {
+                        "field": "Type",
+                        "type": "select",
+                        "disabled": true,
+                        "fillFlag": false
+                    },
+                  {
+                      "field": "Value",
+                      "type": "text",
+                      "disabled": false,
+                      "fillFlag": false
+                  },
+                  {
+                      "field": "LockStatus",
+                      "type": "text",
+                      "disabled": true,
+                      "fillFlag": false
+                  },
+                  //===================================
+                  {
+                      "field": "LOCK_LOT",
+                      "type": "text",
+                      "disabled": true,
+                      "fillFlag": false
+                  },
+                  {
+                      "field": "LOCK_EMP",
+                      "type": "text",
+                      "disabled": true,
+                      "fillFlag": false
+                  },
+                  {
+                      "field": "LOCK_TIME",
+                      "type": "text",
+                      "disabled": true,
+                      "fillFlag": false
+                  },
+                //  "LOCK_LOT": "CRS-20191216002",
+                //"TYPE": "SN",
+                //"WORKORDERNO": "002385025363",
+                //"LOCK_STATION": "PACKING",
+                //"LOCK_STATUS": "已鎖",
+                //"LOCK_REASON": "待确认后解锁  面板絲印 - MKD SYNC",
+                //"UNLOCK_REASON": null,
+                //"LOCK_EMP": "F4472710",
+                //"LOCK_TIME": "2019-12-16 18:42:10"
+
+                  {
+                      "field": "MKD_FLAG",
+                      "type": "select",
+                      "disabled": false,
+                      "fillFlag": false
+                  },
+                  {
+                      "field": "LOCKSTATION",
+                      "type": "select",
+                      "disabled": false,
+                      "fillFlag": false
+                  },
+                  {
+                      "field": "REASON",
+                      "type": "textarea",
+                      "disabled": false,
+                      "fillFlag": false
+                  }
+                ],
+                "sendList": ["Type", "Value", "LockStatus", "MKD_FLAG", "LOCKSTATION", "REASON"]
+            }
+        },
+        "loadLayerData": {                                              //弹出框的控件的所有操作（大框内特殊控件数据加载[加载完页面数据后自动执行]）,非弹出框的操作
+            "Query": function () {
+                $(".lock-wrap").hide();
+                $(".ctr-wrap-max").hide();
+
+                $(".query-wrap").find("select[name=Type]").on("change", function () {
+                    if (this.value == "SN") {
+                        $(".ctr-wrap-max").show();
+                        $(".ctr-wrap").eq(1).hide();
+                    } else {
+                        $(".ctr-wrap-max").hide();
+                        $(".ctr-wrap").eq(1).show();
+                    }
+                });
+                $(".query-wrap").find(".submit").on("click", function () {
+                    var Type = $(".query-wrap").find("select[name=Type]").val();
+                    var send = {
+                        Type: Type,
+                        Status: $(".query-wrap").find("select[name=Status]").val()
+                    };
+                    if (Type != "SN") {
+                        send.Value = $(".query-wrap").find("input[name=Value]").val();
+                    } else {
+                        var sn = $(".query-wrap").find("textarea[name=sn]").val();
+                        send.Value = sn.replace(/[ \t\n,]+/g, ",").replace(/^,|,$/g,"");
+                    }
+                    console.log(send);
+                    self.parent.client.CallFunction("MESStation.Config.LockBoardManager", "GetSelectTypeByUnlockInfo", send, function (e) {
+                        if (e.Status == "Pass") {
+                            $(".tab table").bootstrapTable("load", e.Data);
+                        } else {
+                            $(".tab table").bootstrapTable("load", []);
+                            layer.msg(e.Message, {
+                                icon: 0,
+                                time:2000
+                            });
+                        }
+                    });
+
+                    $(".query-wrap").toggle();
+                });
+
+
+                function createSelect($last,name,d) {
+                    var s = $("<div class=\""+ name + "-wrap\"></div>");
+                    var span = $("<span set-lan=\"html:"+ name +"\"> "+ name +" : </span>");
+                    var select = $("<select></select>");
+                    $.each(d, function (i,str) {
+                        var option = $("<option value=" + str + ">" + str + "</option>");
+                        select.append(option);
+                    });
+                    s.css({
+                        float: "left",
+                        borderRight: "1px solid #337ab7",
+                        background: "#afd5f5",
+                        height: "100%",
+                        padding: "1px 1px 1px 12px",
+                        outline: "none",
+                        cursor: "pointer"
+                    });
+                    span.css({
+                        lineHeight:"28px",
+                    });
+                    select.css({
+                        outline:"none",
+                        border:"none",
+                        width:"160px",
+                        height:"100%",
+                    });
+                    s.append(span, select);
+                    $last.before(s);
+                    return select;
+                }
+
+                function creatFile($last) {    //下一个按钮
+                    var file = $("<div class='file'></div>");
+                    var fileInput = $("<input id='file' type='file' accept='.xlsx,xls' />");
+                    file.append(fileInput);
+                    file.css({
+                        float: "left",
+                        borderRight: "1px solid #337ab7",
+                        height: "100%",
+                        padding: "2px 2px",
+                        outline: "none",
+                        cursor: "pointer"
+                    });
+                    file.hover(function () {
+                        $(this).css({
+                            background: "#337ab7",
+                            color: "#fff"
+                        });
+                    }, function () {
+                        $(this).css({
+                            background: "#fff",
+                            color: "#000"
+                        });
+                    });
+                    var uploadBtn = $("<div id='upload'></div>");
+                    var i = $("<i class='glyphicon glyphicon-open'></i>");
+                    var span = $("<span set-lan='html:upload'>Upload</span>");
+                    uploadBtn.css({
+                        float: "left",
+                        borderRight: "1px solid #337ab7",
+                        height: "100%",
+                        padding: "5px 15px",
+                        cursor: "pointer"
+                    });
+                    uploadBtn.hover(function () {
+                        $(this).css({
+                            background: "#337ab7",
+                            color: "#fff"
+                        });
+                    }, function () {
+                        $(this).css({
+                            background: "#fff",
+                            color: "#000"
+                        });
+                    });
+                    uploadBtn.append(i);
+                    uploadBtn.append(span);
+                    $last.before(uploadBtn);
+                    uploadBtn.before(file);
+                }
+            },
+            "NoQuery-Lock-Unlock": function (loadSelect, generatTable) {
+                var _this = this;
+                loadSelect(this.find("select[name=MKD_FLAG]"), ["N", "Y"]);
+                loadSelect(this.find("select[name=Type]"), ["WO"]);
+
+                this.find("input[name=Value]").attr("placeholder", "输入完请回车！");
+
+                this.find("input[name=Value]").on("keydown", function (e) {
+                    //console.log(e);
+                    if(e.keyCode == '13'){
+                        self.parent.client.CallFunction("MESStation.Config.LockBoardManager", "GetWOINFOANDROUTEStation", { Content: this.value }, function (e) {
+                            console.log(e);
+                            if (e.Status == "Pass") {
+                                var lockStatus = e.Data.WOINFO[0].LOCK_STATUS == "未鎖" ? "0" : "1"
+                                var lockStation = e.Data.WOINFO[0].LOCK_STATUS != "未鎖" ? [e.Data.WOINFO[0].LOCK_STATION] : e.Data.WOISTATIONNFO;
+                                var otherMsg = e.Data.WOINFO[0];
+
+                                changeContent.call(_this, lockStatus, lockStation, otherMsg);
+                            } else {
+                                layer.msg("獲取信息失敗！", {
+                                    icon: 0,
+                                    time:2
+                                });
+                            }
+                        });
+                    }
+                });
+
+
+        //        "LOCK_LOT": "CRS-20191216002",
+        //"TYPE": "SN",
+        //"WORKORDERNO": "002385025363",
+        //"LOCK_STATION": "PACKING",
+        //"LOCK_STATUS": "已鎖",
+        //"LOCK_REASON": "待确认后解锁  面板絲印 - MKD SYNC",
+        //"UNLOCK_REASON": null,
+        //"LOCK_EMP": "F4472710",
+        //"LOCK_TIME": "2019-12-16 18:42:10"
+
+
+
+                function changeContent(lockStatus, lockStation, otherMsg) {
+                    if (lockStatus == '0') {   //未锁定
+                        console.log(this.find("button.Lock-Unlock"));
+                        this.find("input[name=LockStatus]").val("未鎖定");
+
+                        this.find("textarea[name=REASON]").val(otherMsg.UNLOCK_REASON);
+                        this.find("input[name=LOCK_LOT]").val("无");
+                        this.find("input[name=LOCK_EMP]").val("无");
+                        this.find("input[name=LOCK_TIME]").val("无");
+
+                        this.find("button.Lock-Unlock").text("Lock");
+                        loadSelect(this.find("select[name=LOCKSTATION]"), lockStation);
+                        //this.find("select[name=LOCKSTATION]").parent().parent().css("display", "block");
+                    } else {   //已锁定
+                        this.find("input[name=LockStatus]").val("已鎖定");
+
+                        this.find("textarea[name=REASON]").val(otherMsg.LOCK_REASON);
+                        this.find("input[name=LOCK_LOT]").val(otherMsg.LOCK_LOT);
+                        this.find("input[name=LOCK_EMP]").val(otherMsg.LOCK_EMP);
+                        this.find("input[name=LOCK_TIME]").val(otherMsg.LOCK_TIME);
+
+
+                        this.find("button.Lock-Unlock").text("UnLock");
+                        loadSelect(this.find("select[name=LOCKSTATION]"), lockStation);
+                        //this.find("select[name=LOCKSTATION]").parent().parent().css("display", "none");
+                    }
+                }
+
+            }
+        },
+        "btnClick": {                                                       //点击按钮及后续所有操作（所有弹出框都要配置，大框动态变化，处理特殊控件（如表格），处理数据[用于发送至后台]，返回数据）
+            "Query": function (chData, fun1, fun2) {            //小框（chData：选中的数据 fun1：不弹出框直接执行[与后台交互] fun2：弹出小框后确定操作再执行）
+
+                $(".query-wrap").toggle();
+            },
+            "Lock-UnLock": function (chData, fun1, fun2) {
+                if ($(".lock-wrap").css("display") == "block") {
+                    $(".lock-wrap").toggle();
+                    return;
+                }
+
+                var unlocksnIpt = $("textarea.sn-unlock-contain");
+                var locksnIpt = $("textarea.sn-lock-contain");
+                var unlockdescribe = $("textarea.sn-unlock-describe");
+                var lockdescribe = $("textarea.sn-lock-describe");
+                var unlockmkd = $("input.unlock-mkd");
+                var lockmkd = $("input.lock-mkd");
+                var unlockStation = $("select[name=unlock-station]");
+                var lockStation = $("select[name=lock-station]");
+                chData && renderLockWrap(chData);
+                $(".lock-wrap").toggle();
+                function renderLockWrap(data){
+                    console.log(chData);
+                    var type = chData[0].STRTYPE;
+                    switch(type){   //更新頁面內容
+                        case "PL":
+                            break;
+                        case "WO":
+                            break;
+                        case "LOT":
+                            break;
+                        case "SN":
+                            break;
+                        default:
+                            break;
+                    }
+
+                    var unlockData = [];
+                    var unlockStr = "";
+                    var lockData = [];
+                    var lockStr = "";
+                    chData.forEach(function (d,i) {   //分成兩批sn（鎖定和未鎖定sn）
+                        var unlocki = 0;
+                        var locki = 0;
+                        if (d.LOCK_STATUS != "已鎖") {
+                            unlocki++;
+                            unlockData.push(d.SN);
+                            unlockStr += d.SN + "\t" //(unlocki % 3 == 0 ? "\n" : "\t");
+                        } else {
+                            locki++;
+                            lockData.push(d.SN);
+                            lockStr += d.SN + "\t"  //(locki % 3 == 0 ? "\n" : "\t");
+                        }
+                    });
+                    $(".msg-tip").text("選中數據：" + data.length + "個SN");
+                    $(".unlock-sn-tip").text("未鎖SN，共計" + unlockData.length + "個！（該文本框操作無效）")
+                    $(".lock-sn-tip").text("已鎖SN，共計" + lockData.length + "個！（該文本框操作無效）");
+
+
+                    unlocksnIpt.val(unlockStr);
+                    locksnIpt.val(lockStr);
+                    console.log(unlockStr,lockStr);
+                    getRoute(unlockData, $("select[name=unlock-station]"));   //獲取路由，填充工站下拉框
+                    getRoute(lockData, $("select[name=lock-station]"));
+
+                    $(".lock-btn").on("click", function () {
+                        var send = {
+                            TYPE:type,
+                            CONTENT: unlockData.join(),
+                            LOCKREASON: unlockdescribe.val(),
+                            LOCKSTATION: unlockStation.val(),
+                            MKD: unlockmkd[0].checked ? "1" : "0"
+                        }
+                        send.CONTENT.length > 0 && self.parent.client.CallFunction("MESStation.Config.LockBoardManager", "Lock", send, function (e) {
+                            if (e.Data = "Pass") {
+                                layer.msg(e.Message, {
+                                    icon: 0,
+                                    time: 2000
+                                })
+                            } else {
+                                layer.msg(e.Message, {
+                                    icon: 1,
+                                    time: 2000
+                                })
+                            }
+                        })
+                    })
+
+                    $(".unlock-btn").on("click", function () {
+                        var send = {
+                            TYPE:type,
+                            CONTENT: lockData.join(),
+                            UNLOCKREASON: lockdescribe.val(),
+                            UNLOCKSTATION: lockStation.val(),
+                            MKD: lockmkd[0].checked ? "1" : "0"
+                        }
+                        send.CONTENT.length > 0 && self.parent.client.CallFunction("MESStation.Config.LockBoardManager", "Unlock", send, function (e) {
+                            if (e.Data = "Pass") {
+                                layer.msg(e.Message, {
+                                    icon: 0,
+                                    time: 2000
+                                })
+                            } else {
+                                layer.msg(e.Message, {
+                                    icon: 1,
+                                    time: 2000
+                                })
+                            }
+                        })
+                    })
+
+                    function getRoute(snList,$ele) {  //取路由交集工站
+                        snList.length > 0 && self.parent.client.CallFunction("MESStation.Config.LockBoardManager", "GetSNbySNLockStation", { SN: snList.join() }, function (e) {
+                            if (e.Status = "Pass") {
+                                loadSelect($ele, e.Data);
+                            } else {
+                                layer.msg(e.Message, {
+                                    icon: 0,
+                                    time:2000
+                                })
+                            }
+                        });
+                    }
+
+                    function loadSelect($ele, d) {
+
+                        console.log($ele,d);
+
+                        $ele.html("");
+                        Object.prototype.toString.call(d) == "[object Array]" && d.length > 0 && d.forEach(function (s) {
+                            $ele.append($("<option value=\""+ s +"\">"+ s +"</option>"))
+                        });
+                    }
+
+                }
+            },
+            "NoQuery-Lock-Unlock": {
+                "retSendData": function (sendData) {                                    //点击按钮执行（二次处理数据，sendData：第一次处理的发送数据 this：弹出框）
+                    return {
+                        TYPE: sendData.Type,
+                        CONTENT: sendData.Value,
+                        LOCKREASON: sendData.REASON,
+                        LOCKSTATION: sendData.LOCKSTATION,
+                        MKD: sendData.MKD_FLAG == "Y" ? "1" : "0",
+                        LOCKANDUNLOCK: sendData.LockStatus == "未鎖定" ? "LOCK" : "UNLOCK"
+                    }
+                    //return sendData;                                                              //返回的数据为最终发送的数据 重要！！！
+                },
+                "callBackPass": function (e, msgTip, $table, $layerBtn) {          //接收的数据pass后的操作（this：弹出框 e：接收的数据 msgTip：提示函数，不包含刷新页面，$table：表格节点，$layerBtn：弹出框的按钮集合）
+                    msgTip();                                                                      //提示信息
+                    $layerBtn[0].click();                                                        //关闭弹出框
+                },
+                "callBackFail": function (e, msgTip, $table, $layerBtn) {             //请求失败后的操作，参数上同
+                    msgTip();
+                }
+            }
+
+            //"UnLock": function (chData, fun1, fun2) {
+            //    console.log(chData);
+            //}
+        }
+    });
+
+</script>
+</html>

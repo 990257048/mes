@@ -1,0 +1,875 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+	<meta charset="utf-8" />
+</head>
+<link href="../../css/bootstrap.min.css" rel="stylesheet" />
+<link href="../../css/font-awesome.min.css" rel="stylesheet" />
+<style>
+    * {
+        padding:0;
+        margin:0;
+    }
+    html, body {
+        width:100%;
+        height:100%;
+    }
+    .tit{
+        width:100%;
+        height:40px;
+        background:#337ab7;
+        line-height:40px;
+        padding:0px 10px;
+        color:#fff;
+    }
+    .main-wrap {
+        width:100%;
+        height:calc(100% - 40px);
+        padding:10px;
+    }
+    .main {
+        width:100%;
+        height:100%;
+        background:#f5f5f5;
+
+    }
+    .main-left {
+        width:240px;
+        height:100%;
+        float:left;
+        background:#337ab7;
+        padding:20px;
+    }
+    .ctr-p {
+        width:100%;
+        height:40px;
+        text-align:center;
+        color:#fff;
+        font-size:1.6rem;
+        font-weight:700;
+    }
+    .ctr-wrap {
+        width:100%;
+        height:40px;
+        padding-bottom:10px;
+        cursor:pointer;
+    }
+        .ctr-wrap .ctr {
+            width:100%;
+            height:100%;
+            line-height:30px;
+            background:#ddd;
+            border-radius:10px;
+        }
+
+    .ctr-lab {
+        width:30%;
+        height:100%;
+        text-align:center;
+        line-height:30px;
+        font-size:14px;
+        font-weight:600;
+        float:left;
+    }
+    .ctr-select {
+         width:70%;
+        height:100%;
+        font-size:14px;
+        font-weight:600;
+        padding-right:10px;
+        float:left;
+    }
+        .ctr-select select {
+            width:100%;
+            height:100%;
+            line-height:30px;
+            border:1px solid #ddd;
+            outline:none;
+        }
+    .ctr-wrap button {
+        width:100%;
+        height:100%;
+        font-size:14px;
+        text-align:center;
+        font-weight:700;
+        color:#fff;
+        border-radius:10px;
+        background:#81b8e6;
+        line-height:30px;
+        border:none;
+    }
+        .ctr-wrap button.act {
+            background:#013e71;
+        }
+        .ctr-wrap button.no-act:hover {
+            background:#65b9ff;
+        }
+
+    .ctr-status {
+        width:100%;
+        text-align:center;
+    }
+    .status {
+        display:inline-block;
+        width:40px;
+        height:40px;
+        border-radius:50%;
+        border:2px solid #ddd;
+    }
+    .ctr-status,.ctr-msg {
+        color:#fff;
+    }
+
+    .ctr-msg-c[v-f=s] {
+        display:block;
+    }
+    .ctr-msg-c[v-f=h] {
+        display:none;
+    }
+
+
+    .main-right {
+        width:calc(100%  - 240px);
+        height:100%;
+        float:left;
+    }
+</style>
+
+<script src="../../Scripts/jquery-1.9.1.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/echarts.min.js"></script>
+<script src="../../Scripts/echarts-gl.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+<script src="../../Scripts/MesClient.js" ></script>
+<body>
+    <div class="tit">re_wip_chart</div>
+    <div class="main-wrap">
+        <div class="main">
+            <div class="main-left">
+                <div class="ctr-p">
+                    RE WIP CHART
+                </div>
+                <!--<div class="ctr-wrap">
+                    <div class="ctr">
+                        <div class="ctr-lab">BU:</div>
+                        <div class="ctr-select">
+                            <select>
+                                <option value="PCBU">PCBU</option>
+                                <option value="IOTBU">IOTBU</option>
+                                <option value="MCEBU">MCEBU</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>-->
+                <div class="ctr-wrap">
+                    <div class="ctr">
+                        <button name="wip" class="act">WIP</button>
+                    </div>
+                </div>
+                <div class="ctr-wrap">
+                    <div class="ctr">
+                        <button name="efficiency" class="no-act">Efficiency</button>
+                    </div>
+                </div>
+                <div class="ctr-wrap">
+                    <div class="ctr">
+                        <button name="return-rate" class="no-act">Return Rate</button>
+                    </div>
+                </div>
+                <div class="ctr-wrap">
+                    <div class="ctr">
+                        <button name="aging-day" class="no-act">Aging Day</button>
+                    </div>
+                </div>
+                
+                <div class="ctr-status">
+                    </br>
+                    <div class="status"></div>
+                    <div class="status-msg">當前狀況: 达标</div>
+                </div>
+                </br>
+                </br>
+                <div class="ctr-msg">
+                    <div class="ctr-tip"><span class="fa fa-bell-o"></span>  溫馨提示: </div>
+                    </br>
+                    <div class="ctr-msg-wip ctr-msg-c" v-f="s">
+                        <p>Repair WIP</p>
+                        <p>① 當週Repair WIP 的目標值為當週的前4周包裝總產量的0.35%</p>
+                        <p>② Actual 為截止當週星期五8點的維修WIP總量</p>
+                    </div>
+
+                    <div class="ctr-msg-efficiency ctr-msg-c" v-f="h">
+                        <p>Repair Efficiency</p>
+                        <p>① 每週維修效率的目標值（Target）設定為0.6pcs/人·h </p>
+                        <p>② 當周維修效率（Actual）:當週維修總產量/維修人數 * 當週維修工時（55h）</p>
+                    </div>
+
+                    <div class="ctr-msg-returnRate ctr-msg-c" v-f="h">
+                        <p>Repair Rerurn Rate</p>
+                        <p>① 返修板子數量： 由同一種原因進維修的板子</p>
+                        <p>② 返修率：當週返修板子數量/當週維修總產出</p>
+                        <p>③ 返修率目標設定為6%</p>
+                    </div>
+
+                    <div class="ctr-msg-aging ctr-msg-c" v-f="h">
+                        <p>Repair Aging</p>
+                        <p>① 當周維修WIP在線超過30天計入Aging</p>
+                        <p>② Aging Target設定為當周維修WIP的15%</p>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="main-right"></div>
+        </div>
+    </div>
+</body>
+
+<script>
+    $(document).ready(function () {
+        var mychart1 = echarts.init($(".main-right")[0]);
+        var option = {
+            title: {
+                left: 'center',
+                top:'20',
+                text: 'REPAIR WIP',
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                left: 'center',
+                bottom: '15',
+                data: ['Target(Rate)', 'Actual(Rate)'],
+                textStyle: {
+                    fontSize: 14,
+                    fontWeight:700
+                }
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    dataView: { show: true, readOnly: false },
+                    magicType: { show: true, type: ['line', 'bar'] },
+                    restore: { show: true },
+                    saveAsImage: { show: true }
+                }
+            },
+            calculable: true,
+            grid: {
+                left: '70',
+                top: '80',
+                bottom:'70',
+                tooltip: {
+                    axisPointer: {
+                        type: "shadow"
+                    }
+                }
+            },
+
+            xAxis: [
+                {
+                    name:'周別（week）',
+                    type: 'category',
+                    data: ['44', '45', '46', '47', '48', '49'],
+                    nameTextStyle: {
+                        fontSize: 14,
+                        fontWeight:700
+                    },
+                    //axisLine: {
+                    //    lineStyle: {
+
+                    //    }
+                    //}
+                }
+            ],
+            yAxis: [
+                {
+                    name:'數量(pcs)',
+                    type: 'value',
+                    nameTextStyle: {
+                        fontSize: 14,
+                        fontWeight: 700
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: 'Target(Rate)',
+                    type: 'line',
+                    data:[200,200,200,200,200,200]
+                },
+                {
+                    name: 'Actual(Rate)',
+                    type: 'bar',
+                    data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7],
+                    barWidth:'40%'
+                    //markPoint: {
+                    //    data: [
+                    //        { type: 'max', name: '最大值' },
+                    //        { type: 'min', name: '最小值' }
+                    //    ]
+                    //},
+                    //markLine: {
+                    //    data: [
+                    //        { type: 'average', name: '平均值' }
+                    //    ]
+                    //}
+                }
+            ]
+        };
+
+        //mychart1.setOption(option);
+
+        self.parent.client.CallFunction("MESStation.Config.RePerformance", "getRepairWip", {}, function (e) {
+            if (e.Status == "Pass") {
+                var d = e.Data;
+                render.wip(d);
+                var t = d.series[0].data[5];
+                var v = d.series[1].data[5];
+                var c = getTargetClass(t, v);
+                var m = c == 3 || c == 4 ? ["green", "达标"] : c == 2 ? ["yellow", "危险"] : ["red", "不达标"];
+                $(".status").css("background", m[0]);
+                $(".status-msg").text("当前狀況：" + m[1]);
+            } else {
+                layer.msg(e.Message, {
+                    icon:0,
+                    time:2000
+                });
+            }
+        });
+
+
+
+
+
+        $(".ctr-wrap button").on("click", function (e) {
+            if($(this).attr("class") == "no-act"){
+                var name = $(this).attr("name");
+                var _this = this;
+                $(_this).attr("class", "act");
+                $(".ctr-wrap button").not(_this).attr("class", "no-act");
+                
+
+
+                var callBackFn;
+                var functionName;
+                switch (name) {
+                    case "wip":
+                        functionName = "getRepairWip";
+
+                        $(".ctr-msg-c").eq(0).attr("v-f", "s");
+                        $(".ctr-msg-c").not($(".ctr-msg-c").eq(0)).attr("v-f","h");
+
+                        callBackFn = function (d) {
+                            render.wip(d);
+                            var t = d.series[0].data[5];
+                            var v = d.series[1].data[5];
+                            var c = getTargetClass(t,v);
+                            var m = c == 3 || c == 4 ? ["green","达标"] : c == 2 ? ["yellow","危险"] : ["red","不达标"];
+                            $(".status").css("background",m[0]);
+                            $(".status-msg").text("当前狀況："+m[1]);
+                        }
+                        break;
+                    case "efficiency":
+                        functionName = "getRepairEfficiency";
+                        $(".ctr-msg-c").eq(1).attr("v-f", "s");
+                        $(".ctr-msg-c").not($(".ctr-msg-c").eq(1)).attr("v-f", "h");
+                        callBackFn = function (d) {
+                            render.efficiency(d);
+                            var t = d.series[0].data[5];
+                            var v = d.series[1].data[5];
+                            var c = getTargetClass(t, v);
+                            var m = c == 1 || c == 2 ? ["green", "达标"] : c == 3 ? ["yellow", "危险"] : ["red", "不达标"];
+                            $(".status").css("background", m[0]);
+                            $(".status-msg").text("当前狀況：" + m[1]);
+                        }
+                        break;
+                    case "return-rate":
+                        functionName = "getRepairReturnRate";
+                        $(".ctr-msg-c").eq(2).attr("v-f", "s");
+                        $(".ctr-msg-c").not($(".ctr-msg-c").eq(2)).attr("v-f", "h");
+                        callBackFn = function (d) {
+                            render.returnRate(d);
+                            var t = d.series[0].data[5];
+                            var v = d.series[1].data[5];
+                            var c = getTargetClass(t, v);
+                            var m = c == 3 || c == 4 ? ["green", "达标"] : c == 2 ? ["yellow", "危险"] : ["red", "不达标"];
+                            $(".status").css("background", m[0]);
+                            $(".status-msg").text("当前狀況：" + m[1]);
+                        }
+                        break;
+                    case "aging-day":
+                        functionName = "getRepairAgingDay";
+                        $(".ctr-msg-c").eq(3).attr("v-f", "s");
+                        $(".ctr-msg-c").not($(".ctr-msg-c").eq(3)).attr("v-f", "h");
+                        callBackFn = function (d) {
+                            render.agingDay(d);
+                            var t = d.series[0].data[5];
+                            var v = d.series[1].data[5];
+                            var c = getTargetClass(t, v);
+                            var m = c == 3 || c == 4 ? ["green", "达标"] : c == 2 ? ["yellow", "危险"] : ["red", "不达标"];
+                            $(".status").css("background", m[0]);
+                            $(".status-msg").text("当前狀況：" + m[1]);
+                        }
+                        break;
+                }
+
+                self.parent.client.CallFunction("MESStation.Config.RePerformance", functionName, {}, function (e) {
+                    if (e.Status == "Pass") {
+                        console.log(111)
+                        callBackFn(e.Data);
+                    } else {
+                        layer.msg(e.Message, {
+                            icon: 0,
+                            time:2000
+                        })
+                    }
+                });
+            }
+        })
+
+
+
+        var getTargetClass = function (t,v) {
+            var t1 = t * 1.2;
+            var t2 = t * 0.8;
+            var c = v > t1 ? 1 : v > t ? 2 : v > t2 ? 3 : 4;
+            return c;
+        }
+
+        var render = {
+            wip: function (d) {
+                console.log("wip", d);
+                var option = {
+                    title: {
+                        left: 'center',
+                        top: '20',
+                        text: 'REPAIR WIP',
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        left: 'center',
+                        bottom: '15',
+                        data: [d.series[0].name, d.series[1].name], //['Target(wip)', 'Actual(wip)'],
+                        textStyle: {
+                            fontSize: 14,
+                            fontWeight: 700
+                        }
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            dataView: { show: true, readOnly: false },
+                            magicType: { show: true, type: ['line', 'bar'] },
+                            restore: { show: true },
+                            saveAsImage: { show: true }
+                        }
+                    },
+                    //calculable: true,
+                    grid: {
+                        left: '70',
+                        top: '80',
+                        bottom: '70',
+                        tooltip: {
+                            axisPointer: {
+                                type: "shadow"
+                            }
+                        }
+                    },
+
+                    xAxis: [
+                        {
+                            name: d.xAxis.name, //'周別（week）',
+                            type: 'category',
+                            data: d.xAxis.data, //['44', '45', '46', '47', '48', '49'],
+                            nameTextStyle: {
+                                fontSize: 14,
+                                fontWeight: 700
+                            },
+                            //axisLine: {
+                            //    lineStyle: {
+
+                            //    }
+                            //}
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            name: d.yAxis.name, //'wip(pcs)',
+                            type: 'value',
+                            nameTextStyle: {
+                                fontSize: 14,
+                                fontWeight: 700
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: d.series[0].name, //'Target(wip)',
+                            type: 'line',
+                            data: d.series[0].data, // [1.8,1.8, 1.8, 1.8, 1.8, 1.8]
+                            label: {
+                                show: true,
+                                position: 'top',
+                                fontSize: 12,
+                            }
+                        },
+                        {
+                            name: d.series[1].name, //'Actual(wip)',
+                            type: 'line',
+                            data: d.series[1].data, //[2.0, 1.2, 1.5, 1.3, 1.77, 1.65],
+                            barWidth: '40%',
+                            label: {
+                                show: true,
+                                position: 'top',
+                                fontSize: 12,
+                            },
+                            //markPoint: {
+                            //    data: [
+                            //        { type: 'max', name: '最大值' },
+                            //        { type: 'min', name: '最小值' }
+                            //    ]
+                            //},
+                            //markLine: {
+                            //    data: [
+                            //        { type: 'average', name: '平均值' }
+                            //    ]
+                            //}
+                        }
+                    ]
+                };
+                mychart1.setOption(option);
+            },
+            efficiency: function (d) {
+                console.log("efficiency",d);
+                var option = {
+                    title: {
+                        left: 'center',
+                        top: '20',
+                        text: 'REPAIR EFFICIENCY',
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        left: 'center',
+                        bottom: '15',
+                        data:  [d.series[0].name,d.series[1].name], //['Target(UPH)', 'Actual(UPH)'],
+                        textStyle: {
+                            fontSize: 14,
+                            fontWeight: 700
+                        }
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            dataView: { show: true, readOnly: false },
+                            magicType: { show: true, type: ['line', 'bar'] },
+                            restore: { show: true },
+                            saveAsImage: { show: true }
+                        }
+                    },
+                    //calculable: true,
+                    grid: {
+                        left: '70',
+                        top: '80',
+                        bottom: '70',
+                        tooltip: {
+                            axisPointer: {
+                                type: "shadow"
+                            }
+                        }
+                    },
+
+                    xAxis: [
+                        {
+                            name:  d.xAxis.name, //'周別（week）',
+                            type: 'category',
+                            data:  d.xAxis.data, //['44', '45', '46', '47', '48', '49'],
+                            nameTextStyle: {
+                                fontSize: 14,
+                                fontWeight: 700
+                            },
+                            //axisLine: {
+                            //    lineStyle: {
+
+                            //    }
+                            //}
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            name: d.yAxis.name, //'效率(pcs/人·h)',
+                            type: 'value',
+                            nameTextStyle: {
+                                fontSize: 14,
+                                fontWeight: 700
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name:  d.series[0].name, //'Target(UPH)',
+                            type: 'line',
+                            label: {
+                                show: true,
+                                position: 'top',
+                                fontSize: 12,
+                            },
+                            data: d.series[0].data // [1.8,1.8, 1.8, 1.8, 1.8, 1.8]
+                        },
+                        {
+                            name: d.series[1].name, //'Actual(UPH)',
+                            type: 'line',
+                            label: {
+                                show: true,
+                                position: 'top',
+                                fontSize: 12,
+                            },
+                            data: d.series[1].data, //[2.0, 1.2, 1.5, 1.3, 1.77, 1.65],
+                            barWidth: '40%'
+                            //markPoint: {
+                            //    data: [
+                            //        { type: 'max', name: '最大值' },
+                            //        { type: 'min', name: '最小值' }
+                            //    ]
+                            //},
+                            //markLine: {
+                            //    data: [
+                            //        { type: 'average', name: '平均值' }
+                            //    ]
+                            //}
+                        }
+                    ]
+                };
+                mychart1.setOption(option);
+
+            },
+            returnRate: function (d) {
+                console.log("returnRate", d);
+                var option = {
+                    title: {
+                        left: 'center',
+                        top: '20',
+                        text: 'REPAIR RETURN RATE',
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        left: 'center',
+                        bottom: '15',
+                        data: [d.series[0].name, d.series[1].name], //['Target(Rate)', 'Actual(Rate)'],
+                        textStyle: {
+                            fontSize: 14,
+                            fontWeight: 700
+                        }
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            dataView: { show: true, readOnly: false },
+                            magicType: { show: true, type: ['line', 'bar'] },
+                            restore: { show: true },
+                            saveAsImage: { show: true }
+                        }
+                    },
+                    //calculable: true,
+                    grid: {
+                        left: '70',
+                        top: '80',
+                        bottom: '70',
+                        tooltip: {
+                            axisPointer: {
+                                type: "shadow"
+                            }
+                        }
+                    },
+
+                    xAxis: [
+                        {
+                            name: d.xAxis.name, //'周別（week）',
+                            type: 'category',
+                            data: d.xAxis.data, //['44', '45', '46', '47', '48', '49'],
+                            nameTextStyle: {
+                                fontSize: 14,
+                                fontWeight: 700
+                            },
+                            //axisLine: {
+                            //    lineStyle: {
+
+                            //    }
+                            //}
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            name: d.yAxis.name, //'返修率(%)',
+                            type: 'value',
+                            nameTextStyle: {
+                                fontSize: 14,
+                                fontWeight: 700
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: d.series[0].name, //'Target(Rate)',
+                            type: 'line',
+                            label: {
+                                show: true,
+                                position: 'top',
+                                fontSize: 12,
+                            },
+                            data: d.series[0].data // [1.8,1.8, 1.8, 1.8, 1.8, 1.8]
+                        },
+                        {
+                            name: d.series[1].name, //'Actual(Rate)',
+                            type: 'line',
+                            label: {
+                                show: true,
+                                position: 'top',
+                                fontSize: 12,
+                            },
+                            data: d.series[1].data, //[2.0, 1.2, 1.5, 1.3, 1.77, 1.65],
+                            barWidth: '40%'
+                            //markPoint: {
+                            //    data: [
+                            //        { type: 'max', name: '最大值' },
+                            //        { type: 'min', name: '最小值' }
+                            //    ]
+                            //},
+                            //markLine: {
+                            //    data: [
+                            //        { type: 'average', name: '平均值' }
+                            //    ]
+                            //}
+                        }
+                    ]
+                };
+                mychart1.setOption(option);
+            },
+            agingDay: function (d) {
+                console.log("agingDay",d);
+                var option = {
+                    title: {
+                        left: 'center',
+                        top: '20',
+                        text: 'REPAIR AGING > 30',
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        left: 'center',
+                        bottom: '15',
+                        data: [d.series[0].name, d.series[1].name], //['Target(Aging)', 'Actual(Aging)'],
+                        textStyle: {
+                            fontSize: 14,
+                            fontWeight: 700
+                        }
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            dataView: { show: true, readOnly: false },
+                            magicType: { show: true, type: ['line', 'bar'] },
+                            restore: { show: true },
+                            saveAsImage: { show: true }
+                        }
+                    },
+                    //calculable: true,
+                    grid: {
+                        left: '70',
+                        top: '80',
+                        bottom: '70',
+                        tooltip: {
+                            axisPointer: {
+                                type: "shadow"
+                            }
+                        }
+                    },
+
+                    xAxis: [
+                        {
+                            name: d.xAxis.name, //'周別（week）',
+                            type: 'category',
+                            data: d.xAxis.data, //['44', '45', '46', '47', '48', '49'],
+                            nameTextStyle: {
+                                fontSize: 14,
+                                fontWeight: 700
+                            },
+                            //axisLine: {
+                            //    lineStyle: {
+
+                            //    }
+                            //}
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            name: d.yAxis.name, //'aging(pcs)',
+                            type: 'value',
+                            nameTextStyle: {
+                                fontSize: 14,
+                                fontWeight: 700
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: d.series[0].name, //'Target(Aging)',
+                            type: 'line',
+                            label: {
+                                show: true,
+                                position: 'top',
+                                fontSize: 12,
+                            },
+                            data: d.series[0].data // [1.8,1.8, 1.8, 1.8, 1.8, 1.8]
+                        },
+                        {
+                            name: d.series[1].name, //'Actual(Aging)',
+                            type: 'line',
+                            label: {
+                                show: true,
+                                position: 'top',
+                                fontSize: 12,
+                            },
+                            data: d.series[1].data, //[2.0, 1.2, 1.5, 1.3, 1.77, 1.65],
+                            barWidth: '40%'
+                            //markPoint: {
+                            //    data: [
+                            //        { type: 'max', name: '最大值' },
+                            //        { type: 'min', name: '最小值' }
+                            //    ]
+                            //},
+                            //markLine: {
+                            //    data: [
+                            //        { type: 'average', name: '平均值' }
+                            //    ]
+                            //}
+                        }
+                    ]
+                };
+                mychart1.setOption(option);
+            }
+        }
+
+
+
+    });
+
+</script>
+
+
+
+
+</html>

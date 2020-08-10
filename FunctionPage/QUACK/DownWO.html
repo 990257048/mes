@@ -1,0 +1,284 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Down WO</title>
+	</head>
+	<!--<script src="js/jquery-1.11.3.min.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.min.css" />-->
+	
+	<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/font-awesome.min.css" rel="stylesheet" />
+	<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+
+	<script src="../../Scripts/global.js"></script>
+    <script src="../../Scripts/MesClient.UI.js"></script>
+    <script src="../../Scripts/MesClient.js"></script>
+	
+	<style>
+	* {
+        padding: 0;
+        margin: 0;
+        box-sizing:border-box;
+    }
+        html, body {
+            width:100%;
+            height:100%;
+
+        }
+    body {
+        font-size:14px;
+        padding:10px;
+    }
+
+    .title {
+        width: 100%;
+        height: 40px;
+        padding: 0px 15px;
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 5px;
+        line-height: 40px;
+    }
+		
+	.queryList{
+		width: auto;
+		height: 32px;
+		
+		margin: 10px 10px;
+		
+	}	
+	.queryList .tab,
+	.queryList input,
+	.queryList .btn{
+		display: inline-block;
+		float: left;
+		height: 100%;
+	}
+	.queryList .tab{
+		padding: 6px 12px;
+		color: rgb(103,106,108);
+		font-size: 13px;
+		font-weight: bolder;
+		line-height: 20px;
+		
+	}
+	.queryList input{
+		width: 400px;
+		border:1px solid rgb(51,122,183);
+		border-radius: 5px;
+		padding: 6px 12px;
+		outline: none;
+		margin-left:10px;
+        font-size:14px;
+	}
+	.queryList .btn{
+		background: #337ab7;
+		padding: 6px 12px;
+		color: #fff;
+		font-size: 1rem;
+		line-height: 20px;
+		margin-left: 20px;
+	}
+	.queryList .btn:hover{
+		background: #286090;
+		
+	}
+        .tab-main {
+            width:100%;
+            border-radius:5px;
+            padding:10px;
+        }
+        .row-wrap {
+            width:100%;
+            height:40px;
+        }
+        .row-contain {
+            width:100%;
+            height:30px;
+        }
+        .row-son-wrap {
+            width:33.3%;
+            height:100%;
+            float:left;
+        }
+        .lab {
+            width:35%;
+            height:100%;
+            line-height:30px;
+            float:left;
+            padding:0px 15px;
+            text-align:right;
+            background:#ddd;
+            
+        }
+        .view {
+            width:65%;
+            height:100%;
+            padding:0px 10px;
+            float:left;
+        }
+        .v {
+            width:100%;
+            height:100%;
+            line-height:30px;
+            border-bottom:1px solid #000;
+            background:#ddd;
+            padding:0px 10px;
+        }
+	</style>
+	
+	<body>
+		<div class="title fa fa-tags"  >
+        	Download WO
+    	</div>
+    	
+    	<div class="queryList">
+    		<div class="tab">
+    			WO
+    		</div>
+    		<input type="text" />
+    		<div class="btn">
+    			Download To Sfc
+    		</div>
+    	</div>
+
+
+        <!--//        "ID": "MFGII00000000000000000000000000AC9V",
+        //"WORKORDERNO": "002384031093",
+        //"PLANT": "ACGA",
+        //"RELEASE_DATE": "2019-07-31 13:04:30",
+        //"DOWNLOAD_DATE": "2019-07-31 13:04:30",
+        //"PRODUCTION_TYPE": "BTS",
+        //"WO_TYPE": "PCBA REGULAR",
+        //"SKUNO": "73-16852-03",
+        //"SKU_VER": "A0+",
+        //"SKU_SERIES": "NSDI_DEFAUL",
+        //"SKU_NAME": "BALBOA DC 73-16852-03",
+        //"SKU_DESC": null,
+        //"CUST_PN": "73-16852-03",
+        //"CUST_PN_VER": null,
+        //"CUSTOMER_NAME": null,
+        //"ROUTE_ID": "MFGII000000000000000000000000000CKX",
+        //"START_STATION": "SMTLOADING",
+        //"KP_LIST_ID": null,
+        //"CLOSED_FLAG": "0",
+        //"CLOSE_DATE": null,
+        //"WORKORDER_QTY": 840.0,
+        //"INPUT_QTY": 840.0,
+        //"FINISHED_QTY": 0.0,
+        //"SCRAPED_QTY": 0.0,
+        //"STOCK_LOCATION": "B23F",
+        //"PO_NO": null,
+        //"CUST_ORDER_NO": null,
+        //"ROHS": "R6",
+        //"EDIT_EMP": "interface",
+        //"EDIT_TIME": "2019-07-31 13:04:30"-->
+
+
+
+        <div class="tab-main">
+            <div class="row-wrap">
+                <div class="row-contain">
+                    <div class="row-son-wrap">
+                        <div class="lab">WORKORDERNO</div>
+                        <div class="view">
+                            <div class="v WORKORDERNO"></div>
+                        </div>
+                    </div>
+                    <div class="row-son-wrap">
+                        <div class="lab">SKUNO</div>
+                        <div class="view">
+                            <div class="v SKUNO"></div>
+                        </div>
+                    </div>
+                    <div class="row-son-wrap">
+                        <div class="lab">SKU_NAME</div>
+                        <div class="view">
+                            <div class="v SKU_NAME"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row-wrap">
+                <div class="row-contain">
+                    <div class="row-son-wrap">
+                        <div class="lab">WO_TYPE</div>
+                        <div class="view">
+                            <div class="v WO_TYPE"></div>
+                        </div>
+                    </div>
+                    <div class="row-son-wrap">
+                        <div class="lab">PLANT</div>
+                        <div class="view">
+                            <div class="v PLANT"></div>
+                        </div>
+                    </div>
+                    <div class="row-son-wrap">
+                        <div class="lab">SKU_VER</div>
+                        <div class="view">
+                            <div class="v SKU_VER"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+           
+        </div>
+
+	</body>
+    <script>
+        $(document).on("ready", function () {
+                
+            init();
+
+            function init() {
+                clickOperation();
+            }
+
+            function clickOperation() {   //点击操作
+                var downloadBtn = $(".queryList .btn");
+                downloadBtn.on("click", function () {
+                    var inputValue = $(".queryList input").val();
+                    
+                    if(inputValue != ""){
+                        self.parent.client.CallFunction("MESStation.Config.DownLoadWoByInputWo", "DownLoadWoByWo", { "WO": inputValue, BU: self.parent.client.UserInfo.BU }, function (e) {
+                            if (e.Status == "Pass") {
+                                $(".WORKORDERNO").text(e.Data.WORKORDERNO);
+                                $(".SKUNO").text(e.Data.SKUNO);
+                                $(".SKU_NAME").text(e.Data.SKU_NAME);
+                                $(".WO_TYPE").text(e.Data.WO_TYPE);
+                                $(".PLANT").text(e.Data.PLANT);
+                                $(".SKU_VER").text(e.Data.SKU_VER);
+                                layer.msg(e.Message, {
+                                    icon: 1,
+                                    time: 2000
+                                }, function () {
+                                    //location.reload();
+                                });
+
+                            } else {
+                                layer.msg(e.Message, {
+                                    icon: 0,
+                                    time: 2000
+                                }, function () {
+                                    //location.reload();
+                                });
+                            }
+                        });
+                        
+                    }
+                });
+            }
+
+   
+
+
+
+        });
+
+    </script>
+</html>

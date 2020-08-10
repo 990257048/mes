@@ -1,0 +1,380 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>testReport</title>  <!-- GCH 2019/03/11 ADD-->
+</head>
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+<link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+<link href="../../css/ReportConfig.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+<script src="../../Scripts/Report/MesClient.ReportConfig.js"></script>
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:"></span>
+    </div>
+    <div class="list">
+        <div class="btnList"></div>
+        <div class="query">
+            <div class="input">
+                <input type="text" value="" placeholder="" />
+            </div>
+        </div>
+    </div>
+    <div class="tab">
+        <table></table>
+    </div>
+</body>
+<script>
+
+
+    //执行顺序：
+    //①：打开页面自动执行（fn: loadLayerData[btnName]），无选中数据，对弹出框操作（为控件绑定事件，随意操作弹出框内容）
+    //②：打开弹出框执行(fn: btnClick[btnName].loadLayer2)，有选中数据，对弹出框操作（一般情况自动填充数据，这里可以根据选中数据对控件（特殊）二次填充数据，也能对弹出框进行更复杂的操作）
+    //③：点击操作按钮执行(fn: btnClick[btnName].retSendData)，二次处理待发送数据，保证数据无误。
+    //④：后台传回数据时执行(fn: btnClick[btnName].callBackPass / callBackFail)。
+
+
+
+
+    var report = new ConfigReport({
+        "pageMsg": {
+            "pageName": "PdaShipConfig",                    //title名
+            "setLan": "PdaShipConfig",                          //该网页的多语言标签名
+            "queryTip": "请输入TRUCK_SEQ",             //查询框的提示信息
+            "btnMsg": [
+                  {
+                      "id": "btn0",                                      //该按钮的id,可随意定义
+                      "btnName": "New",                             //按钮显示名字，点击该按钮后弹出层的id名（Edit加上Layer ===> EditLayer）注意：需要和layerMsg,apiList,btnClick下的名字一致(非常重要)
+                      "icon": "glyphicon glyphicon-trash",      //该按钮的bootstrap字体图标的类名
+                      "layerBtnName": "new",                      //点击该按钮弹出窗口的功能按钮名（大框需要，小框不需要）
+                      "style": "0",                                      //勾选数据与该按钮是否能操作的关系（0：不勾选数据也能操作  1：仅勾选一条数据后才能操作 2：选中一条或多条数据都可以操作）
+                      "layerFlag": true                                //是否弹出大框
+                  },
+                  {
+                      "id": "btn1",
+                      "btnName": "Edit",  
+                      "layerBtnName":"edit",  
+                      "icon": "glyphicon glyphicon-share",
+                      "style": "1", 
+                      "layerFlag": true
+                  },
+                  {
+                      "id": "btn2",
+                      "btnName": "Delete",
+                      "icon": "glyphicon glyphicon-share",
+                      "style": "0",
+                      "layerFlag": false
+                  },
+            ],
+        },
+        "apiList": {                                                                 //该网页的重要操作对应的前端与后台交互的api（homePage select 都是固定的写法，除此之外名称全部与按钮名称一致） 
+            "homePage": {                                                       //首页的api（homePage：固定写法，用于加载首页表数据）
+                "className": "MESStation.Config.PdaShipConfig",   //该api对应的后台的类路径
+                "functionName": "selectall",                                  //该api名称（方法名称）
+                "colList": ["TRUCK_SEQ"],                                 //后台接收数据的键的集合（大框操作不需要配置，下同；其它情况此项必填，下同）
+                "sendList": [""]                                                 //后台接收数据的值的集合（与键一一对应）
+            },
+            "select": {                                                            //查询框(select:固定写法，用于快速查询表数据)
+                "className": "MESStation.Config.PdaShipConfig",  
+                "functionName": "selectdetail",
+                "colList": ["TRUCK_SEQ"]  
+            },
+            "New": {                                                              //New:与btnName相同，严格对应（大框不需要配置键集合，值集合）
+                "className":"MESStation.Config.xxx",                   
+                "functionName":"new"
+            },
+            "Edit":{
+                "className":"MESStation.Config.xxx",                   
+                "functionName":"edit"
+            },
+            "Delete": {
+                "className": "MESStation.Config.PdaShipConfig",
+                "functionName": "delete",
+                "colList": ["ID"]
+            },
+        },
+        "tableMsg": {                                                           //该表的各字段集合  
+            "column": [ "BU", "TRUCK_NO", "TRUCK_SEQ", "DN_NO", "PACK_NO", "SKUNO", "QTY", "LOCATION", "SHIP_TIME", "VALID_FLAG", "PLATE_NO", "CONTAINER_NO", "CTN_QTY", "WHARF", "LOADING_FLAG", "WHARF_TIME", "LOAD_TIME", "REMARK", "EDIT_EMP", "EDIT_TIME"]
+        },
+        "layerMsg": {                                                           //弹出框（针对大框）各个控件的配置
+            "New": {                                                             //New:与btnName相同，严格对应
+                "showList": [
+                    {
+                        "field": "PALLET",                                   //字段名,控件name,控件id(注意：必须使用变量的命名规则),语言配置名（重要）
+                        "type": "text",                                         //控件类型（text：普通输入框 select：下拉框 checkbox：复选框 radio：单选框 textarea：大段文本框）
+                        "disabled": false,                                     //是否不可编辑
+                        "fillFlag": false                                        //弹出框后是否填充数据
+                    },
+                    {
+                        "field": "DEVIATION_FLAG",       
+                        "type": "radio",                                       
+                        "disabled": false,
+                        "fillFlag": false,
+                        "labelList": ["是", "否"],                          //labelList：单选,复选所特有的配置项（表面显示的名字，对选中该控件解释说明，需要与valList配置项一一对应）
+                        "valList": [true, false]                               //valList：单选,复选所特有的配置项，（用于配置该控件的 value，需要和labelList配置项一一对应）
+                    },
+                    {
+                        "field": "File",
+                        "type": "file",
+                        "disabled": true,
+                        "fillFlag": true
+                    },
+                    {
+                        "field": "File1",
+                        "type": "file",
+                        "disabled": true,
+                        "fillFlag": true
+                    },
+                    {
+                        "field": "ck1",
+                        "type": "checkbox",
+                        "disabled": false,
+                        "fillFlag": false,
+                        "labelList": ["a", "b","c","d","e","f"],                          //labelList：单选,复选所特有的配置项（表面显示的名字，对选中该控件解释说明，需要与valList配置项一一对应）
+                        "valList": ["a", "b", "c", "d", "e", "f"]                         //valList：单选,复选所特有的配置项，（用于配置该控件的 value，需要和labelList配置项一一对应）
+                    },
+                    {
+                        "field": "ck2",
+                        "type": "checkbox",
+                        "disabled": false,
+                        "fillFlag": false,
+                        "labelList": ["a", "b", "c", "d", "e", "f"],                          //labelList：单选,复选所特有的配置项（表面显示的名字，对选中该控件解释说明，需要与valList配置项一一对应）
+                        "valList": ["a", "b", "c", "d", "e", "f"]                               //valList：单选,复选所特有的配置项，（用于配置该控件的 value，需要和labelList配置项一一对应）
+                    },
+                    {
+                        "field": "EDIT_EMP",
+                        "type": "text",
+                        "disabled": true,
+                        "fillFlag": true
+                    },
+                ],
+                "sendList": ["PALLET", "EDIT_EMP"]               //发送给后台的字段集合
+            },
+            "Edit": {
+                "showList": [
+                    {
+                        "field": "ID",                        
+                        "type": "text",                      
+                        "disabled": true,                   
+                        "fillFlag":true                       
+                    },
+                  {
+                      "field": "PALLET",
+                      "type": "text",
+                      "disabled": false,
+                      "fillFlag": true
+                  },
+                  {
+                      "field": "EDIT_EMP",
+                      "type": "text",
+                      "disabled": true,
+                      "fillFlag": true
+                  }
+              ],
+                "sendList": ["ID","PALLET", "EDIT_EMP"]     
+            },
+        },
+        "loadLayerData": {                                              //弹出框的控件的所有操作（大框内特殊控件数据加载[加载完页面数据后自动执行]）
+            "New": function (loadSelect, generatTable) {   //createToobar
+                creatFile($("#btn0"));
+
+                generatTable({
+                    //tableName           //表的类名
+                    //fields               //表字段集合
+                    //tableData            //表数据
+                    //eventObj            //表格的事件
+                    //btnArr              //按钮的配置数据
+                    //$prev              //按钮行的上一个控件，用来插入按钮行
+                    tableName: "table1",          
+                    $prev: this.find("input[name=EDIT_EMP]").parent().parent(),
+                    btnArr: [
+                    {
+                        btnName: "Add",                                  //按钮名称，按钮id（layDeleteBtn）多语言配置（set-lan="html:layDelete"）
+                        icon: "glyphicon glyphicon-share",          //按钮小图标
+                        style: 0                                                //按钮交互样式 0：不勾选数据也能操作按钮 1：勾选一条数据才能操作按钮
+                    },
+                    {
+                        btnName: "Edit",
+                        icon: "glyphicon glyphicon-share",
+                        style: 1
+                    },
+                    {
+                        btnName: "Delete",
+                        icon: "glyphicon glyphicon-share",
+                        style: 1
+                    }
+                    ],
+                    fields: ["xxx1", "xxx2", "xxx3", "xxx4", "xxx5", "xxx6"],
+                    tableData: [
+                        {
+                            "xxx1": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx2": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx3": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx4": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx5": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx6": "xxxxxxxxxxxxxxxxxxxx",
+                        },
+                        {
+                            "xxx1": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx2": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx3": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx4": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx5": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx6": "xxxxxxxxxxxxxxxxxxxx",
+                        },
+                        {
+                            "xxx1": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx2": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx3": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx4": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx5": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx6": "xxxxxxxxxxxxxxxxxxxx",
+                        },
+                        {
+                            "xxx1": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx2": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx3": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx4": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx5": "xxxxxxxxxxxxxxxxxxxx",
+                            "xxx6": "xxxxxxxxxxxxxxxxxxxx",
+                        },
+                    ],
+                    eventObj: {
+                        "onCheck": function (checkedData) {                         //选中数据后的所有操作（一般对style=0的按钮绑定事件） checkedData :选中的数据 this:表格   
+                            //console.log(this, checkedData, $(".layDeleteBtn"));
+                            var _this = this;
+                            $(".layDeleteBtn").off("click");                           //取消绑定事件
+                            $(".layDeleteBtn").on("click", function () {         //选中数据后绑定事件
+                                console.log(_this,checkedData);
+                            });
+                        },
+                        "onUncheck": function () {                                      //取消选中数据执行
+                            $(".layDeleteBtn").off("click");                            //取消选中数据后取消绑定事件
+                        }
+                    },
+                });
+                function creatFile($last) {    //下一个按钮
+                    var file = $("<div class='file'></div>");
+                    var fileInput = $("<input id='file' type='file' accept='.xlsx,xls' />");
+                    file.append(fileInput);
+                    file.css({
+                        float: "left",
+                        borderRight: "1px solid #337ab7",
+                        height: "100%",
+                        padding: "2px 2px",
+                        outline: "none",
+                        cursor:"pointer"
+                    });
+                    file.hover(function () {
+                        $(this).css({
+                            background: "#337ab7",
+                            color: "#fff"
+                        });
+                    }, function () {
+                        $(this).css({
+                            background: "#fff",
+                            color: "#000"
+                        });
+                    });
+                    var uploadBtn = $("<div id='upload'></div>");
+                    var i = $("<i class='glyphicon glyphicon-open'></i>");
+                    var span = $("<span set-lan='html:upload'>Upload</span>");
+                    uploadBtn.css({
+                        float: "left",
+                        borderRight: "1px solid #337ab7",
+                        height: "100%",
+                        padding: "5px 15px",
+                        cursor:"pointer"
+                    });
+                    uploadBtn.hover(function () {
+                        $(this).css({
+                            background: "#337ab7",
+                            color: "#fff"
+                        });
+                    }, function () {
+                        $(this).css({
+                            background: "#fff",
+                            color: "#000"
+                        });
+                    });
+                    uploadBtn.append(i);
+                    uploadBtn.append(span);
+                    $last.before(uploadBtn);
+                    uploadBtn.before(file);
+                }
+            },
+            "Edit": function (loadSelect, generatTable) {
+                var arr = [
+                    "vsfvwerfwerfwefwefefw",
+                    "dwqdqwwdjlkwdjhwkuydh",
+                    "fdqwudhkwqydiuqwyud"
+                ];
+            }
+        },
+        "btnClick": {                                                       //点击按钮及后续所有操作（所有弹出框都要配置，大框动态变化，处理特殊控件（如表格），处理数据[用于发送至后台]，返回数据）
+            "Delete": function (chData, fun1, fun2) {            //小框（chData：选中的数据 fun1：不弹出框直接执行[与后台交互] fun2：弹出小框后确定操作再执行）
+                fun2();
+            },
+            "Edit": {
+                "loadLayer2": function (chData) {                                               //打开弹出框（大框）时执行 ，二次填充内容,this:弹出框 , chData:选中的数据，后续再添加方法，方便优化 （2019/11/26 add ）
+                    console.log(this, chData);
+                    //this.find("select[name=ISMRB]").val(chData.ISMRB == "0" ? "否" : "是");
+                },
+                "retSendData": function (sendData) {                                    //点击按钮执行（二次处理数据，sendData：第一次处理的发送数据 this：弹出框） 
+                    return sendData;                                                              //返回的数据为最终发送的数据 重要！！！
+                },
+                "callBackPass": function (e, msgTip, $table, $layerBtn) {          //接收的数据pass后的操作（this：弹出框 e：接收的数据 msgTip：提示函数，不包含刷新页面，$table：表格节点，$layerBtn：弹出框的按钮集合）
+                    msgTip();                                                                      //提示信息
+                    $table.eq(1).bootstrapTable("load", e.Data);                      //二次加载表数据
+                    $table.find(".bs-checkbox").css({                                    //选择框居中
+                        "text-align": "center",
+                        "vertical-align": "middle",
+                    });
+                    $layerBtn[2].click();                                                        //关闭弹出框
+                    location.reload();                                                             //刷新整个页面
+                },
+                "callBackFail": function (e, msgTip, $table, $layerBtn) {             //请求失败后的操作，参数上同
+                    msgTip();
+                    console.log(this, msgTip, $table);
+                    $table.eq(1).bootstrapTable("load", e.Data);
+                }
+            },
+            "New": {                                                        
+                "retSendData": function (sendData) {        
+                    return sendData;
+                },
+                "callBackPass": function (e, msgTip, $table, $layerBtn) {     
+                    msgTip();
+                },
+                "callBackFail": function (e, msgTip, $table, $layerBtn) {
+                    msgTip();
+                }
+            },
+            "Link": {
+                "retSendData": function (sendData) {            
+                    return sendData;
+                },
+                "callBackPass": function (e, msgTip, $table, $layerBtn) {     
+                    msgTip();
+                },
+                "callBackFail": function (e, msgTip, $table, $layerBtn) {    
+                    msgTip();
+                }
+            },
+        }
+    });
+
+</script>
+</html>

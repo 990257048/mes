@@ -1,0 +1,363 @@
+﻿<!DOCTYPE html>
+<html style="height: 100%">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+	<meta charset="utf-8" />
+    <link rel="stylesheet" href="../../css/bootstrap.min.css" />
+    <link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <script src="../../Scripts/jquery.cookie.js"></script>
+    <script src="../../Scripts/bootstrap.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+    <script src="../../Scripts/plugins/layer/layer.min.js"></script>
+    <script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+
+    <script src="../../Scripts/global.js"></script>
+    <script src="../../Scripts/MesClient.js"></script>
+    <script src="../../Scripts/MesClient.UI.js"></script>
+    <script src="../../Scripts/Report/MesClient.Report.js"></script>
+</head>
+<body style="height: 100%; margin: 0">
+    <h4 style="margin-left:600px;"></h4>
+    <div id="container" style="height: 95%"></div>
+    <div id="tables"><table class="table table-bordered table-condensed"></table></div>
+    <script type="text/javascript" src="../../Scripts/echarts.min.js"></script>
+    <script>
+        $(function () {
+            self.parent.client.CallFunction("MESStation.Config.SMTYiledChartReport", "GetLine", "", function (e) {
+                if (e.Status == "Pass") {
+                    var Line = e.Data;
+                    delayFor(Line, Show, function () {
+                        console.log("end");
+                    }, 30000000);
+                } else {
+                    console.log("Fail");
+                }
+
+            });
+        });//end ready;
+        function delayFor (arr, fn, fnEnd, time) {   //延时循环执行fn,结束循环执行fnEnd
+            var len = arr.length;
+            var current = 0;
+            temp(arr[0]);
+            function temp(val) {
+                fn(val);
+                current++;
+                if (current < len) {
+                    setTimeout(function () {
+                        temp(arr[current]);
+                    }, time);
+                } else {   //循环执行结束
+                    //fnEnd()
+                    setTimeout(function () {
+                        current = 0;
+                        temp(arr[current]);
+                    }, time)
+                }
+            }/////////////////////////
+        }
+   
+        function Show(line)
+        {
+            $(':header').text("線別:"+line);
+            now = new Date();
+            hour = now.getHours();
+           // hour = 1;
+            var SendData = {};
+            SendData.LINE = line;
+            if (8 <= hour && hour < 20) {
+                self.parent.client.CallFunction("MESStation.Config.SMTYiledChartReport", "GetDayChartInfor", SendData, function (e) {
+                    if (e.Status == "Pass") {
+                        var PassCount = e.Data[0];
+                        var FailCount = e.Data[1];
+                        var Yield = e.Data[2];
+                        var Xaxis = e.Data[3];
+                        var TableData = e.Data[4];
+                        $('#tables table').bootstrapTable('destroy').bootstrapTable({
+                            data: TableData,
+                            pagination: false,
+                            striped: true,
+                            height: 260,
+                            cache: false,
+                            columns: [{ field: 'TIMES', title: 'TIMES', align: 'center' },
+                          {
+                              field: 'PASS', title: 'PASS', align: 'center', formatter: function (value, row, index)
+                              {
+                                 return a = '<a href=/FunctionPage/Report/Report.html?ClassName=MESReport.BaseReport.AOIStationReport&RunFlag=1&Line=' + line + '&Interval=' + row.TIMES + '&CountType=Pass>' + value + '</a>';
+                              }
+                          },
+                          {
+                              field: 'FAIL', title: 'FAIL', align: 'center', formatter: function (value, row, index) {
+                                  return a = '<a href=/FunctionPage/Report/Report.html?ClassName=MESReport.BaseReport.AOIStationReport&RunFlag=1&Line=' + line + '&Interval=' + row.TIMES + '&CountType=Fail>' + value + '</a>';
+                                  
+                              }
+                          },
+                          { field: 'TARGET', title: 'TARGET', align: 'center' },
+                          { field: 'YILED', title: 'YILED', align: 'center' }]
+                        })
+                        var dom = document.getElementById("container");
+                        var myChart = echarts.init(dom);
+                        var app = {};
+                        option = null;
+                        app.title = '折柱混合';
+
+                        option = {
+                            title: {
+                                text: 'SMTYieldChartBoards'
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                axisPointer: {
+                                    type: 'cross',
+                                    crossStyle: {
+                                        color: '#999'
+                                    }
+                                }
+                            },
+                            toolbox: {
+                                feature: {
+                                    dataView: { show: true, readOnly: false },
+                                    magicType: { show: true, type: ['line', 'bar'] },
+                                    restore: { show: true },
+                                    saveAsImage: { show: true }
+                                }
+                            },
+                            legend: {
+                                data: ['Pass數量', 'Fail數量', '目標', '良率']
+                            },
+                            xAxis: [
+                                {
+                                    type: 'category',
+                                    data: Xaxis,
+                                    axisPointer: {
+                                        type: 'shadow'
+                                    },
+                                    axisLabel: {
+                                        interval: 0,
+                                        rotate: 40
+                                    }
+                                }
+                            ],
+                            yAxis: [
+                                {
+                                    type: 'value',
+                                    name: '數量',
+                                    min: 0,
+                                    max: 250,
+                                    interval: 50,
+                                    axisLabel: {
+                                        formatter: '{value}'
+                                    }
+                                },
+                                {
+                                    type: 'value',
+                                    name: '良率',
+                                    min: 0,
+                                    max: 100,
+                                    interval: 20,
+                                    axisLabel: {
+                                        formatter: '{value}%'
+                                    }
+                                }
+                            ],
+                            series: [
+                                {
+                                    name: 'Pass數量',
+                                    type: 'bar',
+                                    data: PassCount,
+                                    label: { show: true, position: "top" },
+                                    itemStyle: { color: '#00ff00', borderColor: '#696969' },
+
+                                },
+                                {
+                                    name: 'Fail數量',
+                                    type: 'bar',
+                                    data: FailCount,
+                                    label: { show: true, position: "top" },
+                                    itemStyle: { color: 'red', borderColor: '#696969' }
+                                },
+                                {
+                                    name: '目標',// 0按右邊的,按左邊
+                                    type: 'line',
+                                    yAxisIndex: 1,
+                                    data: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+                                    itemStyle: { color: '#87cefa' },
+                                    label: { show: true, position: "top" }
+                                },
+                                {
+                                    name: '良率',
+                                    type: 'line',
+                                    yAxisIndex: 1,
+                                    data: Yield,
+                                    label: { show: true, position: "top" },
+                                    itemStyle: { color: '#a0522d' }
+                                }
+                            ]
+                        };
+                        if (option && typeof option === "object") {
+                            myChart.setOption(option, true);
+                        }
+                        myChart.on("click", function (params) {
+                            console.log(params);
+                            var line = $(':header').text().split(':')[1];
+                            var interval = params.name;
+                            if (params.componentSubType == 'bar') {
+                                console.log(params);
+                                location.href = "/FunctionPage/Report/Report.html?ClassName=MESReport.BaseReport.AOIStationReport&RunFlag=1&Line=" + line + "&Interval=" + interval + "&CountType=" + params.seriesName;
+                            }
+                        });//end onclikc
+                    } else {
+                        console.log("Fail");
+                    }
+                });//end callfunction;
+            }
+            else {
+                self.parent.client.CallFunction("MESStation.Config.SMTYiledChartReport", "GetNightChartInfor", SendData, function (e) {
+                    if (e.Status == "Pass") {
+                        var PassCount = e.Data[0];
+                        var FailCount = e.Data[1];
+                        var Yield = e.Data[2];
+                        var Xaxis = e.Data[3];
+                        var TableData = e.Data[4];
+                        $('#tables table').bootstrapTable('destroy').bootstrapTable({
+                            data: TableData,
+                            pagination: false,
+                            striped: true,
+                            height: 260,
+                            cache: false,
+                            columns: [{ field: 'TIMES', title: 'TIMES', align: 'center' },
+                          {
+                              field: 'PASS', title: 'PASS', align: 'center', formatter: function (value, row, index) {
+                                  return a = '<a href=/FunctionPage/Report/Report.html?ClassName=MESReport.BaseReport.AOIStationReport&RunFlag=1&Line=' + line + '&Interval=' + row.TIMES + '&CountType=Pass>' + value + '</a>';
+                              }
+                          },
+                          {
+                              field: 'FAIL', title: 'FAIL', align: 'center', formatter: function (value, row, index) {
+                                  return a = '<a href=/FunctionPage/Report/Report.html?ClassName=MESReport.BaseReport.AOIStationReport&RunFlag=1&Line=' + line + '&Interval=' + row.TIMES + '&CountType=Fail>' + value + '</a>';
+
+                              }
+                          },
+                          { field: 'TARGET', title: 'TARGET', align: 'center' },
+                          { field: 'YILED', title: 'YILED', align: 'center' }]
+                        })
+                        var dom = document.getElementById("container");
+                        var myChart = echarts.init(dom);
+                        var app = {};
+                        option = null;
+                        app.title = '折柱混合';
+                        option = {
+                            text: 'SMTYieldChartBoards',
+                            tooltip: {
+                                trigger: 'axis',
+                                axisPointer: {
+                                    type: 'cross',
+                                    crossStyle: {
+                                        color: '#999'
+                                    }
+                                }
+                            },
+                            toolbox: {
+                                feature: {
+                                    dataView: { show: true, readOnly: false },
+                                    magicType: { show: true, type: ['line', 'bar'] },
+                                    restore: { show: true },
+                                    saveAsImage: { show: true }
+                                }
+                            },
+                            legend: {
+                                data: ['Pass數量', 'Fail數量', '目標', '良率']
+                            },
+                            xAxis: [
+                                {
+                                    type: 'category',
+                                    //data: ['08:00-09:00', '09:00-10:00', '10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00', '15:00:16:00', '16:00:17:00', '17:00:18:00', '18:00:19:00', '19:00-20:00'],
+                                    data: Xaxis,
+                                    axisPointer: {
+                                        type: 'shadow'
+                                    },
+                                    axisLabel: {
+                                        interval: 0,
+                                        rotate: 40
+                                    }
+                                }
+                            ],
+                            yAxis: [
+                                {
+                                    type: 'value',
+                                    name: '數量',
+                                    min: 0,
+                                    max: 250,
+                                    interval: 50,
+                                    axisLabel: {
+                                        formatter: '{value}'
+                                    }
+                                },
+                                {
+                                    type: 'value',
+                                    name: '良率',
+                                    min: 0,
+                                    max: 100,
+                                    interval: 20,
+                                    axisLabel: {
+                                        formatter: '{value}%'
+                                    }
+                                }
+                            ],
+                            series: [
+                                {
+                                    name: 'Pass數量',
+                                    type: 'bar',
+                                    data: PassCount,
+                                    label: { show: true, position: "top" },
+                                    itemStyle: { color: '#00ff00' }
+                                },
+                                {
+                                    name: 'Fail數量',
+                                    type: 'bar',
+                                    data: FailCount,
+                                    label: { show: true, position: "top" },
+                                    itemStyle: { color: '#ff69b4' }
+                                },
+                                {
+                                    name: '目標',// 0按右邊的,按左邊
+                                    type: 'line',
+                                    yAxisIndex: 1,
+                                    data: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+                                    itemStyle: { color: '#' }
+                                },
+                                {
+                                    name: '良率',
+                                    type: 'line',
+                                    yAxisIndex: 1,
+                                    data: Yield,
+                                    label: { show: true, position: "top" },
+                                    itemStyle: { color: '#a0522d' },
+                                    label: { show: true, position: "top" }
+                                }
+                            ]
+                        };
+                        ;
+                        if (option && typeof option === "object") {
+                            myChart.setOption(option, true);
+                        }
+                        myChart.on("click", function (params) {
+                            console.log(params);
+                            var line = $(':header').text().split(':')[1];
+                            var interval = params.name;
+                            if (params.componentSubType == 'bar') {
+                                console.log(params);
+                                location.href = "/FunctionPage/Report/Report.html?ClassName=MESReport.BaseReport.AOIStationReport&RunFlag=1&Line=" + line + "&Interval=" + interval + "&CountType=" + params.seriesName;
+                            }
+                        });//end onclikc
+                    } else {
+                        console.log("Fail");
+                    }
+                });//end callfunction;
+            }
+        }
+    </script>
+</body>
+</html>

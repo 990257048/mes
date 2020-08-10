@@ -1,0 +1,392 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MES Employee</title>
+    <link href="../../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../../css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+    <!--<link href="css/animate.css" rel="stylesheet">-->
+    <link href="../../css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <style type="text/css">
+        #Parameters .form-group {
+            padding-top: 10px;
+        }
+        /*去掉表格自定義工具按鈕最後一個右上、右下圓角*/
+        #toolbar .btn:last-child {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        /*div.export > button:first-child {
+             border-top-left-radius: 0; 
+             border-bottom-left-radius: 0;
+        }*/
+        #toolbar {
+            float:left;
+            padding:0px;
+            margin:0px;
+        }
+
+        #pagenum {
+            padding-right: 14px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body class="gray-bg">
+
+    <div class="wrapper wrapper-content animated fadeInRight" id="Emp_list">
+        <div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
+            <div class="ibox  float-e-margins">
+                <div class="panel-heading bg-primary">
+                    <h3><i class="glyphicon glyphicon-tags"></i><lan style="padding-left:10px;"  set-lan="text:h_UserInformation">SFC帳號權限審核</lan></h3>
+                </div>
+                <div class="ibox-content">
+                    <div class="form-horizontal row">
+                        <div class="form-group col-xs-8 col-md-8 col-sm-8 col-lg-8 col-xs-offset-1 col-sm-offset-1 col-lg-offset-1  col-md-offset-1">
+                            <label class="col-xs-3 col-md-3 col-sm-3 col-lg-2 control-label"><lan set-lan="text:lbl_EmpNO">EMP_NO</lan></label>
+                            <div class="col-xs-5 col-md-5 col-sm-5 col-lg-5">
+                                <input type="text" class="form-control" id="S_empno" oninput="TextChange()">
+                            </div>
+                            <div class="col-xs-2 col-md-1 col-sm-2 col-lg-2">
+                                <button class="btn btn-primary" id="S_info"><i class="fa fa-search"><lan set-lan="html:Search">Search</lan></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="ibox-content">
+                    <!--<h1>User List</h1>-->
+                    <div class="fixed-table-toolbar">
+                        <div class="btn-group" id="toolbar" role="group">
+                            <!--<button type="button" class="btn btn-outline btn-default" id="Employee_Add">
+                                <i class="glyphicon glyphicon-plus" aria-hidden="true"><lan set-lan="html:add">Add</lan></i>
+                            </button>-->
+                            <button type="button" class="btn btn-outline btn-default" id="Employee_Update">
+                                <i class="glyphicon glyphicon-pencil" aria-hidden="true">同意</i>
+                            </button>
+                            <button type="button" class="btn btn-outline btn-default" id="Employee_Delete">
+                                <i class="glyphicon glyphicon-trash" aria-hidden="true">駁回</i>
+                            </button>
+                        </div>
+                    </div>
+                    <table class="table table-hover" id="mytab"></table>
+                    <div class="fixed-table-pagination">
+                        <div class="pull-left pagination-detail">
+                            <span class="pagination-info" set-lan="html:PaginationShow">每頁顯示</span>
+                            <span class="page-list">
+                                <span class="btn-group dropup" >
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                        <span class="page-size" id="page-size">10</span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu" id="dropdown-ul">
+                                        <li role="menuitem" class="active">
+                                            <a href="#">10</a>
+                                        </li>
+                                        <li role="menuitem" class="">
+                                            <a href="#">20</a>
+                                        </li>
+                                    </ul>
+                                </span>&nbsp;&nbsp;<span set-lan="html:PaginationPage">條數據</span> 
+                            </span>
+                        </div>
+                        <div class="pull-right" id="example" style="text-align: center"> <ul id="pageLimit"></ul> </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- 全局js -->
+    <script src="../../Scripts/jquery.min.js?v=2.1.4"></script>
+    <script src="../../Scripts/jquery.cookie.js"></script>
+    <script src="../../Scripts/bootstrap.min.js?v=3.3.6"></script>
+    <!-- 第三方插件 -->
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table-export.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/tableExport.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table-zh-TW.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="../../Scripts/plugins/pagination/bootstrap-paginator.js"></script>
+    <!-- 自定義 -->
+ 
+    <script src="../../Scripts/global.js"></script>
+    <script src="../../Scripts/MesClient.js"></script>
+    <script src="../../Scripts/MesClient.UI.js"></script>
+    <script type="text/javascript">
+        var ClassName = "MESStation.MESUserManager.UserPrivilege";
+        var RoleClassName = "MESStation.MESUserManager.UserRole";
+        var Func;
+        var Infowarn;
+        var Sub_Func;
+        var isPostBack = false;
+        var checkthing = false;
+        var searchemp = "";
+        var mesUI = new MesClientUI(self.parent.client);
+        var localelan = "";
+        var lan = $.cookie($.MES.CK_LAN_NAME);
+        $(document).ready(function () {
+            var mesUI = new MesClientUI(self.parent.client);
+            if (lan == "CHINESE") {
+                localelan = "zh-CN"
+            }
+            else if (lan == "CHINESE_TW") {
+                localelan = "zh-TW"
+            }
+            else {
+                localelan = "en"
+            }
+
+           
+            //加載表數據
+            loadtable("LoadUserStationPrivate", { PageRow: 10, PageCount: 1, emp_no: searchemp }, isPostBack);
+
+          
+            //工號查詢
+            $('#S_info').click(function () {
+
+                Search();
+               
+            });
+
+           
+            $("#S_empno").keyup(function (event) {
+                if (event.keyCode == 13) {
+                    Search();
+                }
+            });
+
+           
+            
+            //修改信息
+            $('#Employee_Update').click(function () {
+                var arrselections = $("#mytab").bootstrapTable('getSelections');
+                //if (arrselections.length > 1) {
+                //    swal({
+                //        title: "警告",
+                //        text: "只能選擇一行數據!",
+                //        type: "warning",
+                //        timer: 2000,
+                //        showConfirmButton: false
+                //    });
+                //    return;
+                //}
+                if (arrselections.length <= 0) {
+                    swal({
+                        title: "警告",
+                        text: "請選擇有效的數據!",
+                        type: "warning",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    return;
+                }
+
+                swal({
+                    title: "提示",
+                    text: "簽核成功!",
+                    type: "warning",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+                //$('#Emp_Add').show();
+                //$('#Emp_list').hide();
+                //$("#Header_A").attr('hidden', 'hidden');
+                //$("#Header_U").removeAttr('hidden', 'hidden');
+                //$("#Header_U").text("Update Information");
+
+                //loadtable("LoadUserStationPrivate", { PageRow: 10, PageCount: 1, emp_no: searchemp }, isPostBack);
+
+            });
+            //刪除用戶
+            $('#Employee_Delete').click(function () {
+                var DelRole = [];
+                ClassName = "MESStation.MESUserManager.UserRole";
+                FunctionName = "DeleteUserRolePrivilege";
+                var Selections = [];
+                Edit_NO = $("#mytab").bootstrapTable('getSelections');
+                Selections = $("#mytab").bootstrapTable('getSelections');
+                var arrselections = $("#mytab").bootstrapTable('getSelections');
+                if (arrselections.length <= 0) {
+                    swal("警告", "請選擇有效的數據!", "warning");
+                    return;
+                }
+                for (var i = 0; i < Selections.length; i++) {
+                    DelRole[i] = Selections[i].ROLE_ID;
+                }
+                swal({
+                    title: "提示",
+                    text: "確認要刪除選擇的" + arrselections.length + "條數據嗎！",
+                    type: "warning",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "确定删除！",
+                    showCancelButton: true
+                }, function () {
+                    self.parent.client.CallFunction(ClassName, FunctionName, { EMP_NO: Edit_NO[0].EMP_NO, ROLE_ID: DelRole }, function (ee) {
+                        if (ee.Status == "Pass") {
+                            swal({
+                                title: "提示",
+                                text: "刪除成功！",
+                                type: "warning",
+                                timer: 1000,
+                                showConfirmButton: false
+                            }, function () { 
+                                window.location = "UserStationPrivate.html";
+                            });
+                        }
+                    })
+                });
+            });
+
+            $("#dropdown-ul").on("click", "li", function () {
+                $("#dropdown-ul li").removeClass("active");
+                $(this).addClass("active");
+                $("#page-size").text($(this).text());
+                loadtable("LoadUserStationPrivate", { PageRow: 10, PageCount: 1, emp_no: searchemp }, true);
+            });
+            mesUI.SetLanguage("UserStationPrivateList");
+        });
+
+        function Search() {
+            searchemp = $("#S_empno").val();
+            loadtable("LoadUserStationPrivate", { PageRow: 10, PageCount: "", emp_no: searchemp }, true);
+            if ($("#S_empno").val().replace(/^\s+|\s+$/g, "") == "" || $("#S_empno").val().replace(/^\s+|\s+$/g, "") == null) {
+                checkthing = false;
+            } else {
+                checkthing = true;
+            }
+        }
+        function TextChange() {
+            if ($("#S_empno").val() == "") {
+                Search();
+            }
+        };
+       
+        //加載表數據
+        function loadtable(f, d, i) {
+            var PageSizs;
+            if ($("#page-size").text() != "") {
+                PageSizs = $("#page-size").text();
+            }
+            d = { PageRow: parseInt(PageSizs), PageCount: d.PageCount, emp_no: d.emp_no };
+            self.parent.client.CallFunction(ClassName, f, d, function (e) {
+                if (e.Status == "Pass") {
+                    if (i) {
+                        $('#mytab').bootstrapTable('load', e.Data);
+                    }
+                    else {
+                        var c = [];
+                        var checkbox = " title:'checkall',field:'select',checkbox: true, width: 30, align: 'center',valign: 'middle' ";
+                        c.push({ checkbox });
+                        for (var item in e.Data[0]) {
+                            c.push({ field: item, title: "<label set-lan=\"html:table" + item + "\">" + item + "</label>" });
+                        }
+                        $('#mytab').bootstrapTable({
+                            data: e.Data,
+                            striped: false,
+                            cache: false,
+                            //pagination: true,
+                            sortable: false,
+                            sortOrder: "asc",
+                            //sidePagination: "server",
+                            //pageNumber: n,
+                            //pageSize: s,
+                            //pageList: [8, 15, 30, 70],
+                            search: false,
+                            strictSearch: true,
+                            searchOnEnterKey: false,
+                            showColumns: false,
+                            showRefresh: false,
+                            minimumCountColumns: 2,
+                            clickToSelect: true,
+                            showToggle: false,
+                            cardView: false,
+                            detailView: false,
+                            dataType: "json",
+                            method: "post",
+                            searchAlign: "left",
+                            buttonsAlign: "left",
+                            toolbar: "#toolbar",
+                            toolbarAlign: "left",
+                            showExport: true,                  //是否显示导出按钮
+                            exportDataType: 'all',             //'basic', 'all', 'selected'  exportDataType表示导出的模式是当前页、所有数据还是选中数据
+                            exportTypes: ['excel', 'csv'],     //导出文件类型
+                            Icons: 'glyphicon-export',
+                            exportOptions: {
+                                ignoreColumn: [0],             //忽略某一列的索引
+                                fileName: 'Customer List',     //文件名称设置
+                                worksheetName: 'sheet1',       //表格工作区名称
+                            },
+                            columns: c,
+                            locale: localelan
+                            //onpagechange: function (n, s) {
+                            //    loadtable(n, s);
+                            //}
+
+                           
+                        });
+                       
+                        $('#mytab').bootstrapTable('hideColumn', 'ID');
+                        $('#mytab').bootstrapTable('hideColumn', 'ROLE_ID');
+                        //$('#mytab').bootstrapTable('hideColumn', 'EMP_PASSWORD');
+                        //去掉導出數據按鈕的左上左下圓角
+                        $("lan:contains('Export Data')").parent().css({ 'border-top-left-radius': '0', 'border-bottom-left-radius': '0' });
+                    }
+                    self.parent.client.CallFunction(ClassName, "GetMaxPageUSP", { PageRow: parseInt(PageSizs), Emp_No: d.emp_no }, function (g) {
+                        if (g.Status == "Pass") {
+                            Pagination(g.Data, d.PageCount);
+                        }
+                    });
+                   
+                }
+                else {
+                    swal({
+                        title: "提示",
+                        text: e.Message,
+                        timer: 2000,
+                        type: "warning",
+                        showConfirmButton: false
+                    });
+                }
+                mesUI.SetLanguage("UserStationPrivateList");
+            })
+        }
+        function Pagination(PageNum, currentPage) {
+            searchemp = $("#S_empno").val();
+            $('#pageLimit').bootstrapPaginator({
+                currentPage: currentPage,//当前的请求页面。
+                totalPages: PageNum,//一共多少页。
+                size: "normal",//应该是页眉的大小。
+                bootstrapMajorVersion: 3,//bootstrap的版本要求。
+                alignment: "right",
+                numberOfPages: 5,//一页列出多少数据。
+                itemTexts: function (type, page, current) {//如下的代码是将页眉显示的中文显示我们自定义的中文。
+                    switch (type) {
+                        case "first": return "<<";
+                        case "prev": return "<";
+                        case "next": return ">";
+                        case "last": return ">>";
+                        case "page": return page;
+                    }
+                }, onPageClicked: function (event, originalEvent, type, page) {//给每个页眉绑定一个事件，其实就是ajax请求，其中page变量为当前点击的页上的数字。
+                    loadtable("LoadUserStationPrivate", { PageRow: 10, PageCount: page, emp_no: searchemp }, true);
+                }
+            });
+        }
+
+        
+    </script>
+
+</body>
+</html>

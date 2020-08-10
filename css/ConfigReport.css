@@ -1,0 +1,372 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
+}
+html,body{
+    width:100%;
+    height:100%;
+}
+#report-root{
+    width:100%;
+    height:100%;
+    background: #f5f5f5;
+}
+.config-report{
+    width:100%;
+    height:100%;
+    padding:10px;
+}
+.report-top{
+    width:100%;
+    height:25px;
+}
+
+.control-wrap{
+    box-sizing: content-box;
+    display: inline-block;
+    height:calc(100% - 2px);
+    border:1px solid #20a6f8;
+    border-right: none;
+    color:#029fff;
+    cursor: pointer;
+}
+.control{
+    box-sizing: content-box;
+    height:100%;
+    line-height: 23px;
+    padding: 0px 15px;
+    float: left;
+    border-right: 1px solid #20a6f8;
+}
+.control:hover{
+    background: #337ab7;
+    color:#fff;
+}
+.control i{
+    display:inline-block;
+    font-size: 1rem;
+    line-height: 22px;
+}
+.control span{
+    display:inline-block;
+    padding-left: 2px;
+    font-size: 1.2rem;
+    line-height: 23px;
+}
+.report-title{
+    height: 100%;
+    padding: 0px 20px;
+    line-height: 25px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    float: left;
+    color: #fff;
+    background: #20a6f8;
+    margin-right: 10px;
+}
+.report-search-wrap{
+    box-sizing: content-box;
+    width:220px;
+    height:calc(100% - 2px);
+    padding: 1px;
+    border: 1px solid #20a6f8;
+    float:right;
+
+}
+.report-search-icon{
+    height:100%;
+    width:25px;
+    text-align: center;
+    line-height: 23px;
+    font-size: 1.2rem;
+    color: #029fff;
+    float: left;
+}
+.report-search{
+    width: calc(100% - 25px);
+    height:100%;
+    padding:0px 2px;
+    border: none;
+    outline: none;
+    background: #f5f5f5;
+    font-size: 1.2rem;
+    color: #20a6f8;
+}
+.report-search::-webkit-input-placeholder{
+    font-size: 1.2rem;
+    color: #aaa;
+}
+
+
+
+.table-w{
+    width:100%;
+    height:calc(100% - 25px);
+}
+
+
+
+.report-table{
+    position: relative;
+    width:100%;
+    height:calc(100% - 35px);
+    margin-top: 10px;
+    border: 1px solid #20a6f8;
+    overflow-x: auto;
+}
+
+.report-table::-webkit-scrollbar-thumb {
+    background:#337ab7;
+    border-radius: 4px;
+}
+.report-table::-webkit-scrollbar {
+    width:8px;
+    height:8px;
+    background-color:#f5f5f5;
+}
+
+
+.report-table table{
+    width:100%;
+    height:auto;
+    color: #757575;
+}
+
+.report-table .fix-tit{
+    position: fixed;
+    top: 46px;
+    left: 11px;
+    width:calc(100% - 30px);
+    height:31px;
+    overflow: hidden;
+}
+.report-table .fix-col{
+    position: fixed;
+    top: 78px;
+    left: 11px;
+    height:calc(100% - 123px);
+    overflow: hidden;
+}
+
+.report-table .fix-tit-act{
+    position: relative;
+    height:100%;
+    background: #757575;
+}
+.fix-tit .tit-fix-v{
+    position: absolute;
+    height:31px;
+    top:0px;
+    background: #757575;
+}
+.tit-fix-v .tit-fix-v-block{
+    height:100%;
+    line-height: 31px;
+    text-align: center;
+    float: left;
+    border-right: 1px solid #ddd;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.report-table .fix-col-act{
+    position: relative;
+    width:100%;
+    background: #f5f5f5;
+}
+.fix-tit-act .fix-tit-act-block{
+    height: 100%;
+    text-align: center;
+    line-height: 31px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    border-right: 1px solid #ddd;
+    float: left;
+}
+.fix-col-act .fix-col-act-row{
+    width:100%;
+    height:27px;
+    border-bottom: 1px solid #ddd;
+}
+.fix-col-act-row .fix-col-act-block{
+    height:100%;
+    float:left;
+    text-align: center;
+    line-height: 26px;
+    font-size: 1.4rem;
+    border-right: 1px solid #ddd;
+}
+
+
+
+table thead tr{
+    height:30px;
+}
+table tbody tr{
+    height:26px;
+}
+table td{
+    height:100%;
+    line-height: 26px;
+    text-align: center;
+    padding: 0px 10px !important;
+    border: 1px solid #ddd;
+}
+table th{
+    height:100%;
+    line-height: 30px;
+    text-align: center;
+    padding: 0px 10px !important;
+    border: 1px solid #ddd;
+}
+
+
+
+.report-bot{
+    width:100%;
+    height:24px;
+    position: relative;
+    top:6px;
+}
+.page-msg{
+    height:100%;
+    line-height: 24px;
+    font-size: 1.2rem;
+    padding: 0px;
+    float: left;
+}
+.page-list,.page-list ul{
+    height:100%;
+    float: right;
+}
+.page-list ul{
+    border: 1px solid #20a6f8;
+    border-right: none;
+}
+.page-list ul li{
+    float: left;
+    height:100%;
+    padding: 0px 8px;
+    line-height: 24px;
+    border-right: 1px solid #20a6f8;
+    cursor: pointer;
+}
+.page-list ul li.page-act{
+    color: #fff;
+    background: #69bef3;
+}
+
+.page-list ul li.page-usual:hover{
+    color: #000;
+    background: #e5e5e5;
+}
+
+.global-shadow{
+    position: absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    left: 0;
+    background:rgba(0,0,0,0.5);
+}
+
+.float-box{
+    position: absolute;
+    /* width:600px;
+    height:400px;
+    top:calc(50% - 200px);
+    left:calc(50% - 300px); */
+    background: #f5f5f5;
+    box-shadow: 0px 0px 10px #333;
+}
+.float-top{
+    width:100%;
+    height:30px;
+    background: #337ab7;
+    cursor: move;
+}
+.float-top p{
+    height:100%;
+    padding: 0px 10px;
+    line-height: 30px;
+    color:#fff;
+    float: left;
+}
+.float-top .close-float{
+    height:100%;
+    padding: 0px 10px;
+    top: 0;
+    line-height: 30px;
+    float: right;
+    font-size: 1rem;
+    color:#fff;
+    cursor: pointer;
+}
+.float-top .close-float:hover{
+    background: #20a6f8;
+}
+
+.float-content-wrap{
+    width:100%;
+    height:calc(100% - 30px);
+    padding: 10px;
+}
+.float-content{
+    width:100%;
+    height:100%;
+    font-size:1.2rem;
+    font-weight: 500;
+}
+.ctr-wrap{
+    width:50%; 
+    height:40px;
+    float: left;
+    padding: 5px;
+}
+.ctr-wrap .ctr-lable{
+    width:40%;
+    height:100%;
+    background: #337ab7;
+    float: left;
+}
+.ctr{
+    width:60%;
+    height:100%;
+    float: left;
+    border: 1px solid #029fff;
+}
+.ctr input{
+    width:100%;
+    height:100%;
+    border: none;
+    outline: none;
+    padding: 0px 10px;
+}
+.ctr select{
+    width:100%;
+    height:100%;
+    border: none;
+    outline: none;
+    padding: 0px 10px;
+}
+
+.ctr-big{
+    width:60%;
+    height:200%;
+    float: left;
+    border: 1px solid #029fff;
+}
+.ctr-big textarea{
+    width:100%;
+    height:100%;
+    border: none;
+    outline: none;
+    padding: 10px;
+}
+
+
+
+

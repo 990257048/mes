@@ -1,0 +1,241 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>testReport</title>  <!-- GCH 2019/03/11 ADD-->
+</head>
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+<link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+<link href="../../css/ReportConfig.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+<script src="../../Scripts/Report/MesClient.ReportConfig.js"></script>
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:"></span>
+    </div>
+    <div class="list">
+        <div class="btnList"></div>
+        <div class="query">
+            <div class="input">
+                <input type="text" value="" placeholder="" />
+            </div>
+        </div>
+    </div>
+    <div class="tab">
+        <table></table>
+    </div>
+</body>
+<script>
+
+
+    //执行顺序：
+    //①：打开页面自动执行（fn: loadLayerData[btnName]），无选中数据，对弹出框操作（为控件绑定事件，随意操作弹出框内容）
+    //②：打开弹出框执行(fn: btnClick[btnName].loadLayer2)，有选中数据，对弹出框操作（一般情况自动填充数据，这里可以根据选中数据对控件（特殊）二次填充数据，也能对弹出框进行更复杂的操作）
+    //③：点击操作按钮执行(fn: btnClick[btnName].retSendData)，二次处理待发送数据，保证数据无误。
+    //④：后台传回数据时执行(fn: btnClick[btnName].callBackPass / callBackFail)。
+
+
+
+
+    var report = new ConfigReport({
+        "pageMsg": {
+            "pageName": "Delete TODN",                    //title名
+            "setLan": "deletetodn",                          //该网页的多语言标签名
+            "queryTip": "请输入TO_NO",             //查询框的提示信息
+            "btnMsg": [
+                  {
+                      "id": "btn1",
+                      "btnName": "Edit",  
+                      "layerBtnName":"Delete",  
+                      "icon": "glyphicon glyphicon-pencil",
+                      "style": "1", 
+                      "layerFlag": true
+                  }
+            ],
+        },
+        "apiList": {                                                                 //该网页的重要操作对应的前端与后台交互的api（homePage select 都是固定的写法，除此之外名称全部与按钮名称一致） 
+            "homePage": {                                                       //首页的api（homePage：固定写法，用于加载首页表数据）
+                "className": "MESStation.Config.TOEliminate",   //该api对应的后台的类路径
+                "functionName": "FSelectTONOConfig",                                  //该api名称（方法名称）
+                "colList": ["TO_NO"],                                 //后台接收数据的键的集合（大框操作不需要配置，下同；其它情况此项必填，下同）
+                "sendList": [""]                                                 //后台接收数据的值的集合（与键一一对应）
+            },
+            "select": {                                                            //查询框(select:固定写法，用于快速查询表数据)
+                "className": "MESStation.Config.TOEliminate",
+                "functionName": "FSelectTONOConfig",
+                "colList": ["TO_NO"]
+            },
+            "Edit":{
+                "className": "MESStation.Config.TOEliminate",
+                "functionName": "FUpdateTONOConfig"
+            }
+        },
+        "tableMsg": {                                                           //该表的各字段集合  
+            //"TO_NO": "0000059667",
+            //"DN_CUSTOMER": "BCS191",
+            //"CREATETIME": "2020-03-27 08:11"
+            "column": ["TO_NO", "DN_CUSTOMER", "CREATETIME"]
+        },
+        "layerMsg": {                                                           //弹出框（针对大框）各个控件的配置
+            "Edit": {
+                "showList": [
+                    {
+                        "field": "EMP_NO",                        
+                        "type": "text",                      
+                        "disabled": false,                   
+                        "fillFlag":false                       
+                    },
+                  {
+                      "field": "EMP_PASSWORD",
+                      "type": "password",
+                      "disabled": false,
+                      "fillFlag": false
+                  }
+              ],
+                "sendList": ["EMP_NO", "EMP_PASSWORD"]
+            },
+        },
+        "loadLayerData": {                                              //弹出框的控件的所有操作（大框内特殊控件数据加载[加载完页面数据后自动执行]）
+            
+            "Edit": function (loadSelect, generatTable) {
+                var _this = this;
+                $("#btn1").on("click", function () {
+                    
+                    if($(this).css("cursor") === "pointer"){
+                        var ch_d = $('.tab table').bootstrapTable('getAllSelections')[0];
+                        var TO_NO = ch_d.TO_NO;
+                        self.parent.client.CallFunction("MESStation.Config.TOEliminate", "FSelectDNNOConfig", { TO_NO}, function (e) {
+                            if (e.Status === "Fail") {
+                                var d = [{
+                                    TO_NO: TO_NO,
+                                    DN_NO: "xxxxxxxxx",
+                                    DN_CUSTOMER: "xxxxxxxxxxx",
+                                    CREATETIME: "xxxxxxxxxx"
+                                }];
+                                var field = ["TO_NO", "DN_NO", "DN_CUSTOMER", "CREATETIME"];
+                                generatTable({
+                                    tableName: "table1",
+                                    $prev: _this.find("input[name=EMP_PASSWORD]").parent().parent(),
+                                    btnArr: [],
+                                    fields: field,
+                                    tableData: d,
+                                    eventObj: {
+                                        "onCheck": function (checkedData) {                         //选中数据后的所有操作（一般对style=0的按钮绑定事件） checkedData :选中的数据 this:表格   
+                                            ////console.log(this, checkedData, $(".layDeleteBtn"));
+                                            //var _this = this;
+                                            //$(".layDeleteBtn").off("click");                           //取消绑定事件
+                                            //$(".layDeleteBtn").on("click", function () {         //选中数据后绑定事件
+                                            //    console.log(_this, checkedData);
+                                            //});
+                                        },
+                                        "onUncheck": function () {                                      //取消选中数据执行
+                                            //$(".layDeleteBtn").off("click");                            //取消选中数据后取消绑定事件
+                                        }
+                                    },
+                                });
+                            } else {
+                                layer.msg(e.Message, {
+                                    icon: 0,
+                                    time: 2000
+                                });
+                            }
+                            
+                        });
+                    }
+                    
+
+
+                });
+
+
+
+                //generatTable({
+                //    //tableName           //表的类名
+                //    //fields               //表字段集合
+                //    //tableData            //表数据
+                //    //eventObj            //表格的事件
+                //    //btnArr              //按钮的配置数据
+                //    //$prev              //按钮行的上一个控件，用来插入按钮行
+                //    tableName: "table1",
+                //    $prev: this.find("input[name=EMP_PASSWORD]").parent().parent(),
+                //    btnArr: [
+                //    {
+                //        btnName: "Delete",
+                //        icon: "glyphicon glyphicon-share",
+                //        style: 1
+                //    }
+                //    ],
+                //    fields: ["xxx1", "xxx2", "xxx3", "xxx4", "xxx5", "xxx6"],
+                //    tableData: [
+                //        {
+                //            "xxx1": "xxxxxxxxxxxxxxxxxxxx",
+                //            "xxx2": "xxxxxxxxxxxxxxxxxxxx",
+                //            "xxx3": "xxxxxxxxxxxxxxxxxxxx",
+                //            "xxx4": "xxxxxxxxxxxxxxxxxxxx",
+                //            "xxx5": "xxxxxxxxxxxxxxxxxxxx",
+                //            "xxx6": "xxxxxxxxxxxxxxxxxxxx",
+                //        }
+                //    ],
+                //    eventObj: {
+                //        "onCheck": function (checkedData) {                         //选中数据后的所有操作（一般对style=0的按钮绑定事件） checkedData :选中的数据 this:表格   
+                //            //console.log(this, checkedData, $(".layDeleteBtn"));
+                //            var _this = this;
+                //            $(".layDeleteBtn").off("click");                           //取消绑定事件
+                //            $(".layDeleteBtn").on("click", function () {         //选中数据后绑定事件
+                //                console.log(_this, checkedData);
+                //            });
+                //        },
+                //        "onUncheck": function () {                                      //取消选中数据执行
+                //            $(".layDeleteBtn").off("click");                            //取消选中数据后取消绑定事件
+                //        }
+                //    },
+                //});
+
+            }
+        },
+        "btnClick": {                                                       //点击按钮及后续所有操作（所有弹出框都要配置，大框动态变化，处理特殊控件（如表格），处理数据[用于发送至后台]，返回数据）
+            
+            "Edit": {
+                //"loadLayer2": function (chData) {                                               //打开弹出框（大框）时执行 ，二次填充内容,this:弹出框 , chData:选中的数据，后续再添加方法，方便优化 （2019/11/26 add ）
+                //    console.log(this, chData);
+                //    //this.find("select[name=ISMRB]").val(chData.ISMRB == "0" ? "否" : "是");
+                //},
+                "retSendData": function (sendData) {                                    //点击按钮执行（二次处理数据，sendData：第一次处理的发送数据 this：弹出框） 
+                    var ch_d = this.find(".table1 table").bootstrapTable('getAllSelections')[0];
+                    sendData.TO_NO = ch_d.TO_NO;
+                    sendData.DN_NO = ch_d.DN_NO;
+                    return sendData;                                                              //返回的数据为最终发送的数据 重要！！！
+                },
+                "callBackPass": function (e, msgTip, $table, $layerBtn) {          //接收的数据pass后的操作（this：弹出框 e：接收的数据 msgTip：提示函数，不包含刷新页面，$table：表格节点，$layerBtn：弹出框的按钮集合）
+                    msgTip();                                                                      //提示信息
+                    $table.eq(1).bootstrapTable("load", e.Data);                      //二次加载表数据
+                    $table.find(".bs-checkbox").css({                                    //选择框居中
+                        "text-align": "center",
+                        "vertical-align": "middle",
+                    });
+                    $layerBtn[2].click();                                                        //关闭弹出框
+                    location.reload();                                                             //刷新整个页面
+                },
+                "callBackFail": function (e, msgTip, $table, $layerBtn) {             //请求失败后的操作，参数上同
+                    msgTip();
+                    console.log(this, msgTip, $table);
+                    $table.eq(1).bootstrapTable("load", e.Data);
+                }
+            }
+            
+        }
+    });
+
+</script>
+</html>

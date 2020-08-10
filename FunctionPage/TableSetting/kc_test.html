@@ -1,0 +1,439 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<!--<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-table.min.css" />-->
+<!--<script src="js/jquery-1.9.1.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/layer/layer.min.js"></script>-->
+<!--<script src="js/report.js"></script>-->
+
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+<link href="../../css/font-awesome.min.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<!--<script src="../../Scripts/highcharts.js"></script>-->
+<script src="../../Scripts/echarts.min.js"></script>
+<script src="../../Scripts/echarts-gl.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    html,body {
+        background: #fff;
+        height:100%;
+    }
+
+    .title {
+        width: 100%;
+        height: 40px;
+        padding-left:15px;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+        line-height: 40px;
+    }
+    .main {
+        width:100%;
+        padding:15px;
+    }
+    /*.pie-bar-wrap {
+        margin:0 auto;
+        width:1280px;
+        overflow:auto;
+    }
+    .pie-wrap,.bar-wrap {
+        width:100%;
+        height:460px;
+        background:#ddd;
+    }*/
+    .pie-bar-wrap {
+        width:100%;
+        height:100%;
+        /*padding:10px;*/
+        background:#FFF;
+    }
+    .pie-wrap {
+        width:45.4%;
+        height:100%;
+        float:left;
+        background:#d3eaff;
+    }
+    .bar-wrap {
+        width:53.4%;
+        height:100%;
+        float:right;
+        background:#d3eaff;
+    }
+    .hidden {
+        display: none;
+    }
+</style>
+
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:SMT">AGBU庫存圖（BY 子BU）</span>
+    </div>
+    <div class="main">
+        <div class="pie-bar-wrap">
+            <div class="pie-wrap"></div>
+            <div class="bar-wrap"></div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    $(document).ready(function () {
+        var pieWrap = $(".pie-wrap");
+        var barWrap = $(".bar-wrap");
+        setHeight(function (size) {
+            var height = size[1] - Number($(".title").css("height").replace("px", ""));
+            $(".main").css("height", height + "px");
+        //    var w = (size[0] - 20) * 0.496;
+        //    var h = w * 0.5;
+
+        //    pieWrap.css({
+        //        height: h + "px",
+        //    });
+        //    barWrap.css({
+        //        height: h + "px",
+        //    });
+        });
+        var pieWrap = $(".pie-wrap");
+        var barWrap = $(".bar-wrap");
+        var myCharts1 = echarts.init(pieWrap[0]);
+        var myCharts2 = echarts.init(barWrap[0]);
+        self.parent.client.CallFunction("MESStation.Config.WHSStockChart", "QueryWHSStock", {}, function (e) {
+            if (e.Status == "Pass") {
+                var buArr = [];
+                var typeArr = [];
+                var seriesData = [];
+                var pcbaData = [];
+                var moduleData = [];
+                $.each(e.Data, function (i, o) {
+                    var bu = o["BU"];
+                    var type = o["SKU_TYPE"];
+                    var qty = o["QTY"];
+                    if (!contain(buArr, bu)) {
+                        buArr.push(bu);
+                    }
+                    if (!contain(typeArr, type) && type != "Total") {
+                        typeArr.push(type);
+                    }
+                    if (type == "Total") {
+                        seriesData.push({
+                            name: bu,
+                            value: Number(qty)
+                        });
+                    }
+                    if (type == "PCBA") {
+                        pcbaData.push(Number(qty));
+                    }
+                    if (type == "MODEL") {
+                        moduleData.push(Number(qty));
+                    }
+                });
+
+                console.log(typeArr, seriesData);
+
+                function contain(arr,s) {
+                    var l = arr.length;
+                    var f = false;
+                    for (var i = 0; i < l; i++){
+                        if(arr[i] == s){
+                            f = true;
+                            break;
+                        }
+                    }
+                    return f;
+                }
+
+                var option1 = {
+                    title: {
+                        text: 'AGBU成品库存各子BU的產品数量总和占比图',
+                        x: 'center',
+                        top: 10,
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        //orient: 'vertical',
+                        //left: 'left',
+                        bottom: 10,
+                        data: buArr,   //['BU1', 'BU2', 'BU3', 'BU4']
+                    },
+                     color: ['#0589ab', '#55aaa6', '#6788ba', '#23a7b9', '#7a6'],
+                    series: [
+                        {
+                            name: '库存產品数量',
+                            type: 'pie',
+                            radius: '50%',
+                            center: ['50%', '50%'],
+                            data: seriesData,
+                            //[
+                            //    { value: 335, name: 'BU1' },
+                            //    { value: 310, name: 'BU2' },
+                            //    { value: 234, name: 'BU3' },
+                            //    { value: 135, name: 'BU4' }
+                            //],
+                            itemStyle: {
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                },
+                                //color:['#337ab7','red','green'],
+                            },
+                            label: {
+                                show: true,
+                                position: 'outside',
+                                formatter: '{b} :{c}pcs\n {d}%',
+                                lineHeight:25,
+
+                                fontSize: 14,
+                                fontWeight:400,
+                            }
+                        }
+                    ]
+                };
+                var option2 = {
+                    title: {
+                        text: 'AGBU成品库存各子BU產品数量柱形图',
+                        //subtext: '数据虛構',
+                        x: 'center',
+                        top: 10,
+                        textStyle: {
+                            fontSize: 20,
+                        }
+                    },
+                    legend: {
+                        //orient: 'vertical',
+                        bottom: 10,
+                        data: typeArr //['PCBA', 'MODULE']
+                    },
+                    color: ['#0589ab', '#55aaa6', '#6788ba', '#23a7b9', '#7a6'],
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            dataView: { show: true, readOnly: false },
+                            magicType: { show: true, type: ['line', 'bar'] },
+                            restore: { show: true },
+                            saveAsImage: { show: true }
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow'
+                        },
+                        //formatter:"{b}:<br />机种{a0}:{c0}（个）<br />机种{a1}:{c1}（个）",
+                        //{a} : 系列名   moudle1 moudle2
+                        //{b} : 类目名   BU1 BU2 BU3 BU4
+                        //{C} : 数据值
+                        //triggerOn:'click',
+
+                        //formatter: function (params, ticket, callback) {
+                        //    return retTipHTML(params, "个");
+                        //},
+                        padding: 10,
+                    },
+                    toolbox: {
+                        show: true,
+                    },
+                    grid: {
+                        top: '20%',
+                        left: '10%',
+                        right: '10%',
+                        bottom: '10%',
+                        containLabel: true
+                    },
+                    yAxis: {
+                        name: '產品數量（pcs）',
+                        type: 'value',
+                        boundaryGap: [0, 0.01],
+                        nameTextStyle: {
+                            fontSize: 14
+                        },
+                        axisLabel: {
+                            fontWeight: 800
+                        }
+                    },
+                    xAxis: {
+                        name: '子BU',
+                        type: 'category',
+                        data: buArr, // ['BU1', 'BU2', 'BU3', 'BU4'],
+                        nameTextStyle: {
+                            fontSize: 14
+                        },
+                        axisLabel: {
+                            fontWeight: 800
+                        }
+                    },
+                    series: [
+                        {
+                            name: typeArr[0] ,  //"PCBA"
+                            type: 'bar',
+                            label: {
+                                show: true,
+                                position: 'inside',
+                                fontSize:12,
+                            },
+                            itemStyle: {
+                                color: '#337ab7',
+                            },
+                            barWidth:38,
+                            data: moduleData // moduleData [18203, 23489, 29034, 104970]
+                        },
+                        {
+                            name:  typeArr[1], //'MODULE',
+                            type: 'bar',
+                            label: {
+                                show: true,
+                                position: 'inside',
+                                fontSize:12,
+                            },
+                            itemStyle: {
+                                color: '#61a0a8',
+                            },
+                            barWidth: 38,
+                            data: pcbaData // [19325, 23438, 31000, 121594]
+                        }
+                    ]
+                };
+                myCharts1.setOption(option1);
+                myCharts2.setOption(option2);
+                myCharts1.on("click", function (e) {
+                    console.log(this, e);
+                    //window.open('kc_link.html','_blank');
+                    //location.href = 'FIFO.html?xx=xx1';
+                    //新增选项卡,跳转至新的选项卡
+                    var dataUrl = '/FunctionPage/TableSetting/kc_link.html?bu='+ e.name +'&type=ALL';   //跳转路径,也用于标识选项卡
+                    var dataIndex = e.name + '_ALL';    //用于iframe的name属性
+                    var menuName = "AGBU庫存詳細";    //选项卡名
+                    linkPage(dataUrl, dataIndex, menuName);
+                });
+                myCharts2.on("click", function (e) {
+                    var dataUrl = '/FunctionPage/TableSetting/kc_link.html?bu=' + e.name + '&type=' + e.seriesName;   //跳转路径,也用于标识选项卡
+                    var dataIndex = e.name + '_' + e.seriesName;    //用于iframe的name属性
+                    var menuName = "AGBU庫存詳細";    //选项卡名
+                    linkPage(dataUrl, dataIndex, menuName);
+                });
+            } else {
+
+            }
+        });
+        function retTipHTML(params, d) {
+            var wrap = $("<div></div>");
+            var main = $("<div></div>");
+            var tit = $("<p class='glyphicon glyphicon-tag'> " + params[0].name + ":" + "</p>");
+            wrap.append(main);
+            main.append(tit);
+            $.each(params, function (index, o) {
+                var row = $("<div></div>");
+                var i = $("<i></i>");
+                var c = $("<p class='glyphicon glyphicon-star'> " + o.seriesName + " : " + o.data + d + "</p>");
+                i.css({
+                    display: "inline-block",
+                    width: "16px",
+                    height: "16px",
+                    background: o.color,
+                    borderRadius: "50%",
+                    float: "left",
+                });
+                c.css({
+                    float: "left",
+                    lineHeight: "16px"
+                });
+                row.append( c);
+                main.append(row);
+            });
+            return wrap.html();
+        }
+        
+        function linkPage(dataUrl, dataIndex, menuName) {   //跳转页面(从查询报表找出)
+            var flag = true;
+            //2019/5/15 gch debug
+            if (dataUrl == undefined || $.trim(dataUrl).length == 0) return false;
+            $(self.parent.document).find(".J_menuTab").each(function () {     //遍历所有的选项卡
+                if ($(this).data('id') == dataUrl) {  // 选项卡菜单已存在
+                    if (!$(this).hasClass('active')) {    //匹配的选项卡处于未打开状态
+                        $(this).addClass('active').siblings('.J_menuTab').removeClass('active');    //$(this).siblings('.J_menuTab')  ： 除当前元素的其他所有同级元素
+                        self.parent.window.scrollToTab(this);
+                        // 显示tab对应的内容区
+                        $(self.parent.document).find('.J_mainContent .J_iframe').each(function () {   //遍历所有的 iframe
+                            if ($(this).data('id') == dataUrl) {   //匹配到符合该选项卡的 iframe
+                                $(this).show().siblings('.J_iframe').hide();    //显示该 iframe ,隐藏其他的
+                                return false;
+                            }
+                        });
+                    }
+                    flag = false;
+                    return false;
+                }
+            });
+            // 选项卡菜单不存在或链接地址为空
+            if (flag) {
+                $(self.parent.document).find('.J_iframe').hide();
+                var str = '<a href="javascript:;" class="active J_menuTab" data-id="' + dataUrl + '">' + menuName + ' <i class="fa fa-times-circle"></i></a>';
+                $(self.parent.document).find('.J_menuTab').removeClass('active');
+                // 添加选项卡对应的iframe
+                var str1 = '<iframe class="J_iframe" name="iframe' + dataIndex + '" width="100%" height="100%" src="' + dataUrl + '" frameborder="0" data-id="' + dataUrl + '" seamless></iframe>';
+                $(self.parent.document).find('.J_mainContent').find('iframe.J_iframe').hide().parents('.J_mainContent').append(str1);
+                // 添加选项卡
+                $(self.parent.document).find('.J_menuTabs .page-tabs-content').append(str);
+                self.parent.window.scrollToTab($(self.parent.document).find('.J_menuTab.active'));
+            }
+        }
+
+        function setHeight(fn) {     //設置高度(復用性強)
+            fn(getClientHeight());
+            window.onresize = throttle(function (e) {
+                //console.log(this, e, fn(getClientHeight()));
+                fn(getClientHeight());
+            }, 50);
+            function throttle(fn,delay) {
+                var timer;
+                return function () {
+                    var _this = this;
+                    var args = arguments;
+                    clearTimeout(timer);
+                    timer = setTimeout(function () {
+                        fn.apply(_this,args);
+                    }, delay);
+                }
+            }
+            function getClientHeight() {
+                var size = [];
+                size.push(document.documentElement.clientWidth);
+                size.push(document.documentElement.clientHeight);
+                return size;
+            }
+        }
+    });
+
+    
+</script>
+
+</html>

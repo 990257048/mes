@@ -1,0 +1,302 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>FIFO</title>  <!-- GCH 2019/03/11 ADD-->
+</head>
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+<link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    html, body {
+        width: 100%;
+        height: 100%;
+    }
+
+    body {
+        font-size: 16px;
+        box-sizing: border-box;
+        padding: 10px;
+    }
+
+    .main {
+        width: 60%;
+        height: calc(100% - 80px);
+        position: absolute;
+        top: 60px;
+        left: 20%;
+        background: #337ab7;
+        padding: 20px;
+        border-radius: 10px;
+        overflow: auto;
+    }
+
+
+
+    body::-webkit-scrollbar-thumb {
+        background: #337ab7;
+    }
+
+    body::-webkit-scrollbar {
+        width: 5px;
+        background-color: #fff;
+    }
+
+    .layui-layer .layui-layer-content::-webkit-scrollbar-thumb {
+        background: #337ab7;
+    }
+
+    .layui-layer .layui-layer-content::-webkit-scrollbar {
+        width: 5px;
+        background-color: #fff;
+    }
+
+    .title {
+        width: 100%;
+        height: 40px;
+        padding: 0px 15px;
+        color: #fff;
+        font-size: 1rem;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+        line-height: 40px;
+    }
+
+    .ctr-row {
+        height: 50px;
+        width: 100%;
+    }
+
+    .ctr-wrap {
+        width: 100%;
+        height: 40px;
+    }
+
+    .ctr-lg-row {
+        width: 100%;
+        height: 100px;
+    }
+
+    .ctr-lab {
+        width: 40%;
+        height: 100%;
+        line-height: 40px;
+        padding: 0px 20px;
+        text-align: right;
+        border-bottom: 1px solid #000;
+        color: #fff;
+        float: left;
+    }
+
+    .ctr {
+        border-bottom: 1px solid #000;
+        float: left;
+        width: calc(60% - 15px);
+        margin-left: 15px;
+        height: 100%;
+    }
+
+    .ctr-lg {
+        float: left;
+        width: calc(60% - 15px);
+        margin-left: 15px;
+        height: 90px;
+        border-bottom: 1px solid #000;
+    }
+
+    textarea.ctr-fail {
+        width: 100%;
+        height: 100%;
+        padding: 10px;
+    }
+
+    .ipt {
+        width: 100%;
+        height: 100%;
+        padding: 10px;
+        outline: none;
+        border: none;
+    }
+
+    .ctr-btn {
+        width: 30%;
+        height: 100%;
+        line-height: 40px;
+        text-align: center;
+        margin-left: 35%;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:"> Add Test Record For Erbu </span>
+    </div>
+    <div class="main">
+        <div class="ctr-row">
+            <div class="ctr-wrap">
+                <div class="ctr-lab">部門 :</div>
+                <div class="ctr">
+                    <input class="ipt bu" disabled />
+                </div>
+            </div>
+        </div>
+        <div class="ctr-row">
+            <div class="ctr-wrap">
+                <div class="ctr-lab">產品序列號 :</div>
+                <div class="ctr">
+                    <input class="ipt sn" />
+                </div>
+            </div>
+        </div>
+        <div class="ctr-row">
+            <div class="ctr-wrap">
+                <div class="ctr-lab">工單 :</div>
+                <div class="ctr">
+                    <input class="ipt wo" disabled />
+                </div>
+            </div>
+        </div>
+        <div class="ctr-row">
+            <div class="ctr-wrap">
+                <div class="ctr-lab">測試機種 :</div>
+                <div class="ctr">
+                    <input class="ipt skuno" type="text" disabled />
+                </div>
+            </div>
+        </div>
+        <div class="ctr-row">
+            <div class="ctr-wrap">
+                <div class="ctr-lab">測試工站 :</div>
+                <div class="ctr">
+                    <select class="ipt station">
+                        <option value=" "> </option>
+                        <option value="REWORK1">REWORK1</option>
+                        <option value="REWORK2">REWORK2</option>
+                        <option value="REWORK3">REWORK3</option>
+                        <option value="REWORK4">REWORK4</option>
+                        <option value="REWORK5">REWORK5</option>
+                        <option value="REWORK6">REWORK6</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="ctr-row">
+            <div class="ctr-wrap">
+                <div class="ctr-lab">測試狀態:</div>
+                <div class="ctr">
+                    <input class="ipt status" disabled />
+                </div>
+            </div>
+        </div>
+        <div class="ctr-lg-row">
+            <div class="ctr-wrap">
+                <div class="ctr-lab">Fail信息 :</div>
+                <div class="ctr-lg">
+                    <textarea class="ctr-fail"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="ctr-row">
+            <div class="ctr-wrap">
+                <button class="ctr-btn">OK</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+
+    $(document).on("ready", function () {
+        $(".bu").val(self.parent.client.UserInfo.BU);
+        $(".sn").on("keydown", function (e) {
+            if(e.keyCode == 13){
+                //console.log(this.value);
+
+                self.parent.client.CallFunction("MESStation.Config.AddFailforerbucrBU", "SNCheckAdd", { SN: this.value }, function (d) {
+                    //console.log(d);
+                    if (d.Status == "Pass") {
+                        $(".wo").val(d.Data.WO);
+                        $(".status").val(d.Data.STATUS);
+                        $(".skuno").val(d.Data.SKU);
+                    } else {
+                        layer.msg(d.Message, {
+                            icon: 0,
+                            time:2000
+                        });
+                    }
+                });
+            }
+        });
+
+        $(".ctr-btn").on("click", function (e) {
+            var data = {
+                SN: $(".sn").val(),
+                WO:$(".wo").val(),
+                SKU: $(".skuno").val(),
+                STATION: $(".station").val(),
+                ERRORCODE:$(".ctr-fail").val()
+            };
+            console.log(data);
+            self.parent.client.CallFunction("MESStation.Config.AddFailforerbucrBU", "Save", data, function (d) {
+                if (d.Status == 'Pass') {
+                    layer.msg(d.Message == null ? "null" : d.Message, {
+                        icon: 1,
+                        time: 2000
+                    }, function () {
+                        clearInput();
+                    });
+                } else {
+                    layer.msg(d.Message == null ? "null" : d.Message, {
+                        icon: 0,
+                        time: 2000
+                    }, function () {
+                        clearInput();
+                    });
+                }
+            });
+            function clearInput() {
+                $(".sn").val("");
+                $(".wo").val("");
+                $(".skuno").val("");
+                $(".status").val("");
+                $(".ctr-fail").val("");
+            }
+        });
+
+        $.fn.loadSelect = function (arr) {
+            console.log(this[0].tagName == 'SELECT');
+            var _this = this;
+            if (this[0].tagName == 'SELECT') {
+                $.each(arr, function (index,s) {
+                    var o = $("<option value=\"" + s + "\">" + s + "</option>");
+                    _this.append(o);
+                });
+            } else {
+                conssole.log("此方法只适用select元素！");
+            }
+        }
+
+
+    });
+</script>
+</html>

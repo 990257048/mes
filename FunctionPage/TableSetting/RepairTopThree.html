@@ -1,0 +1,324 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css" />
+    <link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="../../css/plugins/bootstrapDateTimePicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <script src="../../Scripts/jquery-1.9.1.js"></script>
+    <script src="../../Scripts/jquery.cookie.js"></script>
+    <script src="../../Scripts/bootstrap.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+    <script src="../../Scripts/plugins/layer/layer.min.js"></script>
+    <script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="../../Scripts/highcharts.js"></script>
+    <script src="../../Scripts/exporting.js"></script>
+    <script src="../../Scripts/export-csv.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/tableExport.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table-export.js"type="text/javascript" ></script>
+    <script src="../../Scripts/global.js"></script>
+    <script src="../../Scripts/MesClient.js"></script>
+    <script src="../../Scripts/MesClient.UI.js"></script>
+    <script src="../../Scripts/echarts.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapDateTimePicker/bootstrap-datetimepicker.min.js"></script>
+    <style>
+        #body {
+            zoom: .71;
+        }
+
+        .form-group .control-label {
+            padding-top: 5px;
+        }
+
+        .SearchBox {
+            color: #000;
+            opacity: 1;
+            height: auto;
+            padding: 10px;
+            background-color: #fff;
+            position: fixed;
+            border: solid 1.8px #75bfff;
+            border-radius: 5px;
+            min-width: 600px;
+            z-index: 999;
+        }
+            /*/////////////////////////////高超辉2018/9/25改(输入框排版异常)////////////////////////////*/
+
+            .SearchBox .inputs .form-group {
+                display: block;
+                height: 34px;
+                margin-bottom: 10px;
+            }
+
+                .SearchBox .inputs .form-group label {
+                    margin-bottom: 0;
+                    line-height: 33px;
+                    padding: 5px 5px;
+                }
+
+            .SearchBox .btn {
+                position: relative;
+                left: 50%;
+                margin: 10px;
+                margin-left: -20px;
+            }
+
+        /*/////////////////////////////////////////////////////////*/
+        .outputs {
+            height: calc(100% - 60px);
+            overflow-y: scroll;
+        }
+
+        .tools .fade {
+            opacity: 0.9;
+        }
+
+        .intro {
+            background-color: #C9C9C9;
+            border: 2px solid #fff;
+        }
+
+        .introa {
+            border: 1px solid #C9C9C9;
+            font-size: 5px;
+            margin-left: 0px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
+        }
+        /*.introa{ border:3px solid #C9C9C9;font-size: 5px;margin-left: 0px;margin-top: 0px;margin-right: 0px;margin-bottom: 0px;}*/
+
+        .fixed-table-body {
+            overflow-x: scroll;
+            overflow-y: scroll;
+            table-layout: fixed;
+        }
+
+            .fixed-table-body::-webkit-scrollbar {
+                width: 5px;
+                height: 10px;
+                background: #ddd;
+            }
+
+            .fixed-table-body::-webkit-scrollbar-thumb {
+                background: #337ab7;
+            }
+    </style>
+</head>
+<body>
+    <div id="body" class="tools bg-primary p-xs">
+        <button class="btn btn-default SearchBtn"><span class="glyphicon glyphicon-search"></span></button>
+        <div class="SearchBox fa-border fade" style="display: block;">
+            <div class="col-xs-12 inputs">
+
+                <div class="form-group" view-group="StartTime">
+                    <label for="StartTime" class="col-xs-3 control-label text-right" set-lan="html:StartTime">
+                        StartTime
+                    </label>
+                    <div class="col-xs-9">
+                        <input id="StartTime" name="StartTime" type="text" class="form-control datepicker" >
+                    </div>
+                </div>
+                <div class="form-group" view-group="EndTime">
+                    <label for="EndTime" class="col-xs-3 control-label text-right" set-lan="html:EndTime">
+                        EndTime
+                    </label>
+                    <div class="col-xs-9">
+                        <input id="EndTime" name="EndTime" type="text" class="form-control datepicker">
+                    </div>
+                </div>
+                <div class="form-group" view-group="GroupBy">
+                    <label for="GroupBy" class="col-xs-3 control-label text-right" set-lan="html:GroupBy">
+                        GroupBy
+                    </label><div class="col-xs-9">
+                        <select id="GroupBy" name="GroupBy" class="form-control">
+                            <option value="FAIL_CODE">FAIL_CODE</option>
+                            <option value="ACTION_CODE">ACTION_CODE</option>
+                        </select>
+                        <!--<input id="GroupBy" name="GroupBy" type="" class="form-control" placeholder="GroupBy" value="FAIL_CODE">-->
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="col-xs-12">
+                <button class="btn btn-primary submit" set-lan="html:Submit">提交</button>
+            </div>
+        </div>
+
+    </div>
+        <div id="container" style="width:600px;height: 500px; margin:0 auto"></div>
+        <div id="container2">
+        </div>
+        
+</body>
+<script type="text/javascript">
+            $(function () {
+                SetTime();
+                $("#" + "StartTime").datetimepicker().on('changeDate', function (ev) {
+                });
+                $("#"+"EndTime").datetimepicker().on('changeDate', function (ev) {
+                });
+                $(document).on("click", ".SearchBtn", function (e) {
+                    $(".SearchBox").toggle();
+                });
+                $(document).on("click", ".submit", function (e) {
+
+                    self.parent.client.CallFunction("MESStation.Config.RepairTopThree", "GetFailCodeTop3", GetSendData(), function (e) {
+                        if (e.Status == "Pass") {
+                            console.log("成功");
+                            $(".SearchBox").toggle();
+                            $('#container').css('display', 'block');
+                            var dom = document.getElementById("container");
+                            var myChart = echarts.init(dom);
+                            var app = {};
+                            option = {
+                                title: {
+                                    text: 'RepairTopThree',
+                                    subtext: e.Data["TITLE"] + ': ' + $('#StartTime').val() + '-' + $('#EndTime').val(),
+                                    left: 'center',
+                                    textStyle: {
+                                        fontSize: 18
+                                    },
+                                    subtextStyle: {
+                                        fontSize: 13
+                                    }
+                                },
+                                tooltip: {
+                                    trigger: 'item',
+                                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                                },
+                                legend: {
+                                    bottom: 15,
+                                    left: 'center',
+                                     data: e.Data["LIST"],
+                                    textStyle: {
+                                        fontSize: 15,
+                                        fontWeight: 'bold'
+                                    }
+                                },
+                                series: [
+                                    {
+                                        type: 'pie',
+                                        name:'RepairTop3',
+                                        radius: '65%',
+                                        center: ['50%', '50%'],
+                                        selectedMode: 'single',
+                                        data: e.Data["DATA"],
+                                        itemStyle: {
+                                            emphasis: {
+                                                shadowBlur: 10,
+                                                shadowOffsetX: 0,
+                                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                            }
+                                        },
+                                        itemStyle: {
+                                            emphasis: {
+                                                shadowBlur: 10,
+                                                shadowOffsetX: 0,
+                                                shadowColor: 'rgba(0, 0.5, 0.5, 0)'
+                                            },
+                                            normal: {
+                                                color: function (params) {
+                                                    //自定??色
+                                                    var colorList = [
+                                                            '#e062ae', '#37a2da', '#ffdb5c'];
+                                                    return colorList[params.dataIndex]
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            };
+                            if (option && typeof option === "object") {
+                                myChart.setOption(option, true);
+                            }
+                            myChart.on('click', function (params) {
+                                var name = params.data["name"];
+                                var starttime = $("#" + "StartTime").val();
+                                var endtime = $("#" + "EndTime").val();
+                                var groupby = e.Data["TITLE"];
+                                console.log(name);
+                                console.log(starttime);
+                                console.log(endtime);
+                                console.log(groupby);
+                                //location.href = "/FunctionPage/Report/Report.html?ClassName=MESReport.BaseReport.RepairTopThree&RunFlag=1&StartTime=" + starttime + "&EndTime=" + endtime + "&GroupBy=" + groupby + "&Code=" + name;
+                                
+                                var dataUrl = "/FunctionPage/Report/Report.html?ClassName=MESReport.BaseReport.RepairTopThree&RunFlag=1&StartTime=" + starttime + "&EndTime=" + endtime + "&GroupBy=" + groupby + "&Code=" + name;
+                                var dataIndex = "/FunctionPage/Report/Report.html?ClassName=MESReport.BaseReport.RepairTopThree&RunFlag=1&StartTime=" + starttime + "&EndTime=" + endtime + "&GroupBy=" + groupby + "&Code=" + name;   //用于iframe的name属性
+                                var menuName = "RepairTopThreeDetail-" + name;    //选项卡名
+                                linkPage(dataUrl, dataIndex, menuName);
+
+                            });
+                        } else {
+                            console.log("失敗");
+                            var dom = document.getElementById("container");
+                            $('#container').css('display', 'none');
+
+                            //("#id").css('display','none');
+
+                            
+                        }
+                    });
+                });
+
+                var GetSendData = function () {
+                    var Send = {};
+                    Send.StartTime = $('#StartTime').val();
+                    Send.EndTime = $('#EndTime').val();
+                    Send.GroupBy = $('#GroupBy').val();
+                    return Send;
+                }
+            });//end ready
+            var SetTime = function () {
+                var time=(new Date).getTime()-24*60*60*1000;
+                var yesterday=new Date(time);
+                var month=yesterday.getMonth();
+                var day=yesterday.getDate();
+                yesterday = yesterday.getFullYear() + "/" + (yesterday.getMonth() > 9 ? (yesterday.getMonth() + 1) : "0" + (yesterday.getMonth() + 1)) + "/" + (yesterday.getDate() > 9 ? (yesterday.getDate()) : "0" + (yesterday.getDate()));
+                $('#StartTime').val( yesterday + ' 08:00');
+                 var today = new Date();
+                 month = today.getMonth();
+                 day = today.getDate();
+                 today = today.getFullYear() + "/" + (today.getMonth() > 9 ? (today.getMonth() + 1) : "0" + (today.getMonth() + 1)) + "/" + (today.getDate() > 9 ? (today.getDate()) : "0" + (today.getDate()));
+                 $('#EndTime').val(today + ' 08:00');
+            }
+
+            function linkPage(dataUrl, dataIndex, menuName) {   //跳转页面(从查询报表找出)
+                var flag = true;
+                //2019/5/15 gch debug
+                if (dataUrl == undefined || $.trim(dataUrl).length == 0) return false;
+                $(self.parent.document).find(".J_menuTab").each(function () {     //遍历所有的选项卡
+                    if ($(this).data('id') == dataUrl) {  // 选项卡菜单已存在
+                        if (!$(this).hasClass('active')) {    //匹配的选项卡处于未打开状态
+                            $(this).addClass('active').siblings('.J_menuTab').removeClass('active');    //$(this).siblings('.J_menuTab')  ： 除当前元素的其他所有同级元素
+                            self.parent.window.scrollToTab(this);
+                            // 显示tab对应的内容区
+                            $(self.parent.document).find('.J_mainContent .J_iframe').each(function () {   //遍历所有的 iframe
+                                if ($(this).data('id') == dataUrl) {   //匹配到符合该选项卡的 iframe
+                                    $(this).show().siblings('.J_iframe').hide();    //显示该 iframe ,隐藏其他的
+                                    return false;
+                                }
+                            });
+                        }
+                        flag = false;
+                        return false;
+                    }
+                });
+                // 选项卡菜单不存在或链接地址为空
+                if (flag) {
+                    $(self.parent.document).find('.J_iframe').hide();
+                    var str = '<a href="javascript:;" class="active J_menuTab" data-id="' + dataUrl + '">' + menuName + ' <i class="fa fa-times-circle"></i></a>';
+                    $(self.parent.document).find('.J_menuTab').removeClass('active');
+                    // 添加选项卡对应的iframe
+                    var str1 = '<iframe class="J_iframe" name="iframe' + dataIndex + '" width="100%" height="100%" src="' + dataUrl + '" frameborder="0" data-id="' + dataUrl + '" seamless></iframe>';
+                    $(self.parent.document).find('.J_mainContent').find('iframe.J_iframe').hide().parents('.J_mainContent').append(str1);
+                    // 添加选项卡
+                    $(self.parent.document).find('.J_menuTabs .page-tabs-content').append(str);
+                    self.parent.window.scrollToTab($(self.parent.document).find('.J_menuTab.active'));
+                }
+            }
+
+</script>
+</html>

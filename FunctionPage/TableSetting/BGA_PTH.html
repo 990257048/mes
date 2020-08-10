@@ -1,0 +1,623 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>BGA/PTH重工</title>  <!-- GCH 2019/03/21 ADD-->
+</head>
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+<link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background: #fff;
+        zoom: .65;
+    }
+
+    .title {
+        width: 100%;
+        height: 54px;
+        padding: 10px 15px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+        line-height: 33px;
+    }
+
+    .main {
+        margin: 15px;
+        border: 1px solid #337ab7;
+        border-radius: 20px;
+        padding-top: 10px;
+        padding-bottom: 0;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .hui {
+        background: #ddd;
+        text-align: right;
+    }
+
+        .hui label, .ellipsis {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: right;
+            background: #ddd;
+        }
+
+    .tr {
+        margin-top: 10px;
+    }
+
+    #typeList label {
+        padding-top: 10px;
+        padding-bottom: 6px;
+        border: 1px solid #337ab7;
+        border-radius: 10px;
+        text-align: center;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:">BGA/PTH重工</span>
+    </div>
+    <div class="main row">
+        <div class="form-group col-sm-12 col-md-12">
+            <div class="col-sm-12 col-md-12 tr" id="tr1">
+                <div class="col-sm-2 col-md-2 hui">
+                    <label class="" style="padding-top: 10px;">
+                        TYPE：
+                    </label>
+                </div>
+                <div class="col-sm-10 col-md-10" id="typeList" style="padding-left:30px;">
+                    <label class="col-sm-2 col-md-2" index="1">
+                        <lan set-lan="html:DefaultRoute">掃入BGA/PTH維修</lan>
+                    </label>
+                    <label class="col-sm-2 col-md-2" index="2">
+                        <lan set-lan="html:DefaultRoute">掃入BGA/PTH烘烤區</lan>
+                    </label>
+                    <label class="col-sm-2 col-md-2" index="3">
+                        <lan set-lan="html:DefaultRoute">掃出BGA/PTH烘烤區</lan>
+                    </label>
+                    <label class="col-sm-2 col-md-2" index="4">
+                        <lan set-lan="html:DefaultRoute">BGA烘烤CHECK</lan>
+                    </label>
+                    <label class="col-sm-2 col-md-2" index="5">
+                        <lan set-lan="html:DefaultRoute">掃出BGA/PTH維修區</lan>
+                    </label>
+                </div>
+            </div>
+            <!--////////////////////////////////////////////////////////-->
+            <div class="col-sm-12 col-md-12 tr" id="tr1">
+                <div class="col-sm-2 col-md-2 hui">
+                    <label class="" style="padding-top: 10px;">
+                        责任单位：
+                    </label>
+                </div>
+                <div class="col-sm-2 col-md-2">
+                    <label class="col-sm-12 col-md-12">
+                        <select class="form-control" id="select1">
+                            <option value="RE">RE</option>
+                            <option value="SMT">SMT</option>
+                            <option value="5DX">5DX</option>
+                            <option value="SE">SE</option>
+                            <option value="SI">SI</option>
+                            <option value="Kitting">Kitting</option>
+                            <option value="PD">PD</option>
+                            <option value="QE">QE</option>
+                            <option value="ME">ME</option>
+                            <option value="PM">PM</option>
+                            <option value="RD">RD</option>
+                            <option value="RCFA">RCFA</option>
+                            <option value="Design">Design</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="col-sm-3 col-md-3">
+                    <label class="col-sm-5 col-md-5 ellipsis" style="padding-top: 5px;" id="flagLabel">
+                        送修人：
+                    </label>
+                    <div class="col-sm-7 col-md-7">
+                        <input class="form-control" value="" id="emp1" />
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-3">
+                    <label class="col-sm-5 col-md-5 ellipsis" style="padding-top: 5px;">
+                        复核工程师：
+                    </label>
+                    <div class="col-sm-7 col-md-7">
+                        <input class="form-control" value="" id="emp2" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 tr" id="tr1">
+                <div class="col-sm-2 col-md-2 hui">
+                    <label class="" style="padding-top: 10px;">
+                        不良位置：
+                    </label>
+                </div>
+                <div class="col-sm-2 col-md-2" id="flagSize1">
+                    <label class="col-sm-12 col-md-12">
+                        <input class="form-control" id="sizeInput" />
+                    </label>
+                </div>
+                <div class="col-sm-3 col-md-3" id="flagSize2">
+                    <label class="col-sm-3 col-md-3" style="padding-top: 5px;padding-bottom: 5px;">
+                        <input name="type" type="radio" value="BGA" checked><lan set-lan="html:DefaultRoute">&nbsp; BGA</lan>
+                    </label>
+                    <label class="col-sm-3 col-md-3" style="padding-top: 5px;padding-bottom: 5px;">
+                        <input name="type" type="radio" value="PTH"><lan set-lan="html:DefaultRoute">&nbsp; PTH</lan>
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 tr" id="tr1">
+                <div class="col-sm-2 col-md-2 hui">
+                    <label class="" style="padding-top: 10px;">
+                        不良现象：
+                    </label>
+                </div>
+                <div class="col-sm-2 col-md-2" id="flag1">
+                    <label class="col-sm-12 col-md-12">
+                        <select class="form-control" id="select2">
+                            <option value="Short">Short</option>
+                            <option value="Open">Open</option>
+                            <option value="損件">損件</option>
+                            <option value="重工">重工</option>
+                            <option value="氣泡">氣泡</option>
+                            <option value="少件">少件</option>
+                            <option value="少錫">少錫</option>
+                            <option value="偏位">偏位</option>
+                            <option value="B-Scan">B-Scan</option>
+                            <option value="反向">反向</option>
+                            <option value="掉錫">掉錫</option>
+                            <option value="客人設計變更">客人設計變更</option>
+                            <option value="RD設計變更">RD設計變更</option>
+                            <option value="錯料">錯料</option>
+                            <option value="溢錫">溢錫</option>
+                            <option value="手焊">手焊</option>
+                            <option value="來料不良">來料不良</option>
+                            <option value="外觀不良">外觀不良</option>
+                            <option value="修補PAD">修補PAD</option>
+                            <option value="版本升級">版本升級</option>
+                            <option value="ControlRun">ControlRun</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="col-sm-8 col-md-8" id="flag2">
+                    <label class="col-sm-12 col-md-12">
+                        <input class="form-control col-sm-12 col-md-12" id="DESCRIPTION" />
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 tr" id="tr1">
+                <div class="col-sm-2 col-md-2 hui">
+                    <label class="" style="padding-top: 10px;">
+                        SN：
+                    </label>
+                </div>
+                <div class="col-sm-2 col-md-2">
+                    <label class="col-sm-12 col-md-12">
+                        <input class="form-control" id="snIpt" />
+                    </label>
+                </div>
+                <div class="col-sm-8 col-md-8 hidden" id="flagSN">
+                    <label class="col-sm-4 col-md-4">
+                        <label class="col-sm-6 col-md-6 ellipsis">
+                            track no：
+                        </label>
+                        <label class="col-sm-6 col-md-6">
+                            <input class="form-control col-sm-12 col-md-12" />
+                        </label>
+                    </label>
+                    <label class="col-sm-4 col-md-4">
+                        <label class="col-sm-6 col-md-6 ellipsis">
+                            ReworkStation：
+                        </label>
+                        <label class="col-sm-6 col-md-6">
+                            <input class="form-control col-sm-12 col-md-12" />
+                        </label>
+                    </label>
+                    <label class="col-sm-4 col-md-4">
+                        <label class="col-sm-6 col-md-6 ellipsis">
+                            Remark：
+                        </label>
+                        <label class="col-sm-6 col-md-6">
+                            <input class="form-control col-sm-12 col-md-12" />
+                        </label>
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 tr" id="tr1">
+                <div class="col-sm-2 col-md-2 hui">
+                    <label class="" style="padding-top: 10px;">
+                        STATUS：
+                    </label>
+                </div>
+                <div class="col-sm-10 col-md-10">
+                    <label class="col-sm-12 col-md-12">
+                        <textarea class="form-control" style="height:220px; " id="status"></textarea>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $(document).ready(function () {
+        //加载初始数据( $("#select1") $("#select2") )
+
+
+        ////控制栏的操作
+        $("#typeList label").eq(0).css({
+            "background": "#337ab7",
+            "color": "#fff"
+        });
+        $("#typeList label").eq(0).attr("setActive", "true");
+        $("#typeList label").hover(function () {
+            //console.log("mouseover!");
+            if ($(this).attr("setActive") == "true") {    //已选中
+                //console.log("true");
+                $(this).one("click2", function (e) {
+                    //console.log("click");
+                    $("#typeList label").css({
+                        "borderRadius": "10px",
+                        "background": "#fff",
+                        "color": "#000"
+                    });
+                    $("#typeList label").attr("setActive", false);
+                    $(this).css({
+                        "background": "#337ab7",
+                        "opacity": 1,
+                        "color": "#fff"
+                    });
+                    $(this).attr("setActive", true);
+                    clickTypeList.call(this, e);
+                });
+            } else {
+                //console.log("false");
+                $(this).css({
+                    "background": "#337ab7",
+                    "color": "#fff",
+                    "opacity": 0.5
+                });
+                $(this).one("click", function (e) {     //未选中
+                    //console.log("click1");
+                    $("#typeList label").css({
+                        "borderRadius": "10px",
+                        "background": "#fff",
+                        "color": "#000"
+                    });
+                    $("#typeList label").attr("setActive", false);
+                    $(this).css({
+                        "background": "#337ab7",
+                        "opacity": 1,
+                        "color": "#fff"
+                    });
+                    $(this).attr("setActive", true);
+                    clickTypeList.call(this, e);
+                });
+            }
+        }, function () {
+            if (!$(this).attr("setActive") || $(this).attr("setActive") == "false") {   //未选中或setActive未定义（除选中外）
+                $(this).css({
+                    "background": "#fff",
+                    "opacity": 1,
+                    "color": "#000"
+                });
+            }
+        });
+
+
+        clickEvent();
+
+        function clickTypeList(e) {   //点击控制栏时执行
+            switch ($(this).attr("index")) {
+                case "1":
+                    $("#flagLabel").text("送修人：");
+                    $("#flagSize1").removeClass("hidden");
+                    $("#flagSize2").removeClass("hidden");
+                    $("#flag1").removeClass("hidden");
+                    $("#flag2").removeClass("hidden");
+                    $("#flagSN").addClass("hidden");
+
+                    break;
+                case "2":
+                    $("#flagLabel").text("烘烤人：");
+                    $("#flagSize1").addClass("hidden");
+                    $("#flagSize2").addClass("hidden");
+                    $("#flag1").addClass("hidden");
+                    $("#flag2").addClass("hidden");
+                    $("#flagSN").addClass("hidden");
+                    break;
+                case "3":
+                    $("#flagLabel").text("烘烤出板人：");
+                    $("#flagSize1").addClass("hidden");
+                    $("#flagSize2").addClass("hidden");
+                    $("#flag1").addClass("hidden");
+                    $("#flag2").addClass("hidden");
+                    $("#flagSN").addClass("hidden");
+                    break;
+                case "4":
+                    //$("#flagLabel").text("烘烤出板人：");    bug
+                    $("#flagSize1").addClass("hidden");
+                    $("#flagSize2").addClass("hidden");
+                    $("#flag1").addClass("hidden");
+                    $("#flag2").addClass("hidden");
+                    $("#flagSN").addClass("hidden");
+                    break;
+                case "5":
+                    $("#flagLabel").text("BGA/PTH重工人：");
+                    $("#flagSize1").addClass("hidden");
+                    $("#flagSize2").addClass("hidden");
+                    $("#flag1").addClass("hidden");
+                    $("#flag2").addClass("hidden");
+                    $("#flagSN").removeClass("hidden");
+                    break;
+            }
+        }
+
+        function clickEvent() {     //触发（与后台交互）
+            $("#snIpt").on("keydown", function (e) {
+                $("#status").css({
+                    "background": "#fff",
+                    "color": "#000"
+                });
+                var currentIndex = getCurrentIndex();
+                switch (currentIndex) {
+                    case "1":
+                        var className = "MESStation.Config.BGARework";
+                        var functionName = "checkin";
+                        //$("#select1").val();   //责任单位
+                        //$("#emp1").val();   //送修人
+                        //$("#emp2").val();  //复核人
+                        //$("#sizeInput").val();   //不良位置
+                        //getChecked($("#flagSize2 input"));//
+                        //$("#select2").val();   //不良现象
+                        //$("#snIpt");   //sn
+                        //$("#flagSN input");  //
+                        //$("#status");
+
+                        //SN LOCATION DEPARTMENT DESCRIPTION CHECK_IN_EMP
+
+                        //var checkedData = getChecked($("#flagSize2 input"));   //
+                        //console.log(checkedData);
+                        console.log(e.keyCode == 13);
+                        if (e.keyCode == 13) {
+                            var sendData = {
+                                SN: $("#snIpt").val(),
+                                LOCATION: $("#sizeInput").val(),
+                                DEPARTMENT: $("#select1").val(),
+                                DESCRIPTION: $("#DESCRIPTION").val().length == 0 ? $("#select2").val() : $("#DESCRIPTION").val(),
+                                CHECK_IN_EMP: $("#emp1").val()
+                            };
+                            self.parent.client.CallFunction(className, functionName, sendData, function (e) {
+                                if (e.Status == "Pass" && e.MessageCode != "MSGCODE20190407221845") {
+                                    $("#status").css({
+                                        "background": "green",
+                                        "color": "#fff"
+                                    });
+                                    $("#status").val(e.Message);
+                                } else if (e.Status == "Pass" && e.MessageCode == "MSGCODE20190407221845") {
+                                    $("#status").css({
+                                        "background": "FFFF00",
+                                        "color": "#fff"
+                                    });
+                                    $("#status").val(e.Message);
+                                } else {
+                                    $("#status").css({
+                                        "background": "red",
+                                        "color": "#fff"
+                                    });
+                                    $("#status").val(e.Message);
+                                }
+                            });
+                        }
+
+                        break;
+                    case "2":
+                        var className = "MESStation.Config.BGARework";
+                        var functionName = "hkcheckin";
+
+                        //$("#select1").val();   //责任单位
+                        //$("#emp1").val();   //送修人
+                        //$("#emp2").val();  //复核人
+                        //$("#sizeInput").val();   //不良位置
+                        //getChecked($("#flagSize2 input"));//
+                        //$("#select2").val();   //不良现象
+                        //$("#snIpt");   //sn
+                        //$("#flagSN input");  //
+                        //$("#status");
+
+                        if (e.keyCode == 13) {
+                            var sendData = {
+                                SN: $("#snIpt").val(),
+                                HK_IN_EMP: $("#emp1").val()
+                            };
+                            self.parent.client.CallFunction(className, functionName, sendData, function (e) {
+                                if (e.Status == "Pass" && e.MessageCode != "MSGCODE20190407221845") {
+                                    $("#status").css({
+                                        "background": "green",
+                                        "color": "#fff"
+                                    });
+                                    $("#status").val(e.Message);
+                                } else if (e.Status == "Pass" && e.MessageCode == "MSGCODE20190407221845") {
+                                    $("#status").css({
+                                        "background": "FFFF00",
+                                        "color": "#fff"
+                                    });
+                                    $("#status").val(e.Message);
+                                } else {
+                                    $("#status").css({
+                                        "background": "red",
+                                        "color": "#fff"
+                                    });
+                                    $("#status").val(e.Message);
+                                }
+                            });
+                        }
+                        break;
+                    case "3":
+                        var className = "MESStation.Config.BGARework";
+                        var functionName = "hkcheckout";
+                        if (e.keyCode == 13) {
+                            var sendData = {
+                                SN: $("#snIpt").val(),
+                                HK_OUT_EMP: $("#emp1").val(),
+                                //HK_IN_TIME:xxx
+                            };
+                            self.parent.client.CallFunction(className, functionName, sendData, function (e) {
+                                if (e.Status == "Pass" && e.MessageCode != "MSGCODE20190407221845") {
+                                    $("#status").css({
+                                        "background": "green",
+                                        "color": "#fff"
+                                    });
+                                    $("#status").val(e.Message);
+                                } else if (e.Status == "Pass" && e.MessageCode == "MSGCODE20190407221845") {
+                                    $("#status").css({
+                                        "background": "FFFF00",
+                                        "color": "#fff"
+                                    });
+                                    $("#status").val(e.Message);
+                                } else {
+                                    $("#status").css({
+                                        "background": "red",
+                                        "color": "#fff"
+                                    });
+                                    $("#status").val(e.Message);
+                                }
+                            });
+                        }
+                        break;
+                    case "4":
+                        var className = "MESStation.Config.BGARework";
+                        var functionName = "hkcheck";
+                        if (e.keyCode == 13) {
+                            var sendData = {
+                                SN: $("#snIpt").val(),
+                            };
+                            self.parent.client.CallFunction(className, functionName, sendData, function (e) {
+                                if (e.Status == "Pass" && e.MessageCode != "MSGCODE20190407221845") {
+                                    $("#status").css({
+                                        "background": "green",
+                                        "color": "#fff"
+                                    });
+                                    $("#status").val(e.Message);
+                                } else if (e.Status == "Pass" && e.MessageCode == "MSGCODE20190407221845") {
+                                    $("#status").css({
+                                        "background": "FFFF00",
+                                        "color": "#fff"
+                                    });
+                                    $("#status").val(e.Message);
+                                } else {
+                                    $("#status").css({
+                                        "background": "red",
+                                        "color": "#fff"
+                                    });
+                                    $("#status").val(e.Message);
+                                }
+                            });
+                        }
+                        break;
+                    case "5":
+                        var className = "MESStation.Config.BGARework";
+                        var functionName = "checkout";
+                        if (e.keyCode == 13) {
+
+                            //$("#select1").val();   //责任单位
+                            //$("#emp1").val();   //送修人
+                            //$("#emp2").val();  //复核人
+                            //$("#sizeInput").val();   //不良位置
+                            //getChecked($("#flagSize2 input"));//
+                            //$("#select2").val();   //不良现象
+                            //$("#snIpt");   //sn
+                            //$("#flagSN input");  //
+                            //$("#status");
+
+                            //string SN = Data["SN"].ToString().Trim().ToUpper();
+                            //string TRACK_NO = Data["TRACK_NO"].ToString().Trim().ToUpper();
+                            //string RE_STATION = Data["RE_STATION"].ToString().Trim().ToUpper();
+                            //string CHECK_OUT_EMP = Data["CHECK_OUT_EMP"].ToString().Trim().ToUpper();
+
+                            var sendData = {
+                                SN: $("#snIpt").val(),
+
+                                TRACK_NO: $("#flagSN input").eq(0).val(),
+                                RE_STATION: $("#flagSN input").eq(1).val(),
+
+                                CHECK_OUT_EMP: $("#emp1").val()
+                            };
+                            self.parent.client.CallFunction(className, functionName, sendData, function (e) {
+                                if (e.Status == "Pass" && e.MessageCode != "MSGCODE20190407221845") {
+                                    $("#status").css({
+                                        "background": "green",
+                                        "color": "#fff"
+                                    });
+                                    $("#status").val(e.Message);
+                                } else if (e.Status == "Pass" && e.MessageCode == "MSGCODE20190407221845") {
+                                    $("#status").css({
+                                        "background": "FFFF00",
+                                        "color": "#fff"
+                                    });
+                                    $("#status").val(e.Message);
+                                } else {
+                                    $("#status").css({
+                                        "background": "red",
+                                        "color": "#fff"
+                                    });
+                                    $("#status").val(e.Message);
+                                }
+                            });
+                        }
+                        break;
+                }
+            })
+
+            function getCurrentIndex() {
+                var typeList = $("#typeList").find("label[setactive=true]");
+                return typeList.attr("index");
+            }
+
+            function getChecked($input) {
+                var checkedData = "";
+                $.each($input, function (index, ele) {
+                    console.log(ele.checked);
+                    if (ele.checked) {
+                        checkedData = ele.value;
+
+                    }
+                });
+                return checkedData;
+            }
+
+        }
+
+    });
+</script>
+</html>

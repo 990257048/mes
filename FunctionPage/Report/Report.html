@@ -1,0 +1,268 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>Report</title>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link href="../../css/plugins/jQueryUI/jquery-ui.min.css" rel="stylesheet" />
+    <link href="../../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../../css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="../../css/animate.css" rel="stylesheet">
+    <link href="../../css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="../../css/style.css" rel="stylesheet">
+    <link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="../../css/plugins/bootstrapDateTimePicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <style>
+        body {
+            zoom:.71;
+            
+        }
+        .form-group .control-label {
+            padding-top: 5px;
+        }
+
+        .SearchBox {
+            color: #000;
+            opacity: 1;
+            
+            height: auto;
+            padding: 10px;
+            background-color: #fff;
+            position: fixed;
+            border: solid 1.8px #fff;
+            box-shadow: 0px 10px 10px;
+            border-radius: 5px;
+            min-width: 600px;
+            z-index:999;
+            
+
+        }
+        /*/////////////////////////////高超辉2018/9/25改(输入框排版异常)////////////////////////////*/
+
+            .SearchBox .inputs .form-group {
+                display:block;
+                height:34px;
+                margin-bottom:10px;
+                
+            }
+
+            .SearchBox .inputs .form-group label {
+                margin-bottom:0;
+                line-height:33px;
+                padding:5px 5px;
+            }
+
+            .SearchBox .btn {
+            
+                position:relative;
+                left:50%;
+                margin:10px;
+                margin-left:-20px;
+            }
+
+        /*/////////////////////////////////////////////////////////*/
+        .outputs {
+            height: calc(100% - 60px);
+            overflow-y: scroll;
+        }
+        .tools {
+            background:#337ab7;
+        }
+        .fade {
+            opacity:0.9;
+        } 
+        .intro { background-color: #C9C9C9; border:2px solid #fff;}
+        .introa{ border:1px solid #C9C9C9;font-size: 5px;margin-left: 0px;margin-top: 0px;margin-right: 0px;margin-bottom: 0px;} 
+        /*.introa{ border:3px solid #C9C9C9;font-size: 5px;margin-left: 0px;margin-top: 0px;margin-right: 0px;margin-bottom: 0px;}*/
+
+        .fixed-table-body{
+            overflow-x:scroll;
+            overflow-y:scroll;
+            table-layout:fixed;
+        }
+
+        .fixed-table-body::-webkit-scrollbar {
+            width:15px;
+            height:15px;
+    }
+            .fixed-table-body::-webkit-scrollbar-track {
+                background:#eee;
+            }
+    .fixed-table-body::-webkit-scrollbar-thumb {
+        background:#227ab7;
+        border-radius:7px;
+    }
+
+
+
+
+
+
+    </style>
+</head>
+<body class="color-cPage">
+<div class="tools p-xs">
+    <button class="btn btn-default SearchBtn"><span class="glyphicon glyphicon-search"></span></button>
+    <div class="SearchBox fa-border fade" style="display: none">
+        <div class="col-xs-12 inputs">
+            
+        </div>
+        <br/>
+        <div class="col-xs-12">
+            <button class="btn btn-primary submit" set-lan="html:Submit">SUBMIT</button>
+        </div>
+    </div>
+   
+    <!-- Split button -->
+    <div class="btn-group pull-right" id="StyleSelect">
+    </div>
+</div>
+
+ 
+
+<div class="container-fluid no-padding outputs">
+    </div>
+    <!-- 全局js -->
+    <script src="../../Scripts/jquery.2.1.4.js"></script>
+    <script src="../../Scripts/jquery.cookie.js"></script>
+    <script src="../../Scripts/bootstrap.min.js?v=3.3.6"></script>
+    <!-- 第三方插件 -->
+    <script src="../../Scripts/plugins/jquery-ui/jquery-ui.js"></script>
+    <script src="../../Scripts/plugins/JSON/json2.js"></script>
+    <script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="../../Scripts/plugins/toastr/toastr.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+    <script src="../../Scripts/highcharts.js"></script>
+    <!--<script src="../../Scripts/dark-blue.js"></script>-->
+    <script src="../../Scripts/exporting.js"></script>
+    <script src="../../Scripts/export-csv.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/tableExport.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table-export.js"></script>
+    <script src="../../Scripts/plugins/bootstrapDateTimePicker/bootstrap-datetimepicker.min.js"></script>
+    <!-- 自定义 -->
+<script src="../../Scripts/global.js"></script>
+    <script src="../../Scripts/MesClient.UI.js"></script>
+    <script src="../../Scripts/MesClient.js"></script>
+    <!--<script src="../../Scripts/Mes.js"></script>-->
+    <script src="../../Scripts/Report/MesClient.Report.js"></script>
+<script>
+    var ReportClassName = "";
+    var Data = "";
+    var RunFlag = "";
+    var _Report = null;
+    var client = null;
+  
+    $(document).ready(function () {
+        client = self.parent.client;
+        mesUI = new MesClientUI(client);
+        //initStyleSelect();
+        ReportClassName = $.MES.getQueryString("ClassName");//每个报表必须配置的报表后台类
+        //Data = $.MES.getQueryString("Data");//用于其他报表跳转传值
+        Data = $.MES.getQueryObj();
+        RunFlag = $.MES.getQueryString("RunFlag");//用于其他报表跳转自动查询
+        //2019/5/15 GCH DEBUG
+        //console.log(ReportClassName, Data, RunFlag);
+        if (RunFlag == "1") {
+            RunFlag = "0";
+            _Report = new MesReport({
+                Client: self.parent.client,
+                IContainer: $(".inputs"),
+                OContainer: $(".outputs"),
+                UI: new MesClientUI(self.parent.client),
+                ReportClassName: ReportClassName,
+                Init: function (e) {
+                    //if (_Report.Report.Inputs.length > 0) {
+                    //    _Report.SetInputValue(_Report.Report.Inputs[0].Name, Data);
+                    //    _Report.Run();
+                    //}
+                    if (_Report.Report.Inputs.length > 0) {
+                        for (var i = 1; i < Data.length; i++) {
+                            _Report.SetInputValue(Data[i][0], Data[i][1]);
+                        }
+                        _Report.Run();
+                        
+                    }
+                   
+                }
+                
+            });
+            
+            $(document).on("click", ".SearchBtn", function (e) {
+                $(".SearchBox").toggle();
+            });
+            $(document).on("click", ".submit", function (e) {
+                $(".SearchBox").toggle();
+                _Report.Run();
+            });
+            $(".SearchBox").toggle(false);
+
+        }
+        else {
+            _Report = new MesReport({
+                Client: self.parent.client,
+                IContainer: $(".inputs"),
+                OContainer: $(".outputs"),
+                UI: mesUI,
+                ReportClassName: ReportClassName,
+                Init: function (e) {
+
+                }
+            });
+            $(document).on("click", ".SearchBtn", function (e) {
+                $(".SearchBox").toggle();
+            });
+            $(document).on("click", ".submit", function (e) {
+                $(".SearchBox").toggle();
+                _Report.Run();
+            });
+            
+            $(".SearchBox").toggle(true);
+            
+
+
+        }
+        
+
+        //var timer = setInterval(function () {
+        //    //if ($("label")[0]) {
+        //    //    var labels = $("label");
+               
+        //    //    //$(labels[0]).attr("set-lan", "html:WO");
+        //    //    //attrSetLan(["WO"], labels);
+        //    //    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+        //    //    attrSetLan(["WO","Station","StartTime","EndTime"],labels);
+        //    //    mesUI.SetLanguage("ReportTest"); 
+        //    //    clearInterval(timer);
+
+        //    //}
+        //    if($("label[for]")[0]){
+        //        var labels = $($("label[for]"));
+        //        //console.log(labels);
+        //        var len = labels.length;
+        //        for (var i = 0; i < len; i ++){
+        //            $(labels[i]).attr("set-lan", "html:"+$(labels[i]).attr("for"));
+        //        }
+                
+        //        var timer1 = setTimeout(function () {
+        //            //console.log(mesUI);
+        //            mesUI.SetLanguage("ReportTest");
+        //        }, 0);
+
+        //        clearInterval(timer);
+        //    }
+        //}, 10);
+        
+        
+        
+    });
+</script>
+</body>
+</html>

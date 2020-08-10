@@ -1,0 +1,387 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<!--<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-table.min.css" />-->
+<!--<script src="js/jquery-1.9.1.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/layer/layer.min.js"></script>-->
+<!--<script src="js/report.js"></script>-->
+
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+<link href="../../css/font-awesome.min.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<!--<script src="../../Scripts/highcharts.js"></script>-->
+<script src="../../Scripts/echarts.min.js"></script>
+<script src="../../Scripts/echarts-gl.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    html,body {
+        background: #fff;
+        height:100%;
+    }
+
+    .title {
+        width: 100%;
+        height: 40px;
+        padding-left:15px;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+        line-height: 40px;
+    }
+    .main {
+        width:100%;
+        padding:15px;
+    }
+    /*.pie-bar-wrap {
+        margin:0 auto;
+        width:1280px;
+        overflow:auto;
+    }
+    .pie-wrap,.bar-wrap {
+        width:100%;
+        height:460px;
+        background:#ddd;
+    }*/
+    .pie-bar-wrap {
+        width:100%;
+        height:100%;
+        /*padding:10px;*/
+        background:#FFF;
+    }
+    .bar1-wrap {
+        width:100%;
+        height:100%;
+        background:#d3eaff;
+    }
+    .tip {
+        position:absolute;
+        width:30%;
+        height:35px;
+        left:66.5%;
+        top:30%;
+        font-size:14px;
+        font-weight:600;
+        text-align:center;
+        line-height:35px;
+        z-index:10000;
+    }
+    /*.bar2-wrap {
+        width:100%;
+        height:48%;
+        position:relative;
+        top:4%;
+        background:#d3eaff;
+    }*/
+    .hidden {
+        display: none;
+    }
+</style>
+
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:SMT">AGBU庫存圖（BY 月份）</span>
+    </div>
+    <div class="main">
+        <div class="pie-bar-wrap">
+            <div class="tip">當前：AGBU2019年<span id="month-title">2月份</span>各子BU庫存數量佔比</div>
+            <div class="bar1-wrap"></div>
+            <!--<div class="bar2-wrap"></div>-->
+        </div>
+    </div>
+
+</body>
+
+<script>
+    $(document).ready(function () {
+        var bar1Wrap = $(".bar1-wrap");
+        //var bar2Wrap = $(".bar2-wrap");
+        setHeight(function (size) {
+            var height = size[1] - Number($(".title").css("height").replace("px", ""));
+            $(".main").css("height", height + "px");
+        });
+        var myCharts1 = echarts.init(bar1Wrap[0]);
+
+        self.parent.client.CallFunction("MESStation.Config.WHSStockChart", "QueryWHSStockByYear", {}, function (e) {
+            console.log(e);
+            if(e.Status == "Pass"){
+                drawBar(e.Data);
+            }
+        });
+
+        function drawBar(d) {
+
+            var buList = [];
+            var monthList = ["product"];
+            var monthData = [];
+            $.each(d, function (index, o) {
+                var bu = o.BU;
+                var month = o.MONTH;
+                var qty = o.QTY;
+                if (!contain(buList, bu)) {
+                    buList.push(bu);
+                    monthData.push([bu]);
+                }
+                $.each(monthData, function (i, arr) {
+                    if (arr[0] == bu) {
+                        arr.push(Number(qty));
+                    }
+                });
+                if (!contain(monthList, Number(month) + "月份")) {
+                    monthList.push(Number(month) + "月份");
+                }
+            });
+            monthData.unshift(monthList);
+            console.log(buList, monthList, monthData);
+
+            function contain(arr, s) {
+                var f = false;
+                $.each(arr, function (i,str) {
+                    if(str == s){
+                        f = true;
+                        return f;
+                    }
+                });
+                return f;
+            }
+
+            setTimeout(function () {
+                //console.log(ev);
+                var currentYear = 2019;
+                var currentMonth = 1;
+                var option1 = {
+                    title: {
+                        text: 'AGBU2019年每月各子BU產品庫存数量及佔比圖',
+                        //subtext: '数据虛構',
+                        //x: 'left',
+                        top: 10,
+                        x: 'center',
+                        textStyle: {
+                            fontSize: 18,
+                        }
+                    },
+                    legend: {
+                        //orient: 'vertical',
+                        bottom: 10,
+                        x:'25%',
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        showContent: true,
+                        axisPointer: {
+                            type: 'shadow',
+                            snap: true,
+                        },
+                    },
+                    dataset: {
+                        source: monthData
+                        //[
+                        //    ['product', '1月份', '2月份', '3月份', '4月份', '5月份', '6月份', '7月份', '8月份', '9月份', '10月份', '11月份', '12月份'],
+                        //    ['BU1', 41, 30, 65, 53, 83, 98, 41, 30, 65, 53, 83, 98],
+                        //    ['BU2', 86, 92, 85, 83, 73, 55, 86, 92, 85, 83, 73, 55],
+                        //    ['BU3', 24, 67, 79, 86, 65, 82, 24, 67, 79, 86, 65, 82],
+                        //    ['BU4', 55, 67, 69, 72, 53, 39, 55, 67, 69, 72, 53, 39]
+                        //]
+                    },
+                    xAxis: {
+                        name: '時間段(月份)',
+                        type: 'category'
+                    },
+                    yAxis: {
+                        name: '產品數量(pcs)',
+                        gridIndex: 0
+                    },
+                    grid: {
+                        top: '20%',
+                        left: '5%',
+                        right: '35%',
+                    },
+                    color: ['#337ab7', '#2f4554', '#61a0a8', '#d48265'],
+                    series: [
+                        {
+                            type: 'line', smooth: false, seriesLayoutBy: 'row',
+                            //stack: 'AGBU',
+                            barWidth: '50%',
+                            itemStyle: {
+                                borderWidth: 2,
+                            },
+                        },
+                        {
+                            type: 'line', smooth: false, seriesLayoutBy: 'row',
+                            //stack: 'AGBU',
+                            barWidth: '50%',
+                            itemStyle: {
+                                borderWidth: 2,
+                            },
+                        },
+                        {
+                            type: 'line', smooth: false, seriesLayoutBy: 'row',
+                            //stack: 'AGBU',
+                            barWidth: '50%',
+                            itemStyle: {
+                                borderWidth: 2,
+                            },
+                        },
+                        {
+                            type: 'pie',
+                            id: 'pie',
+                            radius: '40%',
+                            center: ['82%', '60%'],
+                            label: {
+                                formatter: '{b}: {@1月份} ({d}%)'
+                            },
+                            encode: {
+                                itemName: 'product',
+                                value: '1月份',
+                                tooltip: '1月份'
+                            }
+                        }
+                    ]
+                };
+
+                myCharts1.on('updateAxisPointer', throttle(function (event) {
+                    evFun(event);
+                }, 100));
+                myCharts1.on("click", function (e) {
+                    var currentBU = e.seriesType == 'pie' ? e.name : e.seriesName;
+                    //console.log(currentYear, currentMonth, currentBU, e);
+                    var dataUrl = '/FunctionPage/TableSetting/kc_link2.html?year=' + currentYear + '&month=' + currentMonth + '&bu=' + currentBU;   //跳转路径,也用于标识选项卡
+                    var dataIndex = currentYear + "_" + currentMonth + "_" + currentBU;    //用于iframe的name属性
+                    var menuName = "AGBU" + currentYear + "年" + currentMonth + "月份" + currentBU + "庫存詳情";  // "kc_link2_" + currentBU + "_" + currentMonth + "Report";    //选项卡名
+                    linkPage(dataUrl, dataIndex, menuName);
+                });
+
+                function evFun(event) {
+                    //console.log(event);
+                    var xAxisInfo = event.axesInfo[0];
+                    //console.log(event.dataIndex + 1 + "月份");
+                    //var month = event.dataIndex + 1 + "月份";
+                    //var tit = "AGBU2019年" + month + "各子BU產品庫存數量佔比";
+                    if (xAxisInfo) {
+
+                        //更新当前月份
+                        currentMonth = event.dataIndex + 1;
+                        //顯示餅圖title
+                        $("#month-title").text(currentMonth + "月份");
+                        var dimension = xAxisInfo.value + 1;
+                        myCharts1.setOption({
+                            series: [
+                                {
+                                    id: 'pie',
+                                    label: {
+                                        formatter: '{b}: {@[' + dimension + ']} ({d}%)'
+                                    },
+                                    encode: {
+                                        value: dimension,
+                                        tooltip: dimension
+                                    }
+                                }]
+                        });
+                    }
+                }
+
+                myCharts1.setOption(option1);
+
+            });
+        }
+        function linkPage(dataUrl, dataIndex, menuName) {   //跳转页面(从查询报表找出)
+            var flag = true;
+            //2019/5/15 gch debug
+            if (dataUrl == undefined || $.trim(dataUrl).length == 0) return false;
+            $(self.parent.document).find(".J_menuTab").each(function () {     //遍历所有的选项卡
+                if ($(this).data('id') == dataUrl) {  // 选项卡菜单已存在
+                    if (!$(this).hasClass('active')) {    //匹配的选项卡处于未打开状态
+                        $(this).addClass('active').siblings('.J_menuTab').removeClass('active');    //$(this).siblings('.J_menuTab')  ： 除当前元素的其他所有同级元素
+                        self.parent.window.scrollToTab(this);
+                        // 显示tab对应的内容区
+                        $(self.parent.document).find('.J_mainContent .J_iframe').each(function () {   //遍历所有的 iframe
+                            if ($(this).data('id') == dataUrl) {   //匹配到符合该选项卡的 iframe
+                                $(this).show().siblings('.J_iframe').hide();    //显示该 iframe ,隐藏其他的
+                                return false;
+                            }
+                        });
+                    }
+                    flag = false;
+                    return false;
+                }
+            });
+            // 选项卡菜单不存在或链接地址为空
+            if (flag) {
+                $(self.parent.document).find('.J_iframe').hide();
+                var str = '<a href="javascript:;" class="active J_menuTab" data-id="' + dataUrl + '">' + menuName + ' <i class="fa fa-times-circle"></i></a>';
+                $(self.parent.document).find('.J_menuTab').removeClass('active');
+                // 添加选项卡对应的iframe
+                var str1 = '<iframe class="J_iframe" name="iframe' + dataIndex + '" width="100%" height="100%" src="' + dataUrl + '" frameborder="0" data-id="' + dataUrl + '" seamless></iframe>';
+                $(self.parent.document).find('.J_mainContent').find('iframe.J_iframe').hide().parents('.J_mainContent').append(str1);
+                // 添加选项卡
+                $(self.parent.document).find('.J_menuTabs .page-tabs-content').append(str);
+                self.parent.window.scrollToTab($(self.parent.document).find('.J_menuTab.active'));
+            }
+        }
+
+        function throttle(fn, delay) {
+            var timer;
+            return function () {
+                var _this = this;
+                var args = arguments;
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    fn.apply(_this, args);
+                }, delay);
+            }
+        }
+
+        function setHeight(fn) {     //設置高度(復用性強)
+            fn(getClientHeight());
+            window.onresize = throttle(function (e) {
+                //console.log(this, e, fn(getClientHeight()));
+                fn(getClientHeight());
+            }, 50);
+            function throttle(fn,delay) {
+                var timer;
+                return function () {
+                    var _this = this;
+                    var args = arguments;
+                    clearTimeout(timer);
+                    timer = setTimeout(function () {
+                        fn.apply(_this,args);
+                    }, delay);
+                }
+            }
+            function getClientHeight() {
+                var size = [];
+                size.push(document.documentElement.clientWidth);
+                size.push(document.documentElement.clientHeight);
+                return size;
+            }
+        }
+    });
+
+    
+
+</script>
+
+</html>

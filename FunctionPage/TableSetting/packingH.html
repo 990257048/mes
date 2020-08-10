@@ -1,0 +1,383 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<!--<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-table.min.css" />-->
+<!--<script src="js/jquery-1.9.1.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/layer/layer.min.js"></script>-->
+<!--<script src="js/report.js"></script>-->
+
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/highcharts.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background: #fff;
+    }
+
+    .title {
+        width: 100%;
+        height: 54px;
+        padding: 10px 15px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+        line-height: 33px;
+    }
+
+    .bottom {
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        height: 60px;
+        background: #337ab7;
+        z-index: 10000;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        font-size: 30px;
+        text-align: center;
+        line-height: 60px;
+        color: #fff;
+    }
+
+    #container0, #container1, #container2, #container3, #container4 {
+        height: 100%;
+        margin: 15px;
+    }
+
+        #container0 h2 {
+            text-align: center;
+        }
+
+        #container0 .tabBody {
+            overflow: hidden;
+        }
+
+        #container3 table, #container4 table {
+            width: 100%;
+        }
+    /*#container3 .tit1,#container3 .tit2,#container4 .tit1,#container4 .tit2 {
+            width:100%;
+        }*/
+    .tit1, .tit2 {
+        width: 100%;
+        font-weight: bold;
+    }
+
+    #container3 .tit1 td, #container4 .tit1 td {
+        width: 50%;
+        text-align: center;
+        border: 1px solid #aeaeae;
+        border-bottom: none;
+        height: 40px;
+        line-height: 40px;
+    }
+
+    #container3 .tit2 td, #container4 .tit2 td {
+        width: 25%;
+        text-align: center;
+        background: #e5f36a;
+        border: 1px solid #aeaeae;
+        height: 40px;
+        line-height: 40px;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:SMT">packing看板</span>
+    </div>
+    
+    <div id="container3">
+        <h2 style="text-align:center;">Packing 每小時產出效率電子看板</h2>
+        <table>
+            <tr class="tit1">
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+        <table>
+            <tr class="tit2">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+        <table id="bt1"></table>
+    </div>
+    <div id="container4">
+        <table>
+            <tr class="tit1">
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+        <table>
+            <tr class="tit2">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+        <table id="bt2"></table>
+    </div>
+</body>
+
+<script>
+
+    $(document).ready(function () {
+        $.fn.setWidth = function (widthArr) {  //只能设置一行
+            this.each(function (index, ele) {
+                $(this).css("width", widthArr[index] + "%");
+            });
+            return this;   //this:jQuery对象
+        }
+
+        self.parent.client.CallFunction("MESStation.Config.RPACKING_RATE_DETAIL", "GetProByHour1", {}, function (e) {    //表2
+            if (e.Status == "Pass") {
+                $("#container3 .tit1").find("td").eq(0).text(e.Data[0]["fitstLeft"]);
+                $("#container3 .tit1").find("td").eq(1).text(e.Data[0]["firstRight"]);
+                $("#container3 .tit2").find("td").eq(0).text(e.Data[0]["second1"]);
+                $("#container3 .tit2").find("td").eq(1).text(e.Data[0]["second2"]);
+                $("#container3 .tit2").find("td").eq(2).text(e.Data[0]["second3"]);
+                $("#container3 .tit2").find("td").eq(3).text(e.Data[0]["second4"]);
+
+                drawTable($("#container3").find("#bt1"), e.Data[1], getFields(e.Data[1][0]));
+                $("#container3").find("#bt1").find("tr").eq(0).css("background", "#e5f36a");
+                $("#container3").find("#bt1").find("tr").eq(13).css("background", "#337ab7");
+                //当前时间高亮
+                var currentHours = new Date().getHours();
+                var text = "";
+                var leftTime = currentHours + ":00";
+                var rightTime = (currentHours + 1) + ":00";
+                if (currentHours < 10) {
+                    leftTime = "0" + currentHours + ":00";
+                    if (currentHours + 1 < 10) {
+                        rightTime = "0" + (currentHours + 1) + ":00";
+                    }
+                    text = leftTime + "~" + rightTime;
+                    console.log(text);
+                    $.each($("#container3").find("#bt1").find("td"), function (index, td) {
+                        if ($(td).text() == text) {
+                            $(td).css("background", "green");
+                            $("#container3").find("#bt1").find("td").eq(index + 1).css("background", "green");
+                            $("#container3").find("#bt1").find("td").eq(index + 2).css("background", "green");
+                        }
+                    });
+                } else {
+                    if (currentHours == 23) {
+                        rightTime = "00:00";
+                    }
+                    text = leftTime + "~" + rightTime;
+                    console.log(text);
+                    $.each($("#container3").find("#bt1").find("td"), function (index, td) {
+                        if ($(td).text() == text) {
+                            $(td).css("background", "green");
+                            $("#container3").find("#bt1").find("td").eq(index + 1).css("background", "green");
+                            $("#container3").find("#bt1").find("td").eq(index + 2).css("background", "green");
+                        }
+                    });
+                }
+            }
+            function getFields(obj) {
+                var fields = [];
+                for (var prop in obj) {
+                    fields.push(prop);
+                }
+                return fields;
+            }
+        });
+
+        self.parent.client.CallFunction("MESStation.Config.RPACKING_RATE_DETAIL", "GetProByHour2", {}, function (e) {    //表2
+            console.log(e);
+            if (e.Status == "Pass") {
+                $("#container4 .tit1").find("td").eq(0).text(e.Data[0]["fitstLeft"]);
+                $("#container4 .tit1").find("td").eq(1).text(e.Data[0]["firstRight"]);
+                $("#container4 .tit2").find("td").eq(0).text(e.Data[0]["second1"]);
+                $("#container4 .tit2").find("td").eq(1).text(e.Data[0]["second2"]);
+                $("#container4 .tit2").find("td").eq(2).text(e.Data[0]["second3"]);
+                $("#container4 .tit2").find("td").eq(3).text(e.Data[0]["second4"]);
+
+                drawTable($("#container4").find("#bt2"), e.Data[1], getFields(e.Data[1][0]));
+                $("#container4").find("#bt2").find("tr").eq(0).css("background", "#e5f36a");
+                $("#container4").find("#bt2").find("tr").eq(13).css("background", "#337ab7");
+                //当前时间高亮
+                var currentHours = new Date().getHours();
+                var text = "";
+                var leftTime = currentHours + ":00";
+                var rightTime = (currentHours + 1) + ":00";
+                if (currentHours < 10) {
+                    leftTime = "0" + currentHours + ":00";
+                    if (currentHours + 1 < 10) {
+                        rightTime = "0" + (currentHours + 1) + ":00";
+                    }
+                    text = leftTime + "~" + rightTime;
+                    console.log(text);
+                    $.each($("#container4").find("#bt2").find("td"), function (index, td) {
+                        if ($(td).text() == text) {
+                            $(td).css("background", "green");
+                            $("#container4").find("#bt2").find("td").eq(index + 1).css("background", "green");
+                            $("#container4").find("#bt2").find("td").eq(index + 2).css("background", "green");
+                        }
+                    });
+                } else {
+                    if (currentHours == 23) {
+                        rightTime = "00:00";
+                    }
+                    text = leftTime + "~" + rightTime;
+                    console.log(text);
+                    $.each($("#container4").find("#bt2").find("td"), function (index, td) {
+                        if ($(td).text() == text) {
+                            $(td).css("background", "green");
+                            $("#container4").find("#bt2").find("td").eq(index + 1).css("background", "green");
+                            $("#container4").find("#bt2").find("td").eq(index + 2).css("background", "green");
+                        }
+                    });
+                }
+            }
+
+            function getFields(obj) {
+                var fields = [];
+                for (var prop in obj) {
+                    fields.push(prop);
+                }
+                return fields;
+            }
+        });
+
+        function str_num(arr) {  //把字符串数组变成数字数组
+            var _arr = [];
+            $.each(arr, function (i,str) {
+                _arr.push(Number(str));
+            });
+            return _arr;
+        }
+
+        function drawTable($ele,data,fieldArr) {
+            $ele.bootstrapTable({
+                data: data,   //e
+                pagination: false,    //分页显示
+                pageSize: 10,         //初始化每一页的数据条数
+                pageList: [10, 25, 50, 100],
+                search: false,        //显示查找框
+                striped: false,        //背景色相间
+                showRefresh: false,   //显示重置按钮
+                columns: columns(fieldArr)
+            });
+            function columns(colList) {   //生成表格关键数据
+                var columns = [];
+                //columns.push({    //选择按钮
+                //    align: 'center',
+                //    valign: 'middle',
+                //    checkbox: true
+                //});
+                $.each(colList, function (i, val) {
+                    var title = "<label set-lan=" + "html:" + val + ">" + val + "</label>";
+                    var obj = {
+                        field: val,
+                        title: title,
+                        align: 'center',
+                        valign: 'middle'
+                    };
+                    columns.push(obj);
+                });
+                return columns;
+            }
+
+        }
+
+        function highChart(control,data) {    //绘制直方图
+            var chart = {
+                type: data["type"],   //column  bar
+                height:"35%"
+            };
+            var title = {
+                text: data["title"]
+            };
+            var subtitle = {
+                text: data["subtitle"]
+            };
+            var xAxis = {
+                categories: data["xAxis"]["categories"],         // ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                title: {
+                    text: data["xAxis"]["title"],
+                    align: 'high'    //high
+                },
+                crosshair: true
+            };
+            var yAxis = {
+                min: 0,
+                title: {
+                    text: data["yAxis"]["title"],
+                    align: 'high'    //high
+                },
+                lineWidth: "1"
+            };
+            var company = data["yAxis"]["title"].match(/\(.+?\)/g)[0];
+            company = company.substr(1, company.length - 2);
+            var tooltip = {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                   '<td style="padding:0"><b>{point.y:.1f} '+ company +'</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            };
+            var plotOptions = {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            };
+            var credits = {
+                enabled: false
+            };
+            var series = data["series"];
+            var json = {};
+            json.chart = chart;
+            json.title = title;
+            json.subtitle = subtitle;
+            json.tooltip = tooltip;
+            json.xAxis = xAxis;
+            json.yAxis = yAxis;
+            json.series = series;
+            json.plotOptions = plotOptions;
+            json.credits = credits;
+            control.highcharts(json);
+        }
+
+    });
+
+</script>
+
+</html>

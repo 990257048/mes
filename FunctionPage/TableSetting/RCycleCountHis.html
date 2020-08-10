@@ -1,0 +1,1061 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Cyle Count His</title>  <!--GCH 2018 /12/21 ADD  每日盘点报表 .HTML-->
+</head>
+
+<!--<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-table.min.css" />
+
+<script src="js/jquery-1.9.1.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/layer/layer.min.js"></script>-->
+
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background: #fff;
+        zoom:.65;
+    }
+    body::-webkit-scrollbar-thumb {
+            background:#337ab7;
+        }
+        body::-webkit-scrollbar {
+            width:5px;
+            background-color:#fff;
+        }
+    .layui-layer .layui-layer-content::-webkit-scrollbar-thumb {
+        background:#337ab7;
+    }
+    .layui-layer .layui-layer-content::-webkit-scrollbar {
+        width:5px;
+        background-color:#fff;
+    }
+    .title {
+        width: 100%;
+        height: 54px;
+        padding: 10px 15px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+        line-height: 33px;
+    }
+
+    .list {
+        width: 100%;
+        height: 34px;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-top: 25px;
+    }
+
+        .list .btnList {
+            height: 100%;
+            float: left;
+            border: 1px solid #337ab7;
+            border-radius: 3px;
+            border-right: none;
+        }
+
+            .list .btnList .btn0 {
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                color: rgb(103,106,108);
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor: pointer;
+            }
+
+                .list .btnList .btn0:hover {
+                    color: #fff;
+                    background: #286090;
+                }
+
+            .list .btnList .btn1,
+            .list .btnList .btn2 {
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                color: rgba(103,106,108,0.6); /*rgba(103,106,108,0.6)*/
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor: no-drop; /*no-drop*/
+            }
+
+                .list .btnList .btn1:hover,
+                .list .btnList .btn2:hover {
+                    color: #fff;
+                    background: #337ab7;
+                    opacity: 0.6;
+                }
+
+            .list .btnList .btn11,
+            .list .btnList .btn22 {
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                color: rgb(103, 106, 108);
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor: pointer;
+            }
+
+                .list .btnList .btn11:hover,
+                .list .btnList .btn22:hover {
+                    color: #fff;
+                    background: #286090;
+                }
+
+        .list .query {
+            float: right;
+            height: 100%;
+        }
+
+            .list .query .input {
+                float: left;
+                height: 100%;
+                width: 196px;
+                border: 1px solid #337ab7;
+                box-sizing: border-box;
+                border-radius: 5px;
+            }
+
+                .list .query .input input {
+                    width: 100%;
+                    height: 100%;
+                    padding: 6px 12px;
+                    border-radius: 5px;
+                    border: none;
+                    color: #676a6c;
+                    outline: none;
+                }
+
+            .list .query .btnQuery {
+                float: left;
+                height: 100%;
+                padding: 6px 12px;
+                line-height: 20px;
+                border: 1px solid #337ab7;
+                margin-left: 8px;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+
+                .list .query .btnQuery:hover {
+                    color: #fff;
+                    background: #286090;
+                }
+
+    .tab {
+        width: auto;
+        /*border: 1px solid #adadad;*/
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-left: 15px;
+        margin-right: 15px;
+        overflow: auto;
+    }
+
+    #ModifyList, #AddList {
+        position: absolute;
+        width:100%;
+    }
+
+        #AddList .addBtn, #ModifyList .editBtn {
+            background: #337ab7;
+            color: #fff;
+            font-weight: bold;
+        }
+
+            #AddList .addBtn:hover, #ModifyList .editBtn:hover {
+                background: #337ab7;
+            }
+
+    #rpt1, #rpt2 {
+        margin:15px;
+    
+    }
+
+
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<body>
+
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:ReworkSet">Cyle Count His</span>
+    </div>
+
+    <div class="list">
+        <div class="btnList">
+            <!--<div class="btn0"><i class="glyphicon glyphicon-plus"></i><span set-lan="html:New">New</span></div>-->
+            <div id="btn1" class="btn1" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i><span set-lan="html:Edit">Edit</span></div>
+            <!--<div id="btn2" class="btn2"><i class="glyphicon glyphicon-trash"></i><span set-lan="html:Delete">Delete</span></div>-->
+        </div>
+        <!--<div class="query">
+            <div class="input">
+                <input type="text" value="" placeholder="请输入NPF_INFO" />
+            </div>
+            <div class="btnQuery" set-lan="html:Query">
+                Search
+            </div>
+        </div>-->
+    </div>
+
+    <div class="tab">
+        <table></table>
+    </div>
+    
+    <!--新增弹窗-->
+    <div id="AddList" class="hidden">
+        <div class="panel-body">
+            <div class="row">
+                </br>      <!--["ERROR_CODE", "NPF_INFO"]-->
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:ERROR_CODE">ERROR_CODE</label>
+                    <div class="col-xs-8">
+                        <input id="ERROR_CODE" class="form-control" value="" />
+                    </div>
+                </div>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:NPF_INFO">NPF_INFO</label>
+                    <div class="col-xs-8">
+                        <input id="NPF_INFO" class="form-control" value="" />
+                    </div>
+                </div>
+                <!--<div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:STATION_NAME">STATION_NAME</label>
+                    <div class="col-xs-8">
+                        <select class="form-control" id="STATION_NAME">
+                        </select>
+                    </div>
+                </div>-->
+                <div class="ADD col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right"></label>
+                    <div class="col-xs-8">
+                        <button class="form-control addBtn">ADD</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--修改弹窗-->
+    <div id="ModifyList" class="hidden">
+        <div class="panel-body">
+            <div class="row">
+                </br>        <!--["ID", "SKUNO", "BU", "ANALYSE_ORDER", "ANALYSE_OWNER", "ANALYSE_QTY", "ANALYSE_TYPE"]-->
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right">ID:</label>
+                    <div class="col-xs-8">
+                        <input id="ID" class="form-control" value="" disabled="disabled" />
+                    </div>
+                </div>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:SKUNO">SKUNO</label>
+                    <div class="col-xs-8">
+                        <input id="SKUNO" class="form-control" value="" disabled="disabled"  />
+                    </div>
+                </div>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:BU">BU</label>
+                    <div class="col-xs-8">
+                        <input id="BU" class="form-control" value="" disabled="disabled"  />
+                    </div>
+                </div>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:ANALYSE_ORDER">ANALYSE_ORDER</label>
+                    <div class="col-xs-8">
+                        <input id="ANALYSE_ORDER" class="form-control" value="" />
+                    </div>
+                </div>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:ANALYSE_OWNER">ANALYSE_OWNER</label>
+                    <div class="col-xs-8">
+                        <input id="ANALYSE_OWNER" class="form-control" value=""  disabled="disabled" />
+                    </div>
+                </div>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:ANALYSE_QTY">ANALYSE_QTY</label>
+                    <div class="col-xs-8">
+                        <input id="ANALYSE_QTY" class="form-control" value="" />
+                    </div>
+                </div>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:ANALYSE_TYPE">ANALYSE_TYPE</label>
+                    <div class="col-xs-8">
+                        <input id="ANALYSE_TYPE" class="form-control" value=""/>
+                    </div>
+                </div>
+                <!--<div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:STATION_NAME">STATION_NAME</label>
+                    <div class="col-xs-8">
+                        
+                        <select class="form-control" id="STATION_NAME">
+                            
+                        </select>
+                    </div>
+                </div>-->
+                <div class="EDIT col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right"></label>
+                    <div class="col-xs-8">
+                        <button class="form-control editBtn">确认差异</button>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <!--///////////////////////////////////////////-->
+            <div class="list">
+                <div class="btnList">
+                    <div id="report1" class="btn0"><i class="glyphicon glyphicon-search"></i><span set-lan="html:New"> SFC 库存清单</span></div>
+                    <div id="report2" class="btn0"><i class="glyphicon glyphicon-search"></i><span set-lan="html:New"> 库存盘点清单</span></div>
+
+                </div>
+                
+            </div>
+
+            <div id="rpt1" class="">
+                <table></table>
+            </div>
+            <div id="rpt2" class="">
+                <table></table>
+            </div>
+            <!--///////////////////////////////////////////-->
+        </div>
+    </div>
+    
+</body>
+
+<script>
+
+	$(document).on("ready",function (){
+	    var getData = null;
+	    var checkedData = null;
+		var apiList = {
+			"select":{
+			    "className": "MESStation.Config.RCycleCountHis",
+			    "functionName": "GetBySN",
+			    "colList": []
+			},
+			"edit":{
+			    "className": "MESStation.Config.RCycleCountHis",
+			    "functionName": "UpdateById",
+			    "colList": ["ID", "SKUNO", "BU", "ANALYSE_ORDER", "ANALYSE_OWNER", "ANALYSE_QTY", "ANALYSE_TYPE"]
+			},
+			"select2":{
+			    "className": "MESStation.Config.RCycleCountHis",
+			    "functionName": "SelectSFCQTY",
+			    "colList": ["SKUNO"]
+			},
+			"select3": {
+			    "className": "MESStation.Config.RCycleCountHis",
+			    "functionName": "SelectREALQTY",
+			    "colList": ["SKUNO"]
+			},
+			"other":{}
+		};
+		var currentSkuno = null;
+		var reportData1 = null;
+		var reportData2 = null;
+	    //sendData_colList(apiList["select2"]["colList"], [""])
+
+	  //  "SKUNO": "68-6307-01",
+      //"BU": "MFGII",
+      //"SAP_QTY": 3.0,
+      //"SFC_QTY": 3.0,
+      //"REAL_QTY": 2.0,
+      //"DIFF_QTT": -1.0,
+      //"LAST_SAP_DATE": "2018-12-21 10:21:18",
+      //"LAST_SFC_DATE": "2018-12-21 10:22:40",
+      //"ANALYSE_QTY": 3.0,
+      //"ANALYSE_TYPE": null,
+      //"ANALYSE_ORDER": null,
+      //"ANALYSE_OWNER": "TEST",
+      //"REAL_DIFF_QTY": 0.0,
+      //"EDIT_EMP": "TEST",
+      //"EDIT_TIME": "2018-12-04 02:44:03"
+
+	    //["SKUNO","BU","SAP_QTY","SFC_QTY","REAL_QTY","DIFF_QTT","LAST_SAP_DATE","LAST_SFC_DATE","ANALYSE_QTY","ANALYSE_TYPE","ANALYSE_ORDER","ANALYSE_OWNER","REAL_DIFF_QTY","EDIT_EMP","EDIT_TIME"]
+		
+		self.parent.client.CallFunction(apiList["select"]["className"], apiList["select"]["functionName"], {}, function (e) {
+		    console.log(e);
+		    if (e.Status == "Pass") {   //Pass
+		        getData = e.Data;  //e.Data
+		        init(getData);
+		    } else {
+		        init([]);
+		    }
+		});
+		//init(tableData);
+		function init(data) {  //入口
+		    console.log("init");
+		    showData(data);     //show数据
+		    //layerInit();             //初始化layer弹出框
+		    //setLanguage();     //设置多语言
+		    clickOperation();     //事件集合
+		}
+        //////////////////////////////////////////////////////////
+	    //根据colList生成发送数据
+		function sendData_colList (colList,dataList){
+			var sendData = {};
+			$.each(colList,function (index,val){
+				sendData[val] = dataList[index];
+			});
+			return sendData;
+		}
+	    //show数据
+		function showData(data) {
+		    $(".tab table").bootstrapTable({
+		        data: data,
+		        pagination: true,    //分页显示
+		        pageSize: 50,         //初始化每一页的数据条数
+		        pageList: [50, 100, 200, 500],
+		        search: false,        //显示查找框
+		        striped: true,        //背景色相间
+		        showRefresh: false,   //显示重置按钮
+		        clickToSelect: true,   //单击一行内任意单元格选中该行
+		        singleSelect: true,  //单选
+		        onPageChange: function () {
+		            $(".tab table").find("td").css({
+		                whiteSpace: "nowrap",
+		                textAlign: "left"
+		            });
+		        },
+		        onCheck: function (row) {
+		            var rows = $('.tab table').bootstrapTable('getAllSelections');  ///getAllSelections
+		            //console.log(rows);
+		            if (rows.length == 1) {
+		                $("#btn1").attr("class", "btn11");
+		            } else {
+		                $("#btn1").attr("class", "btn1");
+		            }
+		            if (rows.length > 0) {
+		                $("#btn2").attr("class", "btn22");
+		            } else {
+		                $("#btn2").attr("class", "btn2");
+		            }
+		            checkedData = rows;
+		        },
+		        onUncheck: function (row) {
+		            var rows = $('.tab table').bootstrapTable('getAllSelections');  ///getAllSelections
+		            //console.log(rows);
+		            if (rows.length == 1) {
+		                $("#btn1").attr("class", "btn11");
+		            } else {
+		                $("#btn1").attr("class", "btn1");
+		            }
+		            if (rows.length > 0) {
+		                $("#btn2").attr("class", "btn22");
+		            } else {
+		                $("#btn2").attr("class", "btn2");
+		            }
+		            checkedData = rows;
+		        },
+		        columns: [{
+		            align: 'left',
+                    valign: 'middle',
+		            checkbox: true
+		        },
+                {     //添加序号 
+                    field: "NO",
+                    title: "<label set-lan=" + "html:" + "NO" + ">" + "NO" + "</label>",// item,  
+                    align: 'left',
+                    valign: 'middle',
+                    formatter: function (value, row, index) {
+                        return index + 1;
+                    }
+                },
+                {           //["SKUNO","BU","SAP_QTY","SFC_QTY","REAL_QTY","DIFF_QTT","LAST_SAP_DATE","LAST_SFC_DATE","ANALYSE_QTY",
+		            //"ANALYSE_TYPE","ANALYSE_ORDER","ANALYSE_OWNER","REAL_DIFF_QTY","EDIT_EMP","EDIT_TIME"]
+		            field: 'SKUNO',
+		            title: '<label set-lan="html:SKUNO">SKUNO</label>',
+		            align: 'left',
+                    valign: 'middle'
+		        }, {
+		            field: 'BU',
+		            title: '<label set-lan="html:BU">BU</label>',
+		            align: 'left',
+		            valign: 'middle'
+		        }, {
+		            field: 'SAP_QTY',
+		            title: '<label set-lan="html:SAP_QTY">SAP_QTY</label>',
+		            align: 'left',
+		            valign: 'middle'
+		        }, {
+		            field: 'SFC_QTY',
+		            title: '<label set-lan="html:SFC_QTY">SFC_QTY</label>',
+		            align: 'left',
+		            valign: 'middle'
+		        }, {
+		            field: 'REAL_QTY',
+		            title: '<label set-lan="html:REAL_QTY">REAL_QTY</label>',
+		            align: 'left',
+		            valign: 'middle'
+		        }, {
+		            field: 'DIFF_QTT',
+		            title: '<label set-lan="html:DIFF_QTT">DIFF_QTT</label>',
+		            align: 'left',
+		            valign: 'middle'
+		        }, {
+		            field: 'LAST_SAP_DATE',
+		            title: '<label set-lan="html:LAST_SAP_DATE">LAST_SAP_DATE</label>',
+		            align: 'left',
+		            valign: 'middle'
+		        }, {
+		            field: 'LAST_SFC_DATE',
+		            title: '<label set-lan="html:LAST_SFC_DATE">LAST_SFC_DATE</label>',
+		            align: 'left',
+		            valign: 'middle'
+		        }, {
+		            field: 'ANALYSE_QTY',
+		            title: '<label set-lan="html:ANALYSE_QTY">ANALYSE_QTY</label>',
+		            align: 'left',
+		            valign: 'middle'
+		        }, {
+		            field: 'ANALYSE_TYPE',
+		            title: '<label set-lan="html:ANALYSE_TYPE">ANALYSE_TYPE</label>',
+		            align: 'left',
+		            valign: 'middle'
+		        }, {
+		            field: 'ANALYSE_ORDER',
+		            title: '<label set-lan="html:ANALYSE_ORDER">ANALYSE_ORDER</label>',
+		            align: 'left',
+		            valign: 'middle'
+		        }, {
+		            field: 'ANALYSE_OWNER',
+		            title: '<label set-lan="html:ANALYSE_OWNER">ANALYSE_OWNER</label>',
+		            align: 'left',
+		            valign: 'middle'
+		        }, {
+		            field: 'REAL_DIFF_QTY',
+		            title: '<label set-lan="html:REAL_DIFF_QTY">REAL_DIFF_QTY</label>',
+		            align: 'left',
+		            valign: 'middle'
+		        }, {
+		            field: 'EDIT_EMP',
+		            title: '<label set-lan="html:EDIT_EMP">EDIT_EMP</label>',
+		            align: 'left',
+		            valign: 'middle'
+		        }, {
+		            field: 'EDIT_TIME',
+		            title: '<label set-lan="html:EDIT_TIME">EDIT_TIME</label>',
+		            align: 'left',
+		            valign: 'middle'
+		        }],
+		    });
+		    $(".tab table").find(".bs-checkbox").css({
+		        "text-align": "left",
+		        "vertical-align": "middle",
+		    });
+		    $(".tab table").find("td").css({
+		        whiteSpace: "nowrap",
+		        textAlign: "left"
+		    });
+		}
+	    //初始化layer弹出框
+		function layerInit() {
+		    getStationName();
+		    function getStationName() {    //获取所有工站名
+		        console.log($("#AddList").find("#STATION_NAME"), $("#ModifyList").find("#STATION_NAME"));
+		        var addStationName = $("#AddList").find("#STATION_NAME");
+		        var modifyStationName = $("#ModifyList").find("#STATION_NAME");
+		        var stationCount;  //工站總數量
+		        self.parent.client.CallFunction("MESStation.MESUserManager.CSecondUser", "GetAllStation", { "STATION_NAME": "" }, function (e) {
+		            //console.log(e);
+		            if (e.Status == "Pass") {    //Pass
+		                stationCount = e.Data.length;
+		                for (var i = 0; i < stationCount; i++) {
+		                    var addOption = $("<option value = " + e.Data[i] + ">" + e.Data[i] + "</option>");    //e.Data[i].STATION_NAME
+		                    var modifyOption = $("<option value = " + e.Data[i] + ">" + e.Data[i] + "</option>");
+		                    //if (i == 0) {
+		                    //    addOption.attr("selected", "selected");
+		                    //    modifyOption.attr("selected", "selected");
+		                    //}
+		                    addStationName.append(addOption);
+		                    modifyStationName.append(modifyOption);
+		                }
+		            }
+		        });
+
+		    }
+		}
+	    //设置多语言
+		function setLanguage(pageMsg) {
+		    var client = self.parent.client;
+		    //console.log(client);
+		    var MesUI = new MesClientUI(client);
+		    MesUI.SetLanguage(pageMsg);
+		}
+        //////////////////////////////////////////////////////////
+        //点击操作
+		function clickOperation() {
+		    /////////////////////////新增
+		    $("#btn0").on("click", function () {
+		        //var EditEmp = self.parent.client.UserInfo.EMP_NAME;
+		        layer.open({
+		            type: 1,
+		            skin: "layui-layer-lan",
+		            title: 'New Data',
+		            area: ["80%", "80%"],
+		            scrollbar: false,
+		            content: $("#AddList"),
+		            maxmin: true,
+		            success: function (layero, index) {
+
+		                var lay = layero;
+		                var w = lay.css("width");
+		                var h = lay.css("height");
+		                lay.css({
+		                    position: "fixed",
+		                    left: "50%",
+		                    top: "50%",
+		                    marginTop: -Number(h.match(/\d+/g)) / 2 + "px",
+		                    marginLeft: -Number(w.match(/\d+/g)) / 2 + "px",
+		                });
+		                var nav = lay.children().eq(0);
+		                nav.off("mousedown");
+		                nav.off("mousemove");
+		                nav.off("mouseup");
+		                nav.off("click");
+
+		                $("#AddList").removeClass("hidden");        //显示弹出框
+		                var inputList = $("#AddList .panel-body").find(".form-control");
+		                Array.prototype.pop.call(inputList);                 //去除最后一项
+		                $(".addBtn").on("click", function () {   //点击 新增数据
+		                    var valList = [];    //值列表
+		                    var flag = true;
+		                    inputList.each(function (i) {    //i为下标
+		                        valList.push(inputList[i].value);
+		                        if (inputList[i].value == "") {
+		                            flag = false;
+		                        }
+		                    });
+		                    if (flag) {             //允许为空
+		                        self.parent.client.CallFunction(apiList["add"]["className"], apiList["add"]["functionName"], sendData_colList(apiList["add"]["colList"],valList), function (e) {
+		                            if (e.Status == "Pass") {      //Pass 
+		                                //console.log(sendData);
+		                                layer.msg("已新增1条数据!", {
+		                                    icon: 1,
+		                                    time: 1000
+		                                }, function () {
+		                                    location.reload();
+		                                });
+		                            } else {
+		                                layer.msg("新增失败!", {
+		                                    icon: 0,
+		                                    time: 1000
+		                                }, function () {
+		                                    location.reload();
+		                                });
+		                            }
+		                        });
+		                    } else {
+		                        layer.msg("请补全数据!", {
+		                            icon: 0,
+		                            time: 1000
+		                        }, function () {
+		                        });
+		                    }
+		                });
+		            },
+		            end: function () {
+		                $("#AddList").addClass("hidden");                                       //隐藏弹出框
+		                $(".panel-body").find("input").each(function (index, node) {     //关闭弹出框各项数据置空
+		                    node.value = "";
+		                });
+		            }
+		        });
+		    });
+		    /////////////////////////修改
+		    $("#btn1").on("click", function () {
+		        if ($(this).attr("class") == "btn11") {
+		            var checkedData = $('.tab table').bootstrapTable('getAllSelections');
+		            console.log(checkedData);
+		            currentSkuno = checkedData[0]["SKUNO"];
+		            //弹出layer框
+		            layer.open({
+		                type: 1,
+		                skin: "layui-layer-lan",
+		                title: 'Edit Data',
+		                area: ["100%", "100%"],
+		                scrollbar: false,
+		                content: $("#ModifyList"),
+		                maxmin: true,
+		                success: function (layero, index) {
+
+		                    var lay = layero;
+		                    var w = lay.css("width");
+		                    var h = lay.css("height");
+		                    lay.css({
+		                        position: "fixed",
+		                        left: "50%",
+		                        top: "50%",
+		                        marginTop: -Number(h.match(/\d+/g)) / 2 + "px",
+		                        marginLeft: -Number(w.match(/\d+/g)) / 2 + "px",
+		                    });
+		                    var nav = lay.children().eq(0);
+		                    nav.off("mousedown");
+		                    nav.off("mousemove");
+		                    nav.off("mouseup");
+		                    nav.off("click");
+
+		                    $("#ModifyList").removeClass("hidden");        //显示弹出框
+		                    var inputList = $("#ModifyList .panel-body").find(".form-control");
+		                    Array.prototype.pop.call(inputList);
+		                    //console.log(inputList);
+		                    $.each(inputList, function (i, node) {               //给各项赋值
+		                        //console.log(node,checkedData[0][apiList["edit"]["colList"][i]]);
+		                        node.value = checkedData[0][apiList["edit"]["colList"][i]];
+		                    });
+		                    //$.each($("#ModifyList").find("#STATION_NAME option"), function (i, opt) {     //自动选中已选中的工站名
+		                    //    //console.log(this, opt);
+		                    //    if (checkedData[0]["STATION_NAME"] == opt.value) {
+                            //        $(opt).attr("selected", "selected");
+		                    //    }
+		                    //});
+		                    $(".editBtn").on("click", function () {   //点击 修改数据
+		                        var valList = [];                                 //值列表
+		                        var flag = true;
+		                        inputList.each(function (i, node) {      //i为下标
+		                            valList.push(node.value);
+		                            //if (String(node.value) != String(checkedData[0][apiList["edit"]["colList"][i]])) {
+		                            //    //console.log(String(node.value), checkedData[0][apiList["edit"]["colList"][i]]);
+		                            //    //console.log(node.value =="undefined", checkedData[0][colNameList[i]] == undefined);
+		                            //    flag = true;
+		                            //}
+		                            if(node.value == ""){
+		                                flag = false;
+		                            }
+		                        });
+		                        
+		                        if (flag  || true) {
+		                            console.log(sendData_colList(apiList["edit"]["colList"], valList));
+		                            self.parent.client.CallFunction(apiList["edit"]["className"], apiList["edit"]["functionName"], sendData_colList(apiList["edit"]["colList"],valList), function (e) {
+		                                console.log(e);
+		                                if (e.Status == "Pass") {      //Pass 
+		                                    layer.msg("已修改1条数据!", {
+		                                        icon: 1,
+		                                        time: 1000
+		                                    }, function () {
+		                                        location.reload();
+		                                    });
+		                                } else {
+		                                    layer.msg("修改失败!", {
+		                                        icon: 0,
+		                                        time: 1000
+		                                    }, function () {
+		                                        location.reload();
+		                                    });
+		                                }
+		                            });
+		                        } else {
+		                            layer.msg("请补全数据!", {
+		                                icon: 0,
+		                                time: 1000
+		                            }, function () {
+		                            });
+		                        }
+		                    });
+		                },
+		                end: function () {
+		                    $("#ModifyList").addClass("hidden");                                     //隐藏弹出框 
+		                    $(".panel-body").find("input").each(function (index, node) {  //关闭弹出框各项数据置空
+		                        node.value = "";
+		                    });
+		                    $("#ModifyList").find("#STATION_NAME option[selected=selected]").removeAttr("selected");
+		                }
+		            });
+		        }
+		    })
+		    /////////////////////////删除
+		    $("#btn2").on("click", function () {
+		        if ($(this).attr("class") == "btn22") {
+		            layer.open({                          //确定是否删除?
+		                title: 'Warning',
+		                btn: ['Delete', 'Cancel'],
+		                content: "Delete operation cannot be rolled back! </br> Are you sure you want to delete these records?",
+		                yes: function (index) {      //确定删除
+		                    layer.close(index);        //关闭该选择layer框
+		                    var checkedData = $('.tab table').bootstrapTable('getAllSelections');
+		                    console.log(checkedData);
+		                    var successCount = 0;     //成功数量
+		                    $.each(checkedData, function (i) {
+		                        var currentId = checkedData[i]["ID"];
+		                        console.log(currentId);
+		                        self.parent.client.CallFunction(apiList["delete"]["className"], apiList["delete"]["functionName"], sendData_colList(apiList["delete"]["colList"],[currentId]), function (e) {
+		                            console.log(e);
+		                            if (e.Status == "Pass") {   // Pass
+		                                successCount++;
+		                                if (successCount == checkedData.length) {
+		                                    layer.msg("已删除" + checkedData.length + "条数据!", {
+		                                        icon: 1,
+		                                        time: 1000
+		                                    }, function () {
+		                                        console.log("deleteSuccess!");
+		                                        location.reload();
+		                                    });
+		                                }
+		                            }
+		                        });
+		                    });
+		                }
+		            });
+		        }
+		    });
+		    /////////////////////////查询
+		    //$(".query .btnQuery").on("click", function () {
+		    //    var val = $(".query .input input")[0].value;
+		    //    $(".tab")[0].innerHTML = "";
+		    //    var table = $("<table></table>");
+		    //    $(".tab").append(table);
+		    //    console.log(val);
+		    //    self.parent.client.CallFunction("MESStation.MESUserManager.CSecondUser", "GetByEMPNO", { "EMP_NO": val }, function (e) {
+		    //        console.log(e);
+		    //        if (e.Status == "Pass") {    //Pass
+		    //            //console.log(e.Data);
+		    //            showData(e.Data);     //e.Data
+		    //            //setLanguage("");
+		    //        }
+		    //    });
+		    //});
+		    $(".query .btnQuery").on("click", function () {
+		        var val = $(".query .input input")[0].value;
+		        console.log(val);
+		        self.parent.client.CallFunction(apiList["select"]["className"], apiList["select"]["functionName"], sendData_colList(apiList["select"]["colList"],[val]), function (e) {
+		            console.log(e);
+		            if (e.Status == "Pass") {    //Pass
+		                $(".tab table").bootstrapTable("load", e.Data);
+
+		                $(".tab table").find(".bs-checkbox").css({
+		                    "text-align": "left",
+		                    "vertical-align": "middle",
+		                });
+		                $(".tab table").find("td").css({
+		                    whiteSpace: "nowrap",
+		                    textAlign: "left"
+		                });
+
+		                //setLanguage("");
+		            }
+		        });
+		    });
+
+		    $("#report1").on("click", function () {
+		        //变更按钮样式
+		        $(this).css({
+		            "background": "#337ab7",
+                    "color":"#fff"
+		        });  //"background", "#337ab7"
+		        $("#report2").css({
+		            "background": "",
+		            "color": "rgb(103,106,108)"
+		        });    //103,106,108
+		        //表的显隐性
+		        $("#rpt1").removeAttr("class","hidden");
+		        $("#rpt2").attr("class", "hidden");
+		        var data = [
+                    {
+                        "SN": "XXXXXXXXXXXX",
+                        "SKUNO": "XXXXXXXXXXXXXXXXX",
+                        "BOX_SN":"XXXXXXXXXXXXXXXXXX"
+                    },
+                    {
+                        "SN": "XXXXXXXXXXXX",
+                        "SKUNO": "XXXXXXXXXXXXXXXXX",
+                        "BOX_SN": "XXXXXXXXXXXXXXXXXX"
+                    },
+                    {
+                        "SN": "XXXXXXXXXXXX",
+                        "SKUNO": "XXXXXXXXXXXXXXXXX",
+                        "BOX_SN": "XXXXXXXXXXXXXXXXXX"
+                    },
+                    {
+                        "SN": "XXXXXXXXXXXX",
+                        "SKUNO": "XXXXXXXXXXXXXXXXX",
+                        "BOX_SN": "XXXXXXXXXXXXXXXXXX"
+                    },
+                    {
+                        "SN": "XXXXXXXXXXXX",
+                        "SKUNO": "XXXXXXXXXXXXXXXXX",
+                        "BOX_SN": "XXXXXXXXXXXXXXXXXX"
+                    },
+                    {
+                        "SN": "XXXXXXXXXXXX",
+                        "SKUNO": "XXXXXXXXXXXXXXXXX",
+                        "BOX_SN": "XXXXXXXXXXXXXXXXXX"
+                    }
+		        ];
+
+		        if (reportData1) {   //如果存在表数据
+		            $("#rpt1 table").bootstrapTable("load", reportData1);
+		        } else {
+		            self.parent.client.CallFunction(apiList["select2"]["className"], apiList["select2"]["functionName"], sendData_colList(apiList["select2"]["colList"], [currentSkuno]), function (e) {
+		                console.log(e);
+		                if (e.Status == "Pass") {
+		                    reportData1 = e.Data;
+		                    $("#rpt1 table").bootstrapTable("load", e.Data);
+		                }
+		            });
+		        }
+
+		        console.log(sendData_colList(apiList["select2"]["colList"], [currentSkuno]));
+		        //self.parent.client.CallFunction(apiList["select2"]["className"], apiList["select2"]["functionName"], sendData_colList(apiList["select2"]["colList"], [currentSkuno]), function (e) {
+		        //    console.log(e);
+		        //    if(e.Status == "Pass"){
+		        //        $("#rpt1 table").bootstrapTable("load",e.Data);
+		        //    }
+		        //});
+		        $("#rpt1 table").bootstrapTable({
+		            data: data,
+		            pagination: true,    //分页显示
+		            pageSize: 10,         //初始化每一页的数据条数
+		            pageList: [10, 25, 50, 100],
+		            search: false,        //显示查找框
+		            striped: true,        //背景色相间
+		            showRefresh: false,   //显示重置按钮
+		            clickToSelect: true,   //单击一行内任意单元格选中该行
+		            singleSelect: true,  //单选
+		            columns: [{
+		                align: 'center',
+		                valign: 'middle',
+		                checkbox: true
+		            }, {
+		                field: 'SN',
+		                title: '<label set-lan="html:SN">SN</label>',
+		                align: 'center',
+		                valign: 'middle'
+		            }, {
+		                //ID,SKUNO,SN,CARTON_NO,PALLET_NO,EDIT_EMP,EDIT_TIME,,,
+		                field: 'SKUNO',
+		                title: '<label set-lan="html:SKUNO">SKUNO</label>',
+		                align: 'center',
+		                valign: 'middle'
+		            }, {
+		                field: 'BOX_SN',
+		                title: '<label set-lan="html:CARTON_NO">CARTON_NO</label>',
+		                align: 'center',
+		                valign: 'middle'
+		            }]
+		        });
+		    });
+
+		    $("#report2").on("click", function () {
+		        //console.log("YYY");
+		        //变更按钮样式
+		        $(this).css({
+		            "background": "#337ab7",
+		            "color": "#fff"
+		        });  //"background", "#337ab7"
+		        $("#report1").css({
+		            "background": "",
+		            "color": "rgb(103,106,108)"
+		        });    //103,106,108
+                //表的显隐性
+		        $("#rpt1").attr("class", "hidden");
+		        $("#rpt2").removeAttr("class", "hidden");
+		        var data = [
+                    {
+                        "SN": "",
+                        "SKUNO": "",
+                        "CARTON_NO": "",
+                        "EDIT_TIME": ""
+                    }
+		        ];
+
+		        if (reportData2) {   //如果存在表数据
+		            $("#rpt2 table").bootstrapTable("load", reportData2);
+		        } else {
+		            self.parent.client.CallFunction(apiList["select3"]["className"], apiList["select3"]["functionName"], sendData_colList(apiList["select3"]["colList"], [currentSkuno]), function (e) {
+		                console.log(e);
+		                if (e.Status == "Pass") {
+		                    reportData2 = e.Data;
+		                    $("#rpt2 table").bootstrapTable("load", e.Data);
+		                }
+		            });
+		        }
+
+		        //self.parent.client.CallFunction(apiList["select3"]["className"], apiList["select3"]["functionName"], sendData_colList(apiList["select3"]["colList"], [currentSkuno]), function (e) {
+		        //    console.log(e);
+		        //    if(e.Status == "Pass"){    // "Pass"
+		        //        $("#rpt2 table").bootstrapTable("load", e.Data);
+		        //    }
+		        //});
+		        $("#rpt2 table").bootstrapTable({
+		            data: data,
+		            pagination: true,    //分页显示
+		            pageSize: 10,         //初始化每一页的数据条数
+		            pageList: [10, 25, 50, 100],
+		            search: false,        //显示查找框
+		            striped: true,        //背景色相间
+		            showRefresh: false,   //显示重置按钮
+		            clickToSelect: true,   //单击一行内任意单元格选中该行
+		            singleSelect: true,  //单选
+		            columns: [{
+		                align: 'center',
+		                valign: 'middle',
+		                checkbox: true
+		            }, {
+		                //SN  SKUNO  CARTON_NO  EDIT_TIME
+		                field: 'SN',
+		                title: '<label set-lan="html:SN">SN</label>',
+		                align: 'center',
+		                valign: 'middle'
+		            }, {
+		                field: 'SKUNO',
+		                title: '<label set-lan="html:SKUNO">SKUNO</label>',
+		                align: 'center',
+		                valign: 'middle'
+		            }, {
+		                field: 'CARTON_NO',
+		                title: '<label set-lan="html:CARTON_NO">CARTON_NO</label>',
+		                align: 'center',
+		                valign: 'middle'
+		            }, {
+		                field: 'EDIT_TIME',
+		                title: '<label set-lan="html:EDIT_TIME">EDIT_TIME</label>',
+		                align: 'center',
+		                valign: 'middle'
+		            }],
+		        });
+            });
+
+
+
+
+
+
+		}
+	});
+
+
+</script>
+
+
+</html>

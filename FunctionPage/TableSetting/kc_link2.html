@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>testReport</title>  <!-- GCH 2019/03/11 ADD-->
+</head>
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+<link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+<link href="../../css/ReportConfig.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+<script src="../../Scripts/Report/MesClient.ReportConfig.js"></script>
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:"></span>
+    </div>
+    <div class="list">
+        <div class="btnList"></div>
+        <div class="query">
+            <div class="input">
+                <input type="text" value="" placeholder="" />
+            </div>
+        </div>
+    </div>
+    <div class="tab">
+        <table></table>
+    </div>
+</body>
+<script>
+    var year = $.MES.getQueryString("year");
+    var month = $.MES.getQueryString("month");
+    var bu = $.MES.getQueryString("bu");
+    //console.log(bu, type);
+    //alert(bu, type);
+    var report = new ConfigReport({
+        "pageMsg": {
+            "pageName": "AGBU" + year + "年" + month + "月份" + bu + "產品庫存詳細",                    //title名
+            "setLan": "PdaShipConfig",                          //该网页的多语言标签名
+            "queryTip": "请输入SKUNO",             //查询框的提示信息
+            "btnMsg": [
+                  {
+                      "id": "btn1",
+                      "btnName": "Query",  
+                      "icon": "glyphicon glyphicon-search",
+                      "style": "0", 
+                      "layerFlag": false
+                  }
+            ],
+        },
+        "apiList": {                                                                 //该网页的重要操作对应的前端与后台交互的api（homePage select 都是固定的写法，除此之外名称全部与按钮名称一致） 
+            "homePage": {                                                       //首页的api（homePage：固定写法，用于加载首页表数据）
+                "className": "MESStation.Config.PdaShipConfig",   //该api对应的后台的类路径
+                "functionName": "SSSSS",                                  //该api名称（方法名称）
+                "colList": ["year","month","bu"],                                 //后台接收数据的键的集合（大框操作不需要配置，下同；其它情况此项必填，下同）
+                "sendList": [year, month,bu]                                                 //后台接收数据的值的集合（与键一一对应）
+            },
+            "select": {                                                            //查询框(select:固定写法，用于快速查询表数据)
+                "className": "MESStation.Config.PdaShipConfig",  
+                "functionName": "SSSSS",
+                "colList": ["SKUNO"]  
+            },
+            //"Query": {   //该按钮不弹出框，也不是删除按钮，需要自定义事件 ，此处不需要配置
+            //    "className": "MESStation.Config.PdaShipConfig",
+            //    "functionName": "xxx",
+            //    "colList": ["ID"]      //
+            //},
+        },
+        "tableMsg": {                                                           //该表的各字段集合  
+            "column": [ "BU", "TRUCK_NO", "TRUCK_SEQ", "DN_NO", "PACK_NO", "SKUNO", "QTY", "LOCATION", "SHIP_TIME", "VALID_FLAG", "PLATE_NO", "CONTAINER_NO", "CTN_QTY", "WHARF", "LOADING_FLAG", "WHARF_TIME", "LOAD_TIME", "REMARK", "EDIT_EMP", "EDIT_TIME"]
+        },
+        "layerMsg": {                                                           //弹出框（针对大框）各个控件的配置
+            
+        },
+        "loadLayerData": {                                              //弹出框的控件的所有操作（大框内特殊控件数据加载[加载完页面数据后自动执行]）,非弹出框的操作
+            "Search": function () {
+                console.log($("#btn1"));
+                //creatFile($("#btn1"));
+                var year_input = createInput($("#btn1"),"YEAR");
+                var month_select = createSelect($("#btn1"), "MONTH", ['ALL','1月份', '2月份', '3月份', '4月份', '5月份', '6月份', '7月份', '8月份', '9月份', '10月份', '11月份', '12月份']);
+                var bu_select = createSelect($("#btn1"), "TYPE", ["ALL", "BU1", "BU2", "BU3", "BU4"]);
+                year_input.val(year);
+                month_select.val(month + "月份");
+                bu_select.val(bu);
+                setTimeout(function () {
+                    console.log($("#btn1"));
+                }, 0);
+
+                function createInput($last,name) {
+                    var iptWrap = $("<div class=\""+ name +"-wrap\"></div>");
+                    var span = $("<span set-lan=\"html:" + name + "\"> " + name + " : </span>");
+                    var ipt = $("<input type='text' />");
+                    iptWrap.css({
+                        float: "left",
+                        borderRight: "1px solid #337ab7",
+                        background: "#afd5f5",
+                        height: "100%",
+                        padding: "1px 1px 1px 12px",
+                        outline: "none",
+                        cursor: "pointer"
+                    });
+                    span.css({
+                        lineHeight: "28px",
+                    });
+                    ipt.css({
+                        outline: "none",
+                        border: "none",
+                        width: "160px",
+                        height: "100%",
+                    });
+                    iptWrap.append(span, ipt);
+                    $last.before(iptWrap);
+                    return ipt;
+                }
+
+                function createSelect($last,name,d) {
+                    var s = $("<div class=\""+ name + "-wrap\"></div>");
+                    var span = $("<span set-lan=\"html:"+ name +"\"> "+ name +" : </span>");
+                    var select = $("<select></select>");
+                    $.each(d, function (i,str) {
+                        var option = $("<option value=" + str + ">" + str + "</option>");
+                        select.append(option);
+                    });
+                    s.css({
+                        float: "left",
+                        borderRight: "1px solid #337ab7",
+                        background: "#afd5f5",
+                        height: "100%",
+                        padding: "1px 1px 1px 12px",
+                        outline: "none",
+                        cursor: "pointer"
+                    });
+                    span.css({
+                        lineHeight:"28px",
+                    });
+                    select.css({
+                        outline:"none",
+                        border:"none",
+                        width:"160px",
+                        height:"100%",
+                    });
+                    s.append(span, select);
+                    $last.before(s);
+                    return select;
+                }
+
+                function creatFile($last) {    //下一个按钮
+                    var file = $("<div class='file'></div>");
+                    var fileInput = $("<input id='file' type='file' accept='.xlsx,xls' />");
+                    file.append(fileInput);
+                    file.css({
+                        float: "left",
+                        borderRight: "1px solid #337ab7",
+                        height: "100%",
+                        padding: "2px 2px",
+                        outline: "none",
+                        cursor: "pointer"
+                    });
+                    file.hover(function () {
+                        $(this).css({
+                            background: "#337ab7",
+                            color: "#fff"
+                        });
+                    }, function () {
+                        $(this).css({
+                            background: "#fff",
+                            color: "#000"
+                        });
+                    });
+                    var uploadBtn = $("<div id='upload'></div>");
+                    var i = $("<i class='glyphicon glyphicon-open'></i>");
+                    var span = $("<span set-lan='html:upload'>Upload</span>");
+                    uploadBtn.css({
+                        float: "left",
+                        borderRight: "1px solid #337ab7",
+                        height: "100%",
+                        padding: "5px 15px",
+                        cursor: "pointer"
+                    });
+                    uploadBtn.hover(function () {
+                        $(this).css({
+                            background: "#337ab7",
+                            color: "#fff"
+                        });
+                    }, function () {
+                        $(this).css({
+                            background: "#fff",
+                            color: "#000"
+                        });
+                    });
+                    uploadBtn.append(i);
+                    uploadBtn.append(span);
+                    $last.before(uploadBtn);
+                    uploadBtn.before(file);
+                }
+            },
+        },
+        "btnClick": {                                                       //点击按钮及后续所有操作（所有弹出框都要配置，大框动态变化，处理特殊控件（如表格），处理数据[用于发送至后台]，返回数据）
+            "Query": function (chData, fun1, fun2) {            //小框（chData：选中的数据 fun1：不弹出框直接执行[与后台交互] fun2：弹出小框后确定操作再执行）
+                console.log(this, $(".BU-wrap select").val(), $(".TYPE-wrap select").val());
+
+                //fun2();
+            }
+        }
+    });
+
+</script>
+</html>

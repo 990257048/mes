@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>DownloadPo</title>
+</head>
+<!--<script src="js/jquery-1.11.3.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.min.css" />-->
+
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background: #fff;
+        zoom: .65;
+    }
+
+    .title {
+        width: 100%;
+        height: 54px;
+        padding: 10px 15px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+        line-height: 33px;
+    }
+
+    .queryList {
+        width: auto;
+        height: 32px;
+        margin: 15px 15px;
+    }
+
+    .queryList-max {
+         width: auto;
+        height: 82px;
+        margin: 15px 15px;
+    }
+        .queryList-max .tab-max {
+             padding: 6px 12px;
+            color: rgb(103,106,108);
+            font-size: 13px;
+            font-weight: bolder;
+            line-height: 70px;
+            float:left;
+        }
+        .queryList-max textarea {
+            border:1px solid #337ab7;
+            border-radius:5px;
+            width:600px;
+            height:100%;
+            padding:8px;
+            float:left;
+        }
+
+        .queryList .tab,
+        .queryList input {
+            display: inline-block;
+            float: left;
+            height: 100%;
+        }
+
+        .queryList .btn {
+            display: inline-block;
+            height: 100%;
+        }
+
+        .queryList .tab {
+            padding: 6px 23px;
+            color: rgb(103,106,108);
+            font-size: 13px;
+            font-weight: bolder;
+            line-height: 20px;
+        }
+
+        .queryList input {
+            width: 600px;
+            border: 1px solid rgb(51,122,183);
+            border-radius: 5px;
+            padding: 6px 12px;
+            outline: none;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+   
+
+        .queryList .btn {
+            background: #337ab7;
+            padding: 8px 22px;
+            color: #fff;
+            font-size: 14px;
+            line-height: 16px;
+            margin-left: 350px;
+        }
+
+            .queryList .btn:hover {
+                background: #286090;
+            }
+</style>
+
+<body>
+    <div class="title">
+        5DX SKIP
+    </div>
+
+    <div class="queryList">
+        <div class="tab">WO:</div>
+        <input name="wo" type="text" placeholder="输入工单请回车，查询该工单的基本信息"/>
+    </div>
+    <div class="queryList-max">
+        <div class="tab-max">NOTES:</div>
+        <textarea name="notes" placeholder="输入描述信息"></textarea>
+    </div>
+    <div class="queryList">
+        <div class="btn" name="submit">
+             跳站
+        </div>
+    </div>
+</body>
+<script>
+        $(document).on("ready", function () {
+            
+            $("input[name=wo]").on("keydown", function (e) {
+                if(e.keyCode == "13"){
+                    self.parent.client.CallFunction("MESStation.Config._5DxSkip", "WOCheckSN5DX", {WO:this.value}, function (d) {
+                        if (d.Status == 'Pass') {
+                            layer.msg(d.Message, {
+                                icon: 1,
+                                time: 2000
+                            }, function () {
+
+                            });
+                        } else {
+                            layer.msg(d.Message, {
+                                icon: 2,
+                                time: 2000
+                            }, function () {
+
+                            });
+                        }
+                    });
+                }
+            });
+
+            $("div[name=submit]").on("click", function () {
+                self.parent.client.CallFunction("MESStation.Config._5DxSkip", "WOSN5DXJumpStation", {WO:$("input[name=wo]").val(),NOTES:$("textarea[name=notes]").val()}, function (d) {
+                    if (d.Status == 'Pass') {
+                        layer.msg(d.Message, {
+                            icon: 1,
+                            time: 2000
+                        }, function () {
+
+                        });
+                    } else {
+                        layer.msg(d.Message, {
+                            icon: 2,
+                            time: 2000
+                        }, function () {
+
+                        });
+                    }
+                });
+            });
+
+
+
+        });
+
+</script>
+</html>

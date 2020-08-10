@@ -1,0 +1,353 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>MES系统</title>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link href="../../css/plugins/jQueryUI/jquery-ui.min.css" rel="stylesheet" />
+    <link href="../../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../../css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="../../css/animate.css" rel="stylesheet">
+    <link href="../../css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="../../css/style.css" rel="stylesheet">
+    <link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="../../css/plugins/bootswatch/bootstrap.min.default.css" rel="stylesheet" />
+    <style>
+        body {
+            zoom:.65;
+        }
+        #inputsite .form-group input, #inputsite .form-group select {
+            margin-top:9px;
+            box-shadow: inset 0px 0px 1px #bcbcbc;
+            border-radius: 5px;
+        }
+
+
+        #inputsite .form-group label {
+            margin-top: 14px;
+            font-size: initial;
+        }
+
+        #inputsite .form-control {
+            font-size: 2rem !important;
+            font-weight: 500 !important;
+            border: 1px solid #4c4c4c;
+        }
+
+            #inputsite .form-control:focus {
+                background-color: #f6f7a6;
+            }
+        #inputsite button,input[type=button] {
+            margin-bottom:25px;
+            padding:0px 20px;
+            background:#337ab7;
+            color:#fff;
+        }
+            #inputsite button:hover,input[type=button]:hover {
+                background:#054073;
+            }
+        #outputsite {
+            font-size: 2rem !important;
+        }
+
+            #outputsite .form-group {
+                /*width: calc((100% - 45px)/3);*/
+                width: calc((100% - 45px)/2);
+                float: left;
+                border-bottom: 1px dotted #337ab7;
+                padding: 0 !important;
+                margin-right: 15px;
+            }
+
+                #outputsite .form-group label {
+                    padding: 0 15px 0 0 !important;
+                    margin: 0;
+                    font-size: initial;
+                    float: left;
+                    width: auto;
+                }
+
+                #outputsite .form-group div {
+                    width: auto;
+                    padding: 0px !important;
+                    min-height: 18px;
+                }
+
+        #tabContainer {
+            padding-bottom:100px;
+        }
+
+        /*#messagesite {
+            overflow: scroll;
+            font-size: 1.5rem;
+        }*/
+
+        .ibox {
+            margin-bottom: 0px;
+        }
+
+        .ibox-content {
+            height: calc(100% - 54px);
+        }
+
+        .btm {
+            width:calc(100% - 70px);
+            height:120px;
+            background: #000;/*#f3f3f3*/
+            position:fixed;
+            bottom:0px;
+            left:35px;
+            font-size:60px;
+            font-weight:bold;
+            line-height:100px;
+            padding:0px 40px;
+            /*border-top-left-radius:20px;
+            border-top-right-radius:20px;*/
+            color:green;
+            text-align:center;
+            border:10px solid #DDD;
+            box-sizing:border-box;
+        }
+
+        @media(max-width:1599px) {
+            #outputsite .form-group {
+                float: left;
+                width: calc((100% - 30px)/2);
+                /*width: 100%;*/
+            }
+        }
+
+        @media(max-width:1199px) {
+            #outputsite .form-group {
+                float: left;
+                width: 100%;
+            }
+        }
+
+        @media(max-width:991px) {
+            #outputsite .form-group {
+                float: left;
+                width: calc(50% - 30px);
+                /*width: 100%;*/
+            }
+        }
+
+        @media(max-width:749px) {
+            #outputsite .form-group {
+                float: left;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="color-cPage gray-bg">
+    <div class="ibox full-height">
+        <div class="panel-heading bg-primary">
+            <h3 class="no-padding no-margins">
+                <i class="glyphicon glyphicon-tags"></i>
+                <span style="padding-left:10px;" set-lan="html:PassStation">
+                </span>
+                <button class="btn btn-default small" id="btnReset">
+                    <i class="glyphicon glyphicon-refresh"></i> <lan set-lan="html:Reset">Reset</lan>
+                </button>
+                <button class="btn btn-default small" id="btnResetLine">
+                    <i class="glyphicon glyphicon-refresh"></i> <lan set-lan="html:ReSetLine">Reset Line</lan>
+                </button>
+            </h3>
+        </div>
+        <div class="ibox-content">
+            <div class="row full-height">
+                <!--<div class="col-xs-12 col-sm-12 col-md-8 col-lg-5" id="IOSite">
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-12 no-padding" id="outputsite">
+
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-8 col-lg-12 no-padding" id="toolsite"></div>
+                    <div class="col-xs-12 col-sm-6 col-md-8 col-lg-12 no-padding" id="inputsite">
+
+                    </div>
+                </div>-->
+                <div class="col-xs-12" id="IOSite">
+                    <div class="col-xs-12">
+                        <div class="panel panel-default col-xs-12 no-padding">
+
+                            <div class="panel-heading" style=" font-size:large; margin-bottom:10px; font-weight:bold;" set-lan="html:StationInput">Input</div>
+                            <div class="panel-body no-padding">
+                                <!--<div class="col-xs-12 no-padding" id="toolsite"></div>-->
+                                <div class="col-xs-12 no-padding" id="inputsite">
+                                    <!--<div class="col-xs-2" style="height:100%;margin-top:15px;">
+                                        <input id="stop" type="button" value="暂停過站" status ="open" />
+                                    </div>-->
+                                </div>
+                            </div>
+
+                            <div class="panel-heading" style=" font-size:large; margin-bottom:10px; font-weight:bold;" set-lan="html:StationInfo">Station Information</div>
+                            <div class="panel-body no-padding">
+                                <div class="col-xs-12" id="outputsite">
+                                </div>
+                                <div class="panel-body col-xs-12" id="tabContainer">   <!--<div class="col-xs-12" id="outputsite">-->
+                                </div>
+                                
+                        </div>
+                    </div>
+                    <!--<div class="col-xs-5">
+                        <div class="panel panel-default col-xs-12 no-padding">
+                            <div class="panel-heading" style=" font-size:large; margin-bottom:10px; font-weight:bold;" set-lan="html:StationInput">Input</div>
+                            <div class="panel-body no-padding">
+                                <div class="col-xs-12 no-padding" id="toolsite"></div>
+                                <div class="col-xs-12 no-padding" id="inputsite">
+                                </div>
+                            </div>
+                        </div>
+                    </div>-->
+                    
+                        <!--<div class="col-xs-5">   
+                            <div class="panel-heading" style="background-color: #92B5D3 !important; font-size:large; font-weight:bold;" set-lan="html:StationMessage">Message</div>
+                            <div class="panel-body no-padding" id="messagesite">
+                            </div>
+                        </div>-->
+                    
+                </div>
+                <!--<div class="col-xs-12 col-sm-12 col-md-4 col-lg-7" id="echarts">
+
+                </div>-->
+                <!--<div class="panel panel-default col-xs-12 no-padding">
+                    <div class="panel-heading" style="background-color: #92B5D3 !important; font-size:large; font-weight:bold;" set-lan="html:StationMessage">Message</div>
+                    <div class="panel-body no-padding" id="messagesite">
+                    </div>
+                </div>-->
+            </div>
+                <div class="btm" id="messagesite" name="btmMsg">
+                    <!--FOC36778990 PASS-->
+                </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="../../Scripts/jquery.min.js"></script>
+    <script src="../../Scripts/jquery.cookie.js"></script>
+    <script src="../../Scripts/bootstrap.min.js?v=3.3.6"></script>
+    <!-- 第三方插件 -->
+    <script src="../../Scripts/plugins/jquery-ui/jquery-ui.js"></script>
+    <script src="../../Scripts/plugins/JSON/json2.js"></script>
+    <script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="../../Scripts/plugins/toastr/toastr.min.js"></script>
+    <script src="../../Scripts/plugins/layer/layer.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+    <!--<script src="../../Scripts/echarts.min.js"></script>-->
+    <!-- 自定义 -->
+    <script src="../../Scripts/global.js"></script>
+    <script src="../../Scripts/MesClient.js"></script>
+    <script src="../../Scripts/MesClient.UI.js"></script>
+    <script src="../../Scripts/Station/MesClient.Helper.js"></script>
+    <script src="../../Scripts/Station/MesClient.Station.js"></script>
+    <script>
+        var Client = null;
+        var stationName = "";
+        var option = null;
+        var station = null;
+        var line = "Line1";
+        var mesUI = null;
+        $(document).ready(function () {            
+            Client = self.parent.client;
+            mesUI = new MesClientUI(Client);
+            line = localStorage.getItem($.MES.CK_LINE_NAME);
+            if (!line) {
+                line = "Line1";
+            }
+            stationName = $.MES.getQueryString("StationName");
+            $('.panel-heading h3 span').text(stationName);
+            var resize = function () {
+                //var hg = $(".ibox-content").height() - $("#IOSite").height() - 40;
+                //$("#messagesite").height(hg > 500 ? hg : 500);
+            };
+            option = {
+                Client: Client,
+                mesUI: mesUI,    //配置语言 2019/06/19 add by gch
+                Line: line,
+                Name: stationName,
+                IScale: "1:2",
+                CloseSelectLineFlag:true,
+                //TContainer: $("#toolsite"),
+                IContainer: $("#inputsite"),
+                OContainer: $("#outputsite"),
+                MContainer: $("#messagesite"),
+                TabContainer:$("#tabContainer"),
+                MessageShowType: undefined,
+                BeforeInit: function () {
+                    self.parent.Loading(true);
+                    option.Line = localStorage.getItem($.MES.CK_LINE_NAME);
+                },
+                Init: function (d) {
+                    if (d.Status == "Pass") {
+                        stationName = station.Name;
+                        $('.panel-heading h3 span').text(stationName);
+                    }
+                    else {
+                        swal("工站初始化失败！", d.Message, "error");
+                    }
+                    resize();
+                }
+            };
+
+            station = new MesStation(option);
+            $("#btnReset").on("click", function (e) {
+                self.parent.Loading(true);
+                $("#messagesite").empty();
+                option.ScanType = station.ScanType;
+                station = new MesStation(option);
+            });
+            //$("#btnResetLine").on("click", function (e) {
+            //    option.Line = "Line1";                
+            //    localStorage.setItem($.MES.CK_LINE_NAME, "");
+            //    option.ScanType = station.ScanType;
+            //    station = new MesStation(option);
+            //});
+
+            mesUI = new MesClientUI(self.parent.client);
+            mesUI.SetLanguage("PassStation");
+            window.onresize = function () {
+                resize();
+            }
+
+            //// GCH 2018/11/7 ADD (定时点击按钮)
+            //var timerAuto;
+            //var timer = setInterval(function () {
+            //    if ($("#IOSite").find("button").length > 0) {
+            //        //console.log($("#IOSite").find("button"));
+            //        setTimeout(function () {
+            //            timerAuto = setInterval(function () {
+            //                $("#inputsite").find("button")[0].click();
+            //            }, 2000);
+            //        }, 0);
+            //        clearInterval(timer);
+            //    }
+            //}, 10);
+            //$("#inputsite").find("#stop").on("click", function () {     //點擊暫停過站
+            //    //console.log(11111);
+            //    console.log($(this).attr("status"));
+            //    if ($(this).attr("status") == "open") {
+            //        clearInterval(timerAuto);
+            //        $(this).attr("status", "close");
+            //        $(this).val("繼續過站");
+            //    } else {
+            //        timerAuto = setInterval(function () {
+            //            $("#inputsite").find("button")[0].click();
+            //        }, 2000);
+            //        $(this).attr("status", "open");
+            //        $(this).val("暫停過站");
+            //    }
+            //});
+
+
+            
+        });
+    </script>
+</body>
+</html>

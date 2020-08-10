@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>MES系統各模塊點擊量</title>
+	</head>
+<link href="../../css/bootstrap.min.css" rel="stylesheet" />
+<link href="../../css/font-awesome.css" rel="stylesheet" />
+	<style>
+		*{
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+		}
+		html,body{
+			width:100%;
+			height:100%;
+		}
+		body{
+			padding: 10px 10px 15px 10px;
+		}
+		.main{
+			width: 100%;
+			height:100%;
+		}
+        .box-left,.box-right {
+            width:calc(50% - 5px);
+            height:100%;
+            float:left;
+            background:#d3eaff;
+        }
+        .box-right {
+            margin-left:10px;
+            
+        }
+	</style>
+	<body>
+		<div class="main">
+			<div class="box-left"></div>
+            <div class="box-right"></div>
+		</div>
+		
+	</body>
+<script src="../../Scripts/jquery-1.9.1.js"></script>
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+<script src="../../Scripts/echarts.min.js"></script>
+<script src="../../Scripts/echarts-gl.js"></script>
+<script>
+    $(document).on('ready', function (e) {
+        var myCharts1 = echarts.init($(".box-left")[0]);
+        var myCharts2 = echarts.init($(".box-right")[0]);
+        
+        self.parent.client.CallFunction("MESStation.Config.MesLogConfig", "GetItemClickRate", {TYPE:"Report",n:"5"}, function (e) {
+            console.log(e);
+            if (e.Status == "Pass") {
+                var seriesData = [];
+                var legendData = [];
+                $.each(e.Data, function (index, o) {
+                    var field = o.FUNCTION_NAME.match(/\.(\w+)\s*$/)[1];
+                    seriesData.push({
+                        name: field,
+                        value: o.S
+                    });
+                    legendData.push(field);
+                });
+                console.log(seriesData, legendData);
+
+
+                var option1 = {
+                    title: {
+                        text: 'MES系統查詢報表點擊量(2019年5月26日起)TOP5',
+                        x: 'center',
+                        top: 20
+                    },
+                    color: ['#0589ab', '#55aaa6', '#6788ba', '#23a7b9', '#7a6'],
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c}次"
+                    },
+                    toolbox: {
+                        feature: {
+                            dataView: { readOnly: false },
+                            restore: {},
+                            saveAsImage: {}
+                        }
+                    },
+                    legend: {
+                        data: legendData,
+                        bottom: 10
+                    },
+                    calculable: true,
+                    series: [
+                        {
+                            name: 'MES系統查詢報表點擊量TOP5',
+                            type: 'funnel',
+                            left: '10%',
+                            top: 80,
+                            //x2: 80,
+                            bottom: 80,
+                            width: '80%',
+                            minSize: '0%',
+                            maxSize: '100%',
+                            sort: 'descending',
+                            gap: 2,
+                            label: {
+                                show: true,
+                                position: 'inside'
+                            },
+                            labelLine: {
+                                length: 10,
+                                lineStyle: {
+                                    width: 1,
+                                    type: 'solid'
+                                }
+                            },
+                            itemStyle: {
+                                borderColor: '#fff',
+                                borderWidth: 1
+                            },
+                            emphasis: {
+                                label: {
+                                    fontSize: 20
+                                }
+                            },
+                            data: seriesData
+                        }
+                    ]
+                };
+                myCharts1.setOption(option1);
+            }
+        });
+
+        self.parent.client.CallFunction("MESStation.Config.MesLogConfig", "GetItemClickRate", { TYPE: "Station",n:'5' }, function (e) {
+            console.log(e);
+            if (e.Status == "Pass") {
+                var seriesData = [];
+                var legendData = [];
+                $.each(e.Data, function (index, o) {
+                    var field = o.FUNCTION_NAME;
+                    seriesData.push({
+                        name: field,
+                        value: o.S
+                    });
+                    legendData.push(field);
+                });
+                console.log(seriesData, legendData);
+                var option2 = {
+                    title: {
+                        text: 'MES系統工站點擊量(2019年5月26日起)TOP5',
+                        x: 'center',
+                        top: 20
+                    },
+                    color: ['#0589ab', '#55aaa6', '#6788ba', '#23a7b9', '#7a6'],
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c}次"
+                    },
+                    toolbox: {
+                        feature: {
+                            dataView: { readOnly: false },
+                            restore: {},
+                            saveAsImage: {}
+                        }
+                    },
+                    legend: {
+                        data: legendData,
+                        bottom: 10
+                    },
+                    calculable: true,
+                    series: [
+                        {
+                            name: 'MES系統查詢報表點擊量TOP5',
+                            type: 'funnel',
+                            left: '10%',
+                            top: 80,
+                            //x2: 80,
+                            bottom: 80,
+                            width: '80%',
+                            minSize: '0%',
+                            maxSize: '100%',
+                            sort: 'descending',
+                            gap: 2,
+                            label: {
+                                show: true,
+                                position: 'inside'
+                            },
+                            labelLine: {
+                                length: 10,
+                                lineStyle: {
+                                    width: 1,
+                                    type: 'solid'
+                                }
+                            },
+                            itemStyle: {
+                                borderColor: '#fff',
+                                borderWidth: 1
+                            },
+                            emphasis: {
+                                label: {
+                                    fontSize: 20
+                                }
+                            },
+                            data: seriesData
+                        }
+                    ]
+                };
+                myCharts2.setOption(option2);
+            }
+        });
+    });
+</script>
+</html>

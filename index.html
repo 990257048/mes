@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <!-- editEmp:gch editTime:20191225 -->
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>MES系统</title>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="shortcut" href="favicon.ico">
+    <link href="favicon.ico" rel="shortcut icon">
+    <link href="css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="css/animate.css" rel="stylesheet">
+    <link rel="stylesheet" href="./Scripts/antd/dist/antd.min.css">
+    <link href="css/Win8style.css?v=4.1.0" rel="stylesheet">
+    <link href="css/menu.css" rel="stylesheet" />
+    
+</head>
+<body class="img-bg" style="zoom:1">
+    <!--加載窗口開始-->
+    <div class="ibox-content full-height login_page loading-bg" id="loadingScreen">
+        <div class="spiner-example">
+            <div class="sk-spinner sk-spinner-wave">
+                <div class="sk-rect1"></div>
+                <div class="sk-rect2"></div>
+                <div class="sk-rect3"></div>
+                <div class="sk-rect4"></div>
+                <div class="sk-rect5"></div>
+            </div>
+            <div class="text-center font-bold note-fontsize-10">loading ...</div>
+        </div>
+    </div>
+    <!--加載窗口結束-->
+    <!--登錄窗口開始-->
+    
+    <div class="container-fluid no-padding login_page full-height win8-bg" id="LoginLayer" style="display:none">
+        <!--20190826 modify by gch-->  
+        <div class="mes-login-box">
+            <div class="top-light"></div>
+            <h2 set-lan="html:wellcome" style="color:#eee; font-size:2rem ;font-weight:bold; line-height:50px;" class="fa fa-skyatlas"> 欢迎使用 Cloud MES !</h2>
+            <div>
+                <div class="form-group ctr-wrap">
+                    <div class="icon-wrap "><span class="img-user"></span></div>
+                    <input type="text" class="form-control-ctr login-control" placeholder="用户名" required="" id="txtUserName" set-lan="attr:placeholder=UPlaceholder">
+                </div>
+                <div class="form-group ctr-wrap">
+                    <div class="icon-wrap "><span class="img-pwd"></span></div>
+                    <input type="password" class="form-control-ctr login-control" placeholder="密码" required="" id="txtPassWord" set-lan="attr:placeholder=PPlaceholder">
+                </div>
+                <div class="form-group ctr-wrap">
+                    <div class="icon-wrap"><span class=" img-token"></span></div>
+                    <input type="text" class="form-control-ctr login-control" placeholder="驗證碼" required="" id="txtCode" set-lan="attr:placeholder=Code">
+                    <span class="code-img"></span>
+                    <p class="change-code" >換一張</p>
+                </div>
+                <div class="form-group ctr-wrap">
+                    <div class="icon-wrap "><span class="img-earth"></span></div>
+                    <select id="txtBU" class="form-control-ctr login-control" title="请选择事业部" set-lan="attr:title=BU"></select>
+                </div>
+                <div class="form-group ctr-wrap">
+                    <div class="icon-wrap"><span class=" img-font"></span></div>
+                    <select id="txtLanguage" class="form-control-ctr login-control" title="请选择语言" set-lan="attr:title=LanSelectT"></select>
+                </div>
+                <button class="btn-login" btn-login="true" set-lan="html:Login">登 录</button>
+                <p class="text-muted text-center">
+                    <a href="login.html#"><small set-lan="html:Forget">忘记密码</small></a> | 
+                    <a href="CreateUser.html"><small set-lan="html:Register">注册账号</small></a> |
+                    <a href="audit.html"><small set-lan="html:audit">主管审核</small></a>
+                </p>
+            </div>
+            <div class="bot-light"></div>
+        </div>
+    </div>
+    <!--登錄窗口結束-->
+    <!--主程序窗口開始-->
+    <div class="container-fluid full-height no-padding win8-bg" id="wrapper" style="display:none;">
+    <div id="root"></div>
+    </div>
+    <!--主程序窗口結束-->
+
+    <!-- 系統通用類庫 -->
+    <!-- 節點操作 -->
+    <script src="Scripts/jquery.min.js"></script>
+    <!-- cookie操作 -->
+    <script src="Scripts/jquery.cookie.js"></script>
+    <!-- 系統佈局 -->
+    <script src="Scripts/bootstrap.min.js?v=3.3.6"></script>
+    <!-- 基於jquery的插件 -->
+    <script src="Scripts/plugins/JSON/json2.js"></script>
+    <script src="Scripts/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="Scripts/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- 彈出層模型 -->
+    <script src="Scripts/plugins/layer/layer.min.js"></script>
+    <!-- 提示框 -->
+    <script src="Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- 系統底層 -->
+    <!-- 全局，擴充原生類方法，jquery底層方法 -->
+    <script src="Scripts/global.js"></script>
+    <!-- 選項卡 -->
+    <script src="Scripts/contabs.js"></script>
+    <!-- 系統前後端數據交互，全局請求封裝 -->
+    
+    <!-- <script src="./Scripts/sockjs.min.js"></script> -->
+    <script src="./Scripts/axios/dist/axios.min.js"></script>
+
+    <script src="Scripts/MesClient.js"></script>
+    <!-- 系統語言配置，模塊配置 -->
+    <script src="Scripts/MesClient.UI.js"></script>
+    <!-- 系統入口 -->
+    <script src="Scripts/Mes.js?v=1.0"></script>
+    
+    <!-- React框架 -->
+    <!-- react核心 -->
+    <script src="../../Scripts/React/react.development.js"></script>          
+    <!-- react组件渲染核心 -->
+    <script src="../../Scripts/React/react-dom.development.js"></script>      
+    <!-- 編譯jsx -->
+    <script src="../../Scripts/React/babel.js"></script>                      
+    <!-- 類型檢測 -->
+    <script src="../../Scripts/React/prop-types.js"></script>                 
+    <!-- 組件狀態管理 -->
+    <script src="../../Scripts/React/redux.js"></script>                      
+    <!-- redux全局組件 -->
+    <script src="../../Scripts/React/react-redux.js"></script>                
+    <!-- redux中間件 -->
+    <script src="../../Scripts/React/redux-thunk.js"></script>                
+    <!-- redux-saga中間件 -->    
+    <script src="./Scripts/React/redux-saga.js"></script> <!--  由webpack打包的 -->
+    <script src="./Scripts/redux-saga/dist/redux-saga-effects.umd.js"></script>
+
+    <script src="./Scripts/moment/moment.js"></script>
+    <script src="./Scripts/icons/dist/index.umd.js"></script>
+    <script src="./Scripts/antd/dist/antd.js"></script>
+
+    <script type="text/jsx" src="./FunctionPage/Mes/request.js"></script>
+    <script type="text/jsx" src="./FunctionPage/Mes/actions/MesActions.js"></script>
+    <script type="text/jsx" src="./FunctionPage/Mes/reducers/MesReducers.js"></script>
+    <script type="text/jsx" src="./FunctionPage/Mes/sagas.js/rootSaga.js"></script>
+
+    <script type="text/jsx" src="./FunctionPage/Mes/components/MesTop.js"></script>
+    <script type="text/jsx" src="./FunctionPage/Mes/components/Menu.js"></script>
+    <script type="text/jsx" src="./FunctionPage/Mes/components/Layer.js"></script>
+    <script type="text/jsx" src="./FunctionPage/Mes/components/Mes.js"></script>
+    <script type="text/jsx" src="./FunctionPage/Mes/index.js"></script>
+
+    <!-- 没用了 -->
+    <!-- <script src="./Scripts/jsx/actions/MesActions.js"></script>
+    <script src="./Scripts/jsx/reducers/MesReducers.js"></script>
+    <script type="text/jsx" src="./Scripts/jsx/components/Mes.js"></script>
+    <script type="text/jsx" src="./Scripts/jsx/components/MesTop.js"></script>
+    <script type="text/jsx" src="./Scripts/jsx/components/MesNav.js"></script>
+    <script type="text/jsx" src="./Scripts/jsx/components/Menu.js"></script>
+    <script type="text/jsx" src="./Scripts/jsx/components/Layer.js"></script>
+    <script type="text/jsx" src="./FunctionPage/Mes/index.js"></script> -->
+</body>
+</html>

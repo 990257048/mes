@@ -1,0 +1,900 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title set-lan="html:Title">Skuno Control</title>
+    <link href="../../css/plugins/jQueryUI/jquery-ui.min.css" rel="stylesheet" />
+    <link href="../../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../../css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="../../css/animate.css" rel="stylesheet">
+    <link href="../../css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="../../css/bu_manager.css" rel="stylesheet" />
+    <style>
+        /*placeholder*/
+        body {
+            zoom:.65;
+        }
+        .ui-autocomplete {
+            display: block;
+            z-index: 999999;
+            max-height: 180px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        #testRouteList ,#sfcRouteList,#wipRouteList{
+            display: none;
+            position: absolute;
+            top:34px;
+            z-index: 10000;
+            background: #fff;
+            border: 1px solid #337ab7;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+            #testRouteList ul  ,#sfcRouteList ul ,#wipRouteList ul{
+                list-style: none;
+                width: 100%;
+            }
+
+                #testRouteList ul li ,#sfcRouteList ul li ,#wipRouteList ul li{
+                    padding-left: 12px;
+                    padding-right: 12px;
+                    cursor: pointer;
+                    height: 20px;
+                    font-size: 10px !important ;
+                }
+
+                    #testRouteList ul li:hover  ,#sfcRouteList ul li:hover,#wipRouteList ul li:hover {
+                        background: #337ab7;
+                        color: #fff;
+                    }
+        #s {
+            position:absolute;
+            right:15px;
+            top:81px;
+            padding:6px 10px;
+            border:1px solid #337ab7;
+            border-radius:5px;
+            outline:none;
+            font-size:14px;
+        }
+        .modifyskuno-tip {
+            display:inline-block;
+            padding:20px 60px;
+            /*background:#ddd;*/
+            width:100%;
+            line-height:26px;
+            top:0px;
+        }
+
+
+
+         .hidden {
+        display: none;
+    }
+    </style>
+</head>
+<body class="full-height">
+    <!--标题-->
+    <div class="panel-heading bg-primary">
+        <h3><i class="glyphicon glyphicon-tags"></i><span style="padding-left:10px;" set-lan="html:SKUSetting">Sku Setting</span></h3>
+    </div>
+    <!--表-->
+    <div class="panel-body">
+        <!--Sku List Toolbar-->
+        <div id="Table_Toolbar">
+            <div class="btn-group hidden-xs" role="group">
+                <button type="button" class="btn btn-outline btn-primary" id="NewSku">
+                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i><lan set-lan="html:New"> New</lan>
+                </button>
+                <button type="button" class="btn btn-outline btn-primary" id="EditSku" disabled>
+                    <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i><lan set-lan="html:Edit"> Edit</lan>
+                </button>
+                <!--GCH 2018/10/23 ADD （新增按钮） -->
+                <button type="button" class="btn btn-outline btn-primary" id="CopySku" >
+                    <i class="glyphicon glyphicon-log-in" aria-hidden="true"></i><lan set-lan="html:Copy"> Copy</lan>
+                </button>
+                <button type="button" class="btn btn-outline btn-primary" id="DeleteSku" disabled>
+                    <i class="glyphicon glyphicon-trash" aria-hidden="true"></i><lan set-lan="html:Delete"> Delete</lan>
+                </button>
+
+            </div>
+        </div>
+        <!--Sku List-->
+        <table id="Sku_List_Table">
+            <input id="s" type="text" placeholder="请输入SKUNO" set-lan="attr:placeholder=searchContain" />
+        </table>
+    </div>
+    <!--大弹窗-->
+    <div id="ModifyList" class="panel-body hidden">
+        <ul class="nav nav-tabs" id="myTab">
+            <li class="active">
+                <a data-toggle="tab" href="#ModifySkuno"><i class="fa fa-list"></i> <lan set-lan="html:SkunoMsg">機種信息</lan></a>
+            </li>
+            <li class="">
+                <a data-toggle="tab" href="#RouteList"><i class="fa fa-th-list"></i> <lan set-lan="html:RouteList">綁定路由</lan></a>
+            </li>
+            <li class="">
+
+                <a data-toggle="tab" href="#EditThrowPoint"><i class="fa fa-th-list"></i> <lan set-lan="html:ThrowPoint">拋帳點</lan></a>
+            </li>
+            <li class="">
+                <a data-toggle="tab" href="#PackList"><i class="fa fa-th-list"></i> <lan set-lan="html:PackList">包装配置</lan></a>
+            </li>
+            <li class=""><!--ZC 2019/4/17 新加Quack上傳-->
+                <a data-toggle="tab" href="#QuackUpLoad"><i class="fa fa-th-list"></i> <lan set-lan="html:PackList">Quack上傳</lan></a>
+            </li>
+            <li class="">
+                <!--ZC 2019/4/21 新加2DX配置上傳-->
+                <a data-toggle="tab" href="#2DXConfig"><i class="fa fa-th-list"></i> <lan set-lan="html:PackList">2DX配置</lan></a>
+            </li>
+            <li class="">
+                <a data-toggle="tab" href="#LinkConfig"><i class="fa fa-th-list"></i><lan set-lan="html:LinkConfig">73&800配置</lan></a>
+            </li>
+            <li class="">
+                <a data-toggle="tab" href="#LabelList"><i class="fa fa-th-list"></i> <lan set-lan="html:LabelList">Label配置</lan></a>
+            </li>
+            <li class="">
+                <a data-toggle="tab" href="#AqlList"><i class="fa fa-th-list"></i> <lan set-lan="html:AqlList">Aql配置</lan></a>
+            </li>
+            <!--GCH 2018/10/25 ADD (*提示)-->
+            <li style="padding:10px 15px;">
+                <p><i style="color:red; line-height:inherit ">tip：加 * 項為必填項！</i></p>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="ModifySkuno" class="tab-pane active row row-lg">
+                <div id="EditModelDetail" class="form-horizontal m-t-md">
+                    <div class="form-group col-xs-6" style="display:none">
+                        <label id="la1" class="col-xs-4 control-label" set-lan="html:ModifyModelMsgID">ID：</label>
+                        <div class="col-xs-8">
+                            <input type="text" class="form-control" name="ID" />
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:ModifyModelMsgSKUNO">SKUNO：</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control" name="SKUNO" id="SKUNO" set-lan="attr:placeholder=ModifyTxtSKUNO" />
+                        </div>
+                        <!--GCH 2018/10/25 ADD 加* -->
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:ModifyModelMsgBU">BU：</label>
+                        <div class="col-xs-7">
+                            <!--<input class="form-control" name="BU" set-lan="attr:placeholder=ModifyTxtBU" readonly />-->
+                            <select class="form-control" name="BU" set-lan="attr:placeholder=ModifyTxtBU"></select>
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                    </div>
+
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:ModifyModelMsgVERSION">VERSION：</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control" name="VERSION" set-lan="attr:placeholder=ModifyTxtVERSION" />
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:ModifyModelMsgCODENAME">CODENAME：</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control" name="SKU_NAME" set-lan="attr:placeholder=ModifyTxtCODENAME" />
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:ModifyModelSkuType">SKU TYPE：</label>
+                        <div class="col-xs-7">
+                            <select class="form-control" name="SKU_TYPE">
+                                <option value="MODEL">MODEL</option>
+                                <option value="PCBA">PCBA</option>
+                            </select>
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:ModifyModelMsgDESCRIPTION">DESCRIPTION：</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control" name="DESCRIPTION" set-lan="attr:placeholder=ModifyTxtDESCRIPTION" />
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:ModifyModelMsgCSERIESID">CSERIESID：</label>
+                        <div class="col-xs-7" name="divSeries">
+                            <select id="C_SERIES_ID" class="form-control" name="C_SERIES_ID"></select>
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                    </div>
+
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:ModifyModelMsgCUSTPARTNO">CUSTPARTNO：</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control" name="CUST_PARTNO" set-lan="attr:placeholder=ModifyTxtCUSTPARTNO" />
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:ModifyModelMsgCUSTSKUCODE">CUSTSKUCODE：</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control" name="CUST_SKU_CODE" set-lan="attr:placeholder=ModifyTxtCUSTSKUCODE" />
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:ModifyModelMsgSNRULE">SNRULE：</label>
+                        <div class="col-xs-7">
+                            <!--<input type="text" class="form-control" name="SN_RULE" set-lan="attr:placeholder=ModifyTxtSNRULE" />-->
+                            <select  class="form-control" name="SN_RULE" set-lan="attr:placeholder=ModifyTxtSNRULE" >  <!--gch 2019/3/17 add-->
+                            </select>
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                    </div>
+
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:ModifyModelMsgPANELRULE">PANEL RULE：</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control" name="PANEL_RULE" set-lan="attr:placeholder=ModifyTxtPANELRULE" />
+                        </div>
+                    </div>
+
+                    <!--GCH 2018/11/28 ADD ( 添加项 )-->
+                    <!--<div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:AutoStation">AUTO STATION：</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control" name="AutoStation" set-lan="attr:placeholder=txtAutoStation" />
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                    </div>-->
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:LENGTH">LENGTH：</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control" name="LENGTH" set-lan="attr:placeholder=txtLENGTH" disabled />
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:LABEL_VER">LABEL_VER：</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control" name="LABEL_VER" set-lan="attr:placeholder=txtLABEL_VER" />
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:MODELCLEI">MODELCLEI：</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control" name="MODELCLEI" set-lan="attr:placeholder=txtMODELCLEI" />
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:DESCRIPTION2">DESCRIPTION2：</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control" name="DESCRIPTION2" set-lan="attr:placeholder=txtDESCRIPTION2" />
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:ECI_NO">ECI_NO：</label>
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control" name="ECI_NO" set-lan="attr:placeholder=txtECI_NO" />
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                    </div>
+                    <!--<div class="form-group col-xs-6">
+                        <label class="col-xs-4 control-label" set-lan="html:FO6">FO6：</label>
+                        <div class="col-xs-7">
+                            <select class="form-control" name="FO6">
+                                <option value="1">Y</option>
+                                <option value="0">N</option>
+                            </select>
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                    </div>-->
+
+                    <div class="form-group col-xs-6" style="display:none">
+                        <label class="col-xs-4 control-label" set-lan="html:ModifyModelMsgLASTEDITTIME">LAST_EDIT_TIME：</label>
+                        <div class="col-xs-8">
+                            <input type="text" class="form-control" name="LAST_EDIT_TIME" set-lan="attr:placeholder=ModifyModelMsgLASTEDITTIME" />
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed col-xs-12"></div>
+                    <div class="form-group col-xs-12">
+                        <div class="col-sm-8 col-sm-offset-4">
+                            <button type="button" class="btn btn-primary" id="SaveSku"><i class="fa fa-pencil"></i> <lan set-lan="html:BtnSave">保存信息</lan></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modifyskuno-tip">
+                    <p class="glyphicon fa fa-lightbulb-o"> 溫馨提示：</p>
+                    <p>1.機種處填寫料號,選擇產品對應的BU.</p>
+                    <p>2.不需要在SFC中管控版本的產品在版本處填“NA”,需要管控版本的填寫對應版本.</p>
+                    <p>3.機種名稱:填寫對應的產品系列.</p>
+                    <p>4.機種類型:選擇PCBA或Model, 組合板的子卡(MB,DC)選擇PCBA, SI后出貨料號選擇Model.單板一站到底出貨的產品選擇PCBA.</p>
+                    <p>5.機種所屬系列:根據所處BU進行選擇.</p>
+                    <p>6.客戶料號即為產品的料號(有客戶料號與PN不一致的除外)</p>
+                    <p>7.Code Value: PE提供對應的產品料號給TE, TE提供對應的Code Value給PE配置進系統.</p>
+                    <p>8.選擇對應的SN編碼規則</p>
+                    <p>9.完成配置后點擊“保存信息”按鈕,進行下一頁“綁定路由”配置</p>
+               </div>
+
+            </div>
+            <div id="RouteList" class="tab-pane row row-lg">
+                <div class="panel-body">
+                    <div class=" row">
+
+                        <div class="form-group col-xs-5">
+                            <label class="col-xs-3" style="padding-top: 5px;padding-bottom: 5px;">SFC路由: </label>
+                            <div class="col-xs-9">
+                                <input type="text" id="SKUAddRouteName" class="form-control col-xs-11 ">
+                                <div class="form-group" id="sfcRouteList">
+                                    <ul style="padding:0;"></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-7">
+                            <div class="col-xs-2" role="group">
+                                <label class="input-group" style="padding-top: 5px;padding-bottom: 5px;">
+                                    <input type="checkbox" id="setDefault">&nbsp;<lan set-lan="html:DefaultRoute">Set Default</lan>
+                                </label>
+                            </div>
+
+                            <div class="col-xs-10" role="group">
+                                <button type="button" class="btn btn-outline btn-primary" id="sfcRouteAdd">
+                                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i><lan set-lan="html:Add"> Add</lan>
+                                </button>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group col-xs-5">
+                            <label class="col-xs-3" style="padding-top: 5px;padding-bottom: 5px;">测试路由:</label>
+                            <div class="col-sm-9 col-md-9">
+                                <input type="text" id="TestRouteName" class="form-control col-xs-12">
+                                <div class="form-group" id="testRouteList">
+                                    <ul style="padding:0;"></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-7">
+                            <label class="col-xs-2" style="padding-top: 5px;padding-bottom: 5px;" set-lan="html:AUTO_STATION">AUTO_STATION:</label>
+                            <div class="col-xs-4">
+                                <select  id="AUTO_SATATION" class="form-control col-xs-12 ">
+                                    <!--<option>xadwdqwdwdqdxcwcw</option>
+                                    <option>xadwdqcwcwdwwxcwcw</option>
+                                    <option>xadwdqwdwdwdxcwcw</option>-->
+                                </select>
+                            </div>
+                            <div class="col-xs-2" role="group">
+                                <label class="input-group" style="padding-top: 5px;padding-bottom: 5px;">
+                                    <input type="checkbox" id="NoCheckTest">&nbsp;<lan set-lan="html:NoCheckTest">NoCheckTest</lan>
+                                </label>
+                            </div>
+                            <div class="col-xs-2 " role="group">
+                                <label class="input-group" style="padding-top: 5px;padding-bottom: 5px;">
+                                    <input type="checkbox" id="setTestDefault">&nbsp;<lan set-lan="html:DefaultTestRoute">Set Default</lan>
+                                </label>
+                            </div>
+                            <div class="form-group col-xs-2 ">
+                                <button type="button" class="btn btn-outline btn-primary" id="testRouteAdd">     <!--SKU_Route-->
+                                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i><lan set-lan="html:Add"> Add</lan>
+                                </button>
+                            </div>
+                        </div>
+                        
+
+                        <div class="form-group col-xs-5">
+                            <label class="col-xs-3" style="padding-top: 5px;padding-bottom: 5px;">WIP路由:</label>
+                            <div class="col-xs-9">
+                                <input type="text" id="wipRouteName" class="form-control col-xs-12">
+                                <div class="form-group" id="wipRouteList">
+                                    <ul style="padding:0;"></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-7">
+                            <div class="form-group col-xs-2">
+                                <button type="button" class="btn btn-outline btn-primary" id="wipRouteAdd">
+                                    <!--SKU_Route-->
+                                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i><lan set-lan="html:Add"> Add</lan>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!--<div class="btn-group col-xs-2 hidden-xs" role="group">
+                            <label class="btn btn-outline input-group" style="padding-top: 5px;padding-bottom: 5px;">
+                                SFC路由:
+                            </label>
+                        </div>
+                        <div class="form-group col-xs-4">
+                            <input type="text" id="SKUAddRouteName" class="form-control">
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+
+                        <div class="btn-group hidden-xs col-xs-2" role="group">
+                            <label class="btn btn-outline input-group" style="padding-top: 5px;padding-bottom: 5px;">
+                                <input type="checkbox"><lan set-lan="html:DefaultRoute">Set Default</lan>
+                            </label>
+                        </div>
+
+                        <div class="btn-group hidden-xs col-xs-2" role="group">
+                            <button type="button" class="btn btn-outline btn-primary" id="SKU_Route">
+                                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i><lan set-lan="html:Add"> Add</lan>
+                            </button>
+                        </div>-->
+                        <!--添加测试路由-->
+                        <!--<div class="btn-group hidden-xs" role="group">
+                            <label class="btn btn-outline input-group" style="padding-top: 5px;padding-bottom: 5px;">
+                                测试路由:
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="TestRouteName" class="form-control">
+                            <div class="form-group" id="testRouteList">
+                                <ul style="padding:0;">
+                                </ul>
+                            </div>
+                        </div>
+                        <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        <div class="btn-group hidden-xs" role="group">
+                            <button type="button" class="btn btn-outline btn-primary" id="SKU_Route">
+                                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i><lan set-lan="html:Add"> Add</lan>
+                            </button>
+                        </div>-->
+
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="RouteList_Toolbar">
+                        <div class="btn-group hidden-xs" role="group">
+                            <button type="button" class="btn btn-outline btn-primary" id="DeleteRoute" disabled>
+                                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i><lan set-lan="html:Delete"> Delete</lan>
+                            </button>
+                        </div>
+                    </div>
+                    <table id="RouteListTable" class="table table-hover"></table>
+                </div>
+
+                <div class="modifyskuno-tip">
+                    <p class="glyphicon fa fa-lightbulb-o"> 溫馨提示：</p>
+                    <p>1.路由框中使用工站模糊查詢對應的路由不同工站使用“逗號”隔開,例如SMTLOADING,AOI2,AOI4,VI,ICT,STOCKIN 進行模糊查詢.</p>
+                    <p>2.未查找對應路由時,需要去“路由配置”界面創建新路由.</p>
+                    <p>3.注意：測試路由后“ NoCheckTest ”一旦被勾選, “ Stockin ”工站將不再卡測試路由, 但包裝依然會卡測試路由及順序,此配置適用與SI 之後進行測試的產品.</p>
+                    <p>4.注意：如有ICT工站,需要將ICT工站建進SFC路由中.</p>
+                </div>
+
+            </div>
+            <div id="EditThrowPoint" class="tab-pane row row-lg">
+                <div class="panel-body">
+                    <div id="ThrowPointForm" role="form" class="form-horizontal row">
+                        <div class="form-group col-xs-6" style="display:none">
+                            <label for="recipient-name" class="col-xs-3 control-label" set-lan="html:ModalThrowPointEditID" style="display:none">ID:</label>
+                            <div class="col-xs-9">
+                                <input type="text" class="form-control" name="ID">
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label for="message-text" class="col-xs-3 control-label" set-lan="html:STATION_NAME">工站名稱:</label>
+                            <div class="col-xs-8">
+                                <!--<input type="text" class="form-control" name="STATION_NAME">-->
+
+                                <select class="form-control" name="STATION_NAME" id="station_name"></select>
+
+                                <!--////////////////////////////////////////////////////////////////////-->
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                        <div class="form-group col-xs-6" id="divStationCode">
+                            <label for="message-text" class="col-xs-3 control-label" set-lan="html:SAP_STATION_CODE">拋賬點:</label>
+                            <div class="col-xs-8">
+                                <select class="form-control" name="SAP_STATION_CODE">
+                                    <option value="0010" selected="selected">0010</option>
+                                    <option value="0020">0020</option>
+                                    <option value="0030">0030</option>
+                                    <option value="0040">0040</option>
+                                    <option value="0050">0050</option>
+                                    <option value="0060">0060</option>
+                                    <option value="0070">0070</option>
+                                    <option value="0080">0080</option>
+                                    <option value="0090">0090</option>
+                                    <option value="0100">0100</option>
+                                    <option value="0110">0110</option>
+                                    <option value="0120">0120</option>
+                                    <option value="0130">0130</option>
+                                    <option value="0140">0140</option>
+                                    <option value="0150">0150</option>
+                                    <option value="0160">0160</option>
+                                    <option value="0170">0170</option>
+                                    <option value="0180">0180</option>
+                                    <option value="0190">0190</option>
+                                    <option value="0200">0200</option>
+                                </select>
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label for="message-text" class="col-xs-3 control-label" set-lan="html:WORKORDER_TYPE">工單類型:</label>
+                            <!--<input type="text" class="form-control" name="WORKORDER_TYPE">-->
+                            <div class="col-xs-8">
+                                <select class="form-control" name="WORKORDER_TYPE">
+                                    <option value="REGULAR">REGULAR</option>
+                                </select>
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                    </div>
+                    <div class="btn-group hidden-xs" role="group">
+                        <button type="button" class="btn btn-outline btn-primary" id="NewPoint">
+                            <i class="glyphicon glyphicon-plus" aria-hidden="true"></i><lan set-lan="html:add"> Add</lan>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="BFPoint_Toolbar">
+                        <div class="btn-group hidden-xs" role="group">
+                            <button type="button" class="btn btn-outline btn-primary" id="DeletePoint" disabled>
+                                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i><lan set-lan="html:Delete"> Delete</lan>
+                            </button>
+                        </div>
+                    </div>
+                    <table id="BFPoint_List_Table" class="table table-hover"></table>
+                </div>
+                <div class="modifyskuno-tip">
+                    <p class="glyphicon fa fa-lightbulb-o"> 溫馨提示：</p>
+                    <p>1.設置拋帳點, 注意拋帳點的首工站,尾工站,以及Quack工站需要與SAP中的拋帳點進行對應.</p>
+                    <p>2.注意：當路由有刪除時,對應的拋帳點也需要進行相應刪除,拋帳點中的工站必須為產品路由中存在的工站.</p>
+                </div>
+            </div>
+
+            
+
+            <div id="PackList" class="tab-pane row row-lg">
+                <div class="panel-body">
+                    <div id="PackConfigForm" role="form" class="form-horizontal">
+                        <div class="form-group col-xs-6">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:PACK_TYPE">包裝模式:</label>
+                            <div class="col-xs-8">
+                                <select class="form-control" name="PACK_TYPE"></select>
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:MAX_QTY">包裝數量:</label>
+                            <div class="col-xs-8">
+                                <input class="form-control" name="MAX_QTY">
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+
+                        <div class="form-group col-xs-6">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:TRANSPORT_TYPE">运输方式:</label>
+                            <div class="col-xs-8">
+                                <select class="form-control" name="TRANSPORT_TYPE"></select>
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:INSIDE_PACK_TYPE">包裝內容:</label>
+                            <div class="col-xs-8">
+                                <select class="form-control" name="INSIDE_PACK_TYPE"></select>
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:SN_RULE">编码规则:</label>
+
+                            <div class="col-xs-8">
+                                <select class="form-control" name="SN_RULE"></select>
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:DESCRIPTION">說明:</label>
+                            <div class="col-xs-8">
+                                <textarea class="form-control" name="DESCRIPTION"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline btn-primary" id="AddPack">
+                            <i class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></i><lan set-lan="html:add"> Save</lan>
+                        </button>
+                    </div>
+                </div>
+                <div class="hr-line-dashed col-xs-12"></div>
+                <div class="panel-body">
+                    <div id="PackList_Toolbar">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline btn-primary" id="DeletePack" disabled>
+                                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i><lan set-lan="html:Delete"> Delete</lan>
+                            </button>
+                        </div>
+                    </div>
+                    <table id="PackListTable" class="table table-hover "></table>
+                </div>
+                <div class="modifyskuno-tip">
+                    <p class="glyphicon fa fa-lightbulb-o"> 溫馨提示：</p>
+                    <p>1.包裝模式選“Carton”, 配置對應一個Carton裝的對應產品數量,包裝內容選“SN”,編碼規則選“DefCarton”</p>
+                    <p>2.然後包裝模式選“Pallet”,配置對應一個Pallet的Carton數量,包裝內容選“Carton”,編碼規則選“ DefPallet”</p>
+                </div>
+            </div>
+            <div id="QuackUpLoad" class="tab-pane row row-lg"><!--ADD BY ZC--> 
+                <div class="panel-body">
+                    <div role="form" style="float:left" class="form-horizontal row">
+                        <div class="form-group col-xs-3">
+                            <div class="col-xs-8">
+                               <input type="file" id="inimgs" name="File" accept=".bmp"/>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" style="display:inline-block;float:left " class="btn btn-outline btn-primary" id="UpLoadQuack">
+                        <i class="glyphicon glyphicon-arrow-up" aria-hidden="true"></i>
+                        <lan set-lan="text:UpLoad">上傳</lan>
+                    </button>
+                </div>
+            <div id="dimgs" style="margin-left:15px;margin-right:15px;margin-top:15px;height:400px;background:#ddd;">
+                <img  id="imgs" width="100%" height="100%"/>
+            </div>
+                <div class="modifyskuno-tip">
+                    <p class="glyphicon fa fa-lightbulb-o"> 溫馨提示：</p>
+                    <p>1. 上傳Quack SOP對應的圖片,注意上傳的圖片需要可以明確識別Quack的方向.</p>
+                    <p>2.  圖片格式為 bmp 格式.</p>
+                </div>
+            </div>
+            <div id="2DXConfig" class="tab-pane row row-lg"><!--ADD BY ZC-->
+                <div class="panel-body">
+                    <div role="form" class="form-horizontal row">
+                        <div class="form-group col-xs-6">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:SKUNO">SKUNO</label>
+                            <div class="col-xs-8">
+                              <input type="text" class="form-control" disabled="disabled" name="SKUNO" id="2dx_skuno"/>
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:CODENAME">CODENAME</label>
+                            <div class="col-xs-8">
+                                <input type="text" class="form-control" disabled="disabled"  name="CODENAME" id="codename" />
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:STATION">STATION</label>
+                            <div class="col-xs-8">
+                                <select class="form-control" name="STATION" id="2dx_station"></select>
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                         <div class="form-group col-xs-6">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:QTY">QTY</label>
+                            <div class="col-xs-8">
+                                <input type="text" class="form-control" placeholder="PTH"  name="QTY" id="quantity"/>
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:VALID">VALID</label>
+                            <div class="col-xs-8">
+                                <input type="radio"  name="VALID" checked="checked" value="1" />
+                                <span class="" style="line-height:34px;font-size:16px;">Y</span>
+                                <input type="radio" name="VALID" value="0"/>
+                                <span class="" style="line-height:34px;font-size:16px;">N</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-3" >
+                            <button type="button" class="btn btn-outline btn-primary" id="Save2dConfig">
+                                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                                <lan set-lan="text:add">Save</lan>
+                            </button>
+                            <button type="button" class="btn btn-outline btn-primary" id="Edit2dConfig">
+                                <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
+                                <lan set-lan="html:Edit">Edit</lan>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modifyskuno-tip">
+                    <p class="glyphicon fa fa-lightbulb-o"> 溫馨提示：</p>
+                    <p>1.根據產品的UPH配置需要抽測的數量.SMT，PTH系統配置數量為2小時的產品,即每2小時抽測1片.</p>
+                    <p>2.注意:SMT抽測的原件為BGA，QFN及引腳看不到的連接器,對應面別無此連接器時不需要配置2D 抽測.</p>
+                </div>
+            </div>
+            <div id="LinkConfig" class="tab-pane row row-lg">
+                <div class="panel-body">
+                    <div role="form" class="form-horizontal row">
+                        <div class="form-group col-xs-6">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:SKUNO73">SKUNO73</label>
+                            <div class="col-xs-8">
+                                <input class="form-control" name="SKUNO73" id="skuno_73"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:VERSION73">VERSION73</label>
+                            <div class="col-xs-8">
+                                <input class="form-control" name="VERSION73" id="version_73" />
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:SKUNO68">SKUNO68</label>
+                            <div class="col-xs-8">
+                                <input class="form-control" disabled="disabled" name="SKUNO68" id="skuno_68" />
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                        <div class="form-group col-xs-3">
+                            <button type="button" class="btn btn-outline btn-primary" id="SaveLinkConfig">
+                                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                                <lan set-lan="text:add">Save</lan>
+                            </button>
+                            <button type="button" class="btn btn-outline btn-primary" id="EditLinkConfig">
+                                <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
+                                <lan set-lan="html:Edit">Edit</lan>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modifyskuno-tip">
+                    <p class="glyphicon fa fa-lightbulb-o"> 溫馨提示：</p>
+                    <p>1.單板一站到底的需要配置800 與 73 的對應關係,避免SMT All Part記錄無法識別.</p>
+                </div>
+            </div>
+            <div id="LabelList" class="tab-pane row row-lg">
+                <div class="panel-body">
+                    <div role="form" class="form-horizontal row">
+                        <div class="form-group col-xs-6">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:STATION">打印工站:</label>
+                            <div class="col-xs-8">
+                                <!--<input class="form-control" name="STATION">-->
+
+                                <select class="form-control" name="STATION" id="station_name2"></select>
+
+                                <!--///////////////////////////////////////////-->
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                        <div class="form-group col-xs-3">
+                            <label class="col-xs-5 control-label text-right" set-lan="html:LABELNAME">标签模板:</label>
+                            <div class="col-xs-6">
+                                <!--<input class="form-control" name="LABELNAME">-->
+                                <select class="form-control" name="LABELNAME">
+                                    
+
+				    <option value="AG_CARTON_LABEL_PO3">AG_CARTON_LABEL_PO3</option>
+                                    <option value="AG_PALLET_LIST_30-70">AG_PALLET_LIST_30-70</option>
+                                    <option value="AG_BOXLABEL-1">AG_BOXLABEL-1</option>
+                                </select>
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:LABELTYPE">标签类型:</label>
+                            <div class="col-xs-8">
+                                <select class="form-control" name="LABELTYPE"></select>
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                        <div class="form-group col-xs-3">
+                            <label class="col-xs-5 control-label text-right" set-lan="html:PrintQTY">打印數量:</label>
+                            <div class="col-xs-6">
+                                <input class="form-control" name="QTY">
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                        <div class="form-group col-xs-3">
+                            <label class="col-xs-5 control-label text-right" set-lan="html:PRINTSEQ">打印顺序:</label>
+                            <div class="col-xs-6">
+                                <input class="form-control" name="SEQ">
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline btn-primary" id="AddLabel">
+                            <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                            <lan set-lan="text:add"> 新增</lan>
+                        </button>
+                    </div>
+                </div>
+                <div class="hr-line-dashed col-xs-12"></div>
+                <div class="panel-body">
+                    <div id="LabelList_Toolbar">
+                        <div class="btn-group " role="group">
+                            <button type="button" class="btn btn-outline btn-primary" id="DeleteLabel" disabled>
+                                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i><lan set-lan="html:delete"> 删除</lan>
+                            </button>
+                        </div>
+                    </div>
+                    <table id="LabelListTable" class="table table-hover"></table>
+                </div>
+            </div>
+
+            <div id="AqlList" class="tab-pane row row-lg">
+                <div class="panel-body">
+                    <div role="form" class="form-horizontal row">
+                        <div class="form-group col-xs-5">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:AqlType">AqlType:</label>
+                            <div class="col-xs-8">
+                                <select class="form-control" name="AqlType"></select>
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                        <div class="form-group col-xs-5">
+                            <label class="col-xs-3 control-label text-right" set-lan="html:DefaultLevel">DefaultLevel:</label>
+                            <div class="col-xs-8">
+                                <select class="form-control" name="DefaultLevel"></select>
+                            </div>
+                            <span class="" style="line-height:34px;font-size:26px;color:red; ">*</span>
+                        </div>
+                        <div class="form-group col-xs-2">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline btn-primary" id="ConfirmAql">
+                                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                                    <lan set-lan="text:add"> 確定</lan>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-body">
+                    <table id="SkuAqlListTable" class="table table-hover"></table>
+                    <table id="AqlListTable" class="table table-hover"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="copy-sku-lay" class="panel-body hidden">
+        
+        <div class="form-group col-xs-12">
+            <label class="col-xs-3" style="padding-top: 5px;padding-bottom: 5px;">參考機種: </label>
+            <div class="col-xs-9">
+                <input type="text" id="old-sku" class="form-control col-xs-11 ">
+            </div>
+        </div>
+        <div class="form-group col-xs-12">
+            <label class="col-xs-3" style="padding-top: 5px;padding-bottom: 5px;">機種: </label>
+            <div class="col-xs-9">
+                <input type="text" id="new-sku" class="form-control col-xs-11 ">
+            </div>
+        </div>
+        <div class="form-group col-xs-12 ">
+            <button type="button" class="btn btn-outline btn-primary" id="copy-btn">
+                <!--SKU_Route-->
+                <i class="glyphicon glyphicon-log-in" aria-hidden="true"></i><lan set-lan="html:Copy"> copy</lan>
+            </button>
+        </div>
+    </div>
+
+
+    <!-- 全局js -->
+    <script src="../../Scripts/jquery.min.js?v=2.1.4"></script>
+    <script src="../../Scripts/jquery.cookie.js"></script>
+    <script src="../../Scripts/bootstrap.min.js?v=3.3.6"></script>
+    <!-- 第三方插件 -->
+    <script src="../../Scripts/plugins/JSON/json2.js"></script>
+    <script src="../../Scripts/plugins/jquery-ui/jquery-ui.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table-zh-TW.min.js"></script>
+    <script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="../../Scripts/plugins/JSON/json2.js"></script>
+    <script src="../../Scripts/plugins/layer/layer.min.js"></script>
+
+    <script src="../../Scripts/global.js"></script>
+    <script src="../../Scripts/MesClient.UI.js"></script>
+    <script src="../../Scripts/MesClient.js"></script>
+    <script src="../../Scripts/Setting/SkuSetting.js"></script>
+</body>
+</html>

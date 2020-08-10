@@ -1,0 +1,581 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>testReport</title>  <!-- GCH 2019/07/27 ADD-->
+</head>
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+<link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+<link href="../../css/ReportConfig.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+<script src="../../Scripts/Report/MesClient.ReportConfig.js"></script>
+
+<style>
+    .query-wrap {
+        position:absolute;
+        width:500px;
+        height:auto;
+        background:#FFF;
+        z-index:10000;
+        top:120px;
+        padding:20px;
+        padding-bottom:0;
+        border:1px solid #337ab7;
+        border-radius:10px;
+        box-shadow:5px 5px 15px #000;
+    }
+    .ctr-wrap {
+        width:100%;
+        height:50px;
+        padding-bottom:15px;
+    }
+    .lab, .ctr {
+        height:100%;
+        line-height:35px;
+        float:left;
+    }
+    .lab {
+        width:30%;
+        padding:0px 20px;
+        background:#ddd;
+        text-align:right;
+        border-bottom:2px solid #337ab7;
+        box-sizing:border-box;
+    }
+    .ctr {
+        width:70%;
+        padding:0px 20px;
+        /*background:blue;*/
+
+    }
+
+        .ctr select,.ctr input {
+            width:100%;
+            height:100%;
+            padding:5px 15px;
+        }
+
+    .ctr-wrap .submit {
+        width:36%;
+        height:100%;
+        text-align:center;
+        background:#337ab7;
+        line-height:35px;
+        margin-left:32%;
+        color:#fff;
+        font-size:18px;
+        cursor:pointer;
+    }
+    .ctr-wrap .submit:hover {
+        background:#003f75;
+    }
+</style>
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:"></span>
+    </div>
+    <div class="list">
+        <div class="btnList"></div>
+        <div class="query">
+            <div class="input">
+                <input type="text" value="" placeholder="" />
+            </div>
+        </div>
+        <div class="query-wrap">
+            <div class="ctr-wrap">
+                <div class="lab">Type</div>
+                <div class="ctr">
+                    <select>
+                        <option value="UNCHECKED">UNCHECKED</option>
+                        <option value="MISS">MISS</option>
+                        <option value="SCRAP">SCRAP</option>
+                        <option value="SKIP">SKIP</option>
+                        <option value="RTV">RTV</option>
+                    </select>
+                </div>
+            </div>
+            <div class="ctr-wrap">
+                <div class="lab">QuackSN</div>
+                <div class="ctr">
+                    <input type="text" name="quacksn" value=" " />
+                </div>
+            </div>
+            <div class="ctr-wrap">
+                <div class="lab">LOT</div>
+                <div class="ctr">
+                    <input type="text" name="lot" value=" " />
+                </div>
+            </div>
+            <div class="ctr-wrap">
+                <div class="submit glyphicon glyphicon-search">Submit</div>
+            </div>
+        </div>
+    </div>
+    <div class="tab">
+        <table></table>
+    </div>
+</body>
+<script>
+    //var bu = $.MES.getQueryString("bu");
+    //var type = $.MES.getQueryString("type");
+    //console.log(bu, type);
+    //alert(bu, type);
+    var report = new ConfigReport({
+        "pageMsg": {
+            "pageName": "QuackMiss",                    //title名
+            "setLan": "QuackMiss",                          //该网页的多语言标签名
+            "queryTip": "暫時無用",             //查询框的提示信息
+            "multiSelect":true,                        //是否多選（默認為false）
+            "btnMsg": [
+                  {
+                      "id": "btn1",
+                      "btnName": "Query",  
+                      "icon": "glyphicon glyphicon-search",
+                      "style": "0", 
+                      "layerFlag": false
+                  },
+                  {
+                      "id": "btn2",
+                      "btnName": "Miss",  
+                      "icon": "glyphicon glyphicon-pencil",
+                      "style": "2", 
+                      "layerFlag": false
+                  },
+                  {
+                      "id": "btn3",
+                      "btnName": "Scrap",
+                      "icon": "glyphicon glyphicon-pencil",
+                      "style": "2",
+                      "layerFlag": false
+                  },
+                  {
+                      "id": "btn4",
+                      "btnName": "Skip",
+                      "icon": "glyphicon glyphicon-pencil",
+                      "style": "2",
+                      "layerFlag": false
+                  },
+                  {
+                      "id": "btn5",
+                      "btnName": "Rtv",
+                      "icon": "glyphicon glyphicon-pencil",
+                      "style": "2",
+                      "layerFlag": false
+                  },
+                  {
+                      "id": "btn6",
+                      "btnName": "ScrapRtv",
+                      "icon": "glyphicon glyphicon-pencil",
+                      "style": "2",
+                      "layerFlag": false
+                  }
+            ],
+        },
+        "apiList": {                                                                 //该网页的重要操作对应的前端与后台交互的api（homePage select 都是固定的写法，除此之外名称全部与按钮名称一致） 
+            "homePage": {                                                       //首页的api（homePage：固定写法，用于加载首页表数据）
+                "className": "MESStation.Config.QuackSystem_ChooseMiss",   //该api对应的后台的类路径
+                "functionName": "GetAllTypeData",                                  //该api名称（方法名称）
+                "colList": ["TYPE","QSN","LOT"],                                 //后台接收数据的键的集合（大框操作不需要配置，下同；其它情况此项必填，下同）
+                "sendList": ["UNCHECKED", "", ""]                                                 //后台接收数据的值的集合（与键一一对应）
+            },
+            "select": {                                                            //查询框(select:固定写法，用于快速查询表数据)
+                "className": "MESStation.Config.xxxx",
+                "functionName": "xxxx",
+                "colList": ["SKUNO"]  
+            },
+            "Query": {   //该按钮不弹出框，也不是删除按钮，需要自定义事件 ，此处不需要配置
+                "className": "MESStation.Config.xxxx",
+                "functionName": "xxx",
+                "colList": ["ID"]      //
+            },
+            "Miss": {   //该按钮不弹出框，也不是删除按钮，需要自定义事件 ，此处不需要配置
+                "className": "MESStation.Config.xxxx",
+                "functionName": "xxx",
+                "colList": ["ID"]      //
+            },
+            "Scrap": {   //该按钮不弹出框，也不是删除按钮，需要自定义事件 ，此处不需要配置
+                "className": "MESStation.Config.xxxx",
+                "functionName": "xxx",
+                "colList": ["ID"]      //
+            },
+            "Skip": {   //该按钮不弹出框，也不是删除按钮，需要自定义事件 ，此处不需要配置
+                "className": "MESStation.Config.xxxx",
+                "functionName": "xxx",
+                "colList": ["ID"]      //
+            },
+            "Rtv": {   //该按钮不弹出框，也不是删除按钮，需要自定义事件 ，此处不需要配置
+                "className": "MESStation.Config.xxxx",
+                "functionName": "xxx",
+                "colList": ["ID"]      //
+            },
+            "ScrapRtv": {   //该按钮不弹出框，也不是删除按钮，需要自定义事件 ，此处不需要配置
+                "className": "MESStation.Config.xxxx",
+                "functionName": "xxx",
+                "colList": ["ID"]      //
+            },
+
+
+        },
+        "tableMsg": {                                                           //该表的各字段集合  
+
+
+            "column": ["QSN", "LOT_NO", "STATE", "EDIT_EMP","EDIT_TIME"]
+        },
+        "layerMsg": {                                                           //弹出框（针对大框）各个控件的配置
+            
+        },
+        "loadLayerData": {                                              //弹出框的控件的所有操作（大框内特殊控件数据加载[加载完页面数据后自动执行]）,非弹出框的操作
+            "Query": function () {
+                //console.log($("#btn1"));
+                //creatFile($("#btn1"));
+                //var bu_select = createSelect($("#btn1"), "BU", ["ALL", "IOTBU", "MCEBU", "PCBU"]);
+                //var type_select = createSelect($("#btn1"), "TYPE", ["ALL", "PCBA", "MODEL"]);
+                //bu_select.val(bu);
+                //type_select.val(type);
+                //setTimeout(function () {
+                //    console.log($("#btn1"));
+                //}, 0);
+                $(".query-wrap").find(".ctr-wrap").eq(0).find("select").on("change", function () {
+                    var send = {
+                        TYPE: $(this).val(),
+                        QSN: "",
+                        LOT: "",
+                    };
+                    self.parent.client.CallFunction("MESStation.Config.QuackSystem_ChooseMiss", "GetAllTypeData", send, function (e) {
+                        if (e.Status == "Pass") {
+                            $(".tab table").bootstrapTable("load", e.Data);
+                        } else {
+                            $(".tab table").bootstrapTable("load", []);
+                            layer.msg(e.Message, {
+                                icon: 0,
+                                time: 2000
+                            });
+                        }
+                    });
+                });
+                $(".query-wrap").find(".submit").on("click", function () {
+                    var send = {
+                        TYPE: $(".query-wrap").find(".ctr-wrap").eq(0).find("select").val(),
+                        QSN: $(".query-wrap").find(".ctr-wrap").eq(1).find("input").val().replace(/^ +| +$/g,""),
+                        LOT: $(".query-wrap").find(".ctr-wrap").eq(2).find("input").val().replace(/^ +| +$/g, ""),
+                    }
+                    console.log(send);
+                    self.parent.client.CallFunction("MESStation.Config.QuackSystem_ChooseMiss", "GetAllTypeData", send, function (e) {
+                        if (e.Status == "Pass") {
+                            $(".tab table").bootstrapTable("load", e.Data);
+                        } else {
+                            $(".tab table").bootstrapTable("load", []);
+                            layer.msg(e.Message, {
+                                icon: 0,
+                                time:2000
+                            });
+                        }
+                    });
+
+                    console.log(send);
+                    $(".query-wrap").toggle();
+                });
+
+
+                function createSelect($last,name,d) {
+                    var s = $("<div class=\""+ name + "-wrap\"></div>");
+                    var span = $("<span set-lan=\"html:"+ name +"\"> "+ name +" : </span>");
+                    var select = $("<select></select>");
+                    $.each(d, function (i,str) {
+                        var option = $("<option value=" + str + ">" + str + "</option>");
+                        select.append(option);
+                    });
+                    s.css({
+                        float: "left",
+                        borderRight: "1px solid #337ab7",
+                        background: "#afd5f5",
+                        height: "100%",
+                        padding: "1px 1px 1px 12px",
+                        outline: "none",
+                        cursor: "pointer"
+                    });
+                    span.css({
+                        lineHeight:"28px",
+                    });
+                    select.css({
+                        outline:"none",
+                        border:"none",
+                        width:"160px",
+                        height:"100%",
+                    });
+                    s.append(span, select);
+                    $last.before(s);
+                    return select;
+                }
+
+                function creatFile($last) {    //下一个按钮
+                    var file = $("<div class='file'></div>");
+                    var fileInput = $("<input id='file' type='file' accept='.xlsx,xls' />");
+                    file.append(fileInput);
+                    file.css({
+                        float: "left",
+                        borderRight: "1px solid #337ab7",
+                        height: "100%",
+                        padding: "2px 2px",
+                        outline: "none",
+                        cursor: "pointer"
+                    });
+                    file.hover(function () {
+                        $(this).css({
+                            background: "#337ab7",
+                            color: "#fff"
+                        });
+                    }, function () {
+                        $(this).css({
+                            background: "#fff",
+                            color: "#000"
+                        });
+                    });
+                    var uploadBtn = $("<div id='upload'></div>");
+                    var i = $("<i class='glyphicon glyphicon-open'></i>");
+                    var span = $("<span set-lan='html:upload'>Upload</span>");
+                    uploadBtn.css({
+                        float: "left",
+                        borderRight: "1px solid #337ab7",
+                        height: "100%",
+                        padding: "5px 15px",
+                        cursor: "pointer"
+                    });
+                    uploadBtn.hover(function () {
+                        $(this).css({
+                            background: "#337ab7",
+                            color: "#fff"
+                        });
+                    }, function () {
+                        $(this).css({
+                            background: "#fff",
+                            color: "#000"
+                        });
+                    });
+                    uploadBtn.append(i);
+                    uploadBtn.append(span);
+                    $last.before(uploadBtn);
+                    uploadBtn.before(file);
+                }
+            },
+        },
+        "btnClick": {                                                       //点击按钮及后续所有操作（所有弹出框都要配置，大框动态变化，处理特殊控件（如表格），处理数据[用于发送至后台]，返回数据）
+            "Query": function (chData, fun1, fun2) {            //小框（chData：选中的数据 fun1：不弹出框直接执行[与后台交互] fun2：弹出小框后确定操作再执行）
+                
+                $(".query-wrap").toggle();
+                //console.log(this, $(".BU-wrap select").val(), $(".TYPE-wrap select").val());
+                //self.parent.client.CallFunction("MESStation.Config.WHSStockChart", "QueryWHSStockByBU", { BU: $(".BU-wrap select").val(), TYPE: $(".TYPE-wrap select").val() }, function (e) {
+                //    if (e.Status == "Pass") {
+                //        $(".tab table").bootstrapTable("load", e.Data);
+                //        $(".tab table").find(".bs-checkbox").css({
+                //            "text-align": "left",
+                //            "vertical-align": "middle",
+                //        });
+                //        $(".tab table").find("td").css({
+                //            whiteSpace: "nowrap",
+                //            textAlign: "left"
+                //        });
+                //        layer.msg(e.Message, {
+                //            icon: 1,
+                //            time: 2000
+                //        }, function () {
+                //        });
+                //    } else {
+                //        layer.msg(e.Message, {
+                //            icon: 0,
+                //            time: 2000
+                //        }, function () {
+                //        });
+                //    }
+                //});
+                //fun2();
+            },
+            "Miss": function (chData, fun1, fun2) {
+                var type = $(".query-wrap").find(".ctr-wrap").eq(0).find("select").val();
+                console.log(type);
+                if (type != "UNCHECKED") {
+                    layer.msg("請選擇“UNCHECKED”類型再操作！", {
+                        icon: 0,
+                        time: 2000
+                    });
+                } else {
+                    console.log(chData);
+                    var send = {
+                        TYPE: "Miss",
+                        QSN: "",
+                        LOT: chData[0].LOT_NO
+                    };
+                    $.each(chData, function (index,data) {
+                        send.QSN += data.QSN + ",";
+                    });
+                    console.log(send);
+                    self.parent.client.CallFunction("MESStation.Config.QuackSystem_ChooseMiss", "UpdateGetSelectData", send, function (e) {
+                        if (e.Status == "Pass") {
+                            layer.msg(e.Message, {
+                                icon: 1,
+                                time: 2000
+                            })
+                        } else {
+                            layer.msg(e.Message, {
+                                icon: 0,
+                                time: 2000
+                            })
+                        }
+                    });
+
+
+                }
+            },
+            "Scrap": function (chData, fun1, fun2) {
+                var type = $(".query-wrap").find(".ctr-wrap").eq(0).find("select").val();
+                console.log(type);
+                if (type != "UNCHECKED") {
+                    layer.msg("請選擇“UNCHECKED”類型再操作！", {
+                        icon: 0,
+                        time: 2000
+                    });
+                } else {
+                    console.log(chData);
+                    console.log(chData);
+                    var send = {
+                        TYPE: "Scrap",
+                        QSN: "",
+                        LOT: chData[0].LOT_NO
+                    };
+                    $.each(chData, function (index, data) {
+                        send.QSN += data.QSN + ",";
+                    });
+                    console.log(send);
+                    self.parent.client.CallFunction("MESStation.Config.QuackSystem_ChooseMiss", "UpdateGetSelectData", send, function (e) {
+                        if (e.Status == "Pass") {
+                            layer.msg(e.Message, {
+                                icon: 1,
+                                time: 2000
+                            })
+                        } else {
+                            layer.msg(e.Message, {
+                                icon: 0,
+                                time: 2000
+                            })
+                        }
+                    });
+                }
+            },
+            "Skip": function (chData, fun1, fun2) {
+                var type = $(".query-wrap").find(".ctr-wrap").eq(0).find("select").val();
+                console.log(type);
+                if (type != "UNCHECKED") {
+                    layer.msg("請選擇“UNCHECKED”類型再操作！", {
+                        icon: 0,
+                        time: 2000
+                    });
+                } else {
+                    console.log(chData);
+                    var send = {
+                        TYPE: "Skip",
+                        QSN: "",
+                        LOT: chData[0].LOT_NO
+                    };
+                    $.each(chData, function (index, data) {
+                        send.QSN += data.QSN + ",";
+                    });
+                    console.log(send);
+                    self.parent.client.CallFunction("MESStation.Config.QuackSystem_ChooseMiss", "UpdateGetSelectData", send, function (e) {
+                        if (e.Status == "Pass") {
+                            layer.msg(e.Message, {
+                                icon: 1,
+                                time: 2000
+                            })
+                        } else {
+                            layer.msg(e.Message, {
+                                icon: 0,
+                                time: 2000
+                            })
+                        }
+                    });
+                }
+            },
+            "Rtv": function (chData, fun1, fun2) {
+                var type = $(".query-wrap").find(".ctr-wrap").eq(0).find("select").val();
+                console.log(type);
+                if (type != "UNCHECKED") {
+                    layer.msg("請選擇“UNCHECKED”類型再操作！", {
+                        icon: 0,
+                        time: 2000
+                    });
+                } else {
+                    console.log(chData);
+                    var send = {
+                        TYPE: "Rtv",
+                        QSN: "",
+                        LOT: chData[0].LOT_NO
+                    };
+                    $.each(chData, function (index, data) {
+                        send.QSN += data.QSN + ",";
+                    });
+                    console.log(send);
+                    self.parent.client.CallFunction("MESStation.Config.QuackSystem_ChooseMiss", "UpdateGetSelectData", send, function (e) {
+                        if (e.Status == "Pass") {
+                            layer.msg(e.Message, {
+                                icon: 1,
+                                time: 2000
+                            })
+                        } else {
+                            layer.msg(e.Message, {
+                                icon: 0,
+                                time: 2000
+                            })
+                        }
+                    });
+                }
+            },
+            "ScrapRtv": function (chData, fun1, fun2) {
+                var type = $(".query-wrap").find(".ctr-wrap").eq(0).find("select").val();
+                console.log(type);
+                if (type != "SCRAP") {
+                    layer.msg("請選擇“SCRAP”類型再操作！", {
+                        icon: 0,
+                        time: 2000
+                    });
+                } else {
+                    console.log(chData);
+                    var send = {
+                        TYPE: "ScrapRtv",
+                        QSN: "",
+                        LOT: chData[0].LOT_NO
+                    };
+                    $.each(chData, function (index, data) {
+                        send.QSN += data.QSN + ",";
+                    });
+                    console.log(send);
+                    self.parent.client.CallFunction("MESStation.Config.QuackSystem_ChooseMiss", "UpdateGetSelectData", send, function (e) {
+                        if (e.Status == "Pass") {
+                            layer.msg(e.Message, {
+                                icon: 1,
+                                time: 2000
+                            })
+                        } else {
+                            layer.msg(e.Message, {
+                                icon: 0,
+                                time: 2000
+                            })
+                        }
+                    });
+                }
+            }
+        }
+    });
+
+</script>
+</html>

@@ -1,0 +1,760 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title set-lan="html:Title">SFCControl</title>
+    <link href="../../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../../css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="../../css/animate.css" rel="stylesheet">
+    <link href="../../css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="../../css/bu_manager.css" rel="stylesheet" />
+</head>
+<body class="gray-bg" style="zoom:.65;">
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+
+                <div class="ibox">
+                    <div class="panel-heading bg-primary">
+                        <h3><i class="glyphicon glyphicon-tags"></i><span style="padding-left:10px;" set-lan="html:SFCControl">C_SFCControl</span></h3>
+                    </div>
+                    <div class="ibox-content">
+                        <div id="SkunoList" class="row row-lg form-horizontal">
+                            <div class="col-sm-12">
+                                <div class="ibox float-e-margins no-margins">
+                                    <div class="ibox-content" style="padding-bottom:0px;">
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 control-label text-right" set-lan="html:txtControlName">ControlName:</label>
+                                            <div class="col-sm-3">
+                                                <!--<input type="text" id="ControlName" class="form-control" set-lan="attr:placeholder=placeholderControl" placeholder="請輸入需要查詢的特殊管控號碼" />-->
+                                                <select id="ControlName" class="form-control" set-lan="attr:placeholder=placeholderControl">
+                                                   <option>ALL</option> 
+                                                </select>
+                                            </div>
+                                            <label class="col-sm-2 control-label text-right" set-lan="html:txtControlValue">ControlValue:</label>
+                                            <div class="col-sm-3">
+                                                <input type="text" id="ControlValue" class="form-control" set-lan="attr:placeholder=placeholderControl" placeholder="請輸入需要查詢的特殊管控原因" />
+                                            </div>
+                                            <!--<label class="col-sm-2 control-label text-right" set-lan="html:txtControlValue">UploadFile:</label>
+                                            <br><br>
+                                            <div class="col-sm-3">
+                                                <input type="file" id="uploadFile" class="form-control"/>
+                                            </div>
+                                            <div class="col-sm-1 text-right">
+                                                <button type="button" class="btn btn-primary" onclick="SearchSkuno1()"><i class="fa fa-search"></i> <lan set-lan="html:upload">上傳</lan></button>
+                                            </div>-->
+                                            
+                                            <div class="col-sm-1 text-right">
+                                                <button type="button" class="btn btn-primary" onclick="SearchSkuno()"><i class="fa fa-search"></i> <lan set-lan="html:select">Query</lan></button>
+                                            </div>
+                                            <br><br>
+                                            <label class="col-sm-2 control-label text-right" set-lan="html:selectFile">FileName：</label>
+                                            <div class="col-sm-3">
+                                                <select  id="selectFile" class="form-control" ></select>
+                                                <!--<input type="select" id="selectFile" class="form-control" set-lan="attr:placeholder=placeholderSelectFile" placeholder="請輸入需要下载的文件" />-->
+                                            </div>
+                                            <div class="col-sm-1 text-right">
+                                                <button id="downLoad" type="button" class="btn btn-primary"><i class="fa fa-download"></i> <lan set-lan="html:downLoad">DownLoad</lan></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="example-wrap">
+                                    <h3 set-lan="html:ViewSkunoList">异常管理清单</h3>
+                                    <div class="ibox-content">
+                                        <div class="example">
+                                            <div class="bootstrap-table">
+                                                <div class="fixed-table-toolbar">
+                                                    <div class="bs-bars pull-left">
+                                                        <div class="btn-group " id="exampleTableEventsToolbar" role="group">
+                                                            <button type="button" class="btn btn-outline btn-default" onclick="    TypeAdd()">
+                                                                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i><lan set-lan="html:add">添加</lan>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <table id="tb_departments" class="table table-hover"></table>
+                                            </div><div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="ModifyList" class="clients-list" style="display:none">
+
+                            <div class="col-sm-12 tab-content row" style="margin-bottom: 10px;margin-top: -10px;">
+                                <button type="button" class="btn btn-primary" onclick="    BackSkuno()"><i class="fa fa-step-backward"></i> <lan set-lan="html:back">返回</lan></button>
+                            </div>
+                            <ul class="nav nav-tabs" id="myTab">
+                                <li class="active">
+                                    <a data-toggle="tab" href="#ModifySkuno"><i class="fa fa-list"></i> <lan set-lan="html:ControlMsg">管控信息</lan></a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="ModifySkuno" class="tab-pane active row row-lg">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-title">
+                                            <h5 set-lan="html:EditControlMsg">添加管控信息</h5>
+                                        </div>
+                                        <div id="EditModelDetail" class="row form-horizontal ibox-content profile-content">
+
+
+                                            <form role="form" class="form-horizontal m-t">
+                                                <div class="col-sm-10">
+
+
+                                                    <div class="form-group draggable">
+                                                        <label class="col-sm-4 control-label" set-lan="html:ControlName">ControlName：</label>
+                                                        <div class="col-sm-8">
+                                                            <!--<input type="text" class="form-control" name="Control_Name" id="ControlName"  set-lan="attr:placeholder=ControlName" />-->
+                                                            <select id="tControlName" class="form-control" set-lan="attr:placeholder=ControlNames"  >
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group draggable">
+                                                        <label class="col-sm-4 control-label" set-lan="html:ControlValue">ControlValue：</label>
+                                                        <!--<div class="col-sm-8">
+                                                            <input type="text" class="form-control" name="Control_Value" id="tControlValue" set-lan="attr:placeholder=ControlValue" />
+                                                        </div>-->
+                                                        <div class="col-sm-3">
+                                                            <input type="text" class="form-control" name="Control_Value" id="tControlValue" set-lan="attr:placeholder=ControlValue" />
+                                                        </div>
+                                                        <label class="col-sm-2 control-label" set-lan="html:SelectFile">SelectFile：</label>
+                                                        <div class="col-sm-3">
+                                                            <input type="file" class="form-control" name="SelectFile" id="tSelectFile" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group draggable" id="ctype">
+                                                        <label class="col-sm-4 control-label" set-lan="html:ControlType">ControlType：</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control" name="Control_Type" id="tControlType" set-lan="attr:placeholder=ControlType" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group draggable" id="clever">
+                                                        <label class="col-sm-4 control-label" set-lan="html:ControlLevel">ControlLevel：</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control" name="Control_Level" id="tControlLevel" set-lan="attr:placeholder=ControlLevel" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group draggable">
+                                                        <label class="col-sm-4 control-label" set-lan="html:ControlDesc">ControlDesc：</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control" name="Control_Desc" id="tControlDesc" set-lan="attr:placeholder=ControlDesc" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group draggable">
+                                                        <label class="col-sm-4 control-label" set-lan="html:uploadfile">Upload File：</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="file" class="form-control" name="Upload_File" id="uploadfile"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class="col-sm-2"></div>
+                                        <div class="hr-line-dashed col-sm-12"></div>
+                                        <div class="form-group draggable">
+                                            <div class="col-sm-12 col-sm-offset-4">
+                                                <button type="button" class="btn btn-primary" onclick="InsertMes()"><i class="fa fa-pencil"></i> <lan set-lan="html:BtnSave">保存信息</lan></button>
+                                            </div>
+                                        </div>
+                                        </form>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+    <!-- 全局js -->
+    <script src="../../Scripts/jquery.min.js?v=2.1.4"></script>
+    <script src="../../Scripts/jquery.cookie.js"></script>
+    <script src="../../Scripts/bootstrap.min.js?v=3.3.6"></script>
+    <!-- 第三方插件 -->
+    <script src="../../Scripts/plugins/JSON/json2.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table-zh-TW.min.js"></script>
+    <script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="../../Scripts/plugins/JSON/json2.js"></script>
+
+    <script src="../../Scripts/global.js"></script>
+    <script src="../../Scripts/MesClient.UI.js"></script>
+    <script src="../../Scripts/MesClient.js"></script>
+    <script src="../../Scripts/plugins/layer/layer.min.js"></script>
+    <script src="../../Scripts/plugins/excel/xlsx.full.min.js"></script>
+    <script src="../../Scripts/plugins/excel/import_excel_2_json.js"></script>
+    <script>
+        var mesUI = new MesClientUI(self.parent.client);
+        var AddSKUId = "";
+        var tableLocale = "";
+
+        var fileData;
+
+        var filename = "";
+        var Bas64File = "";
+        var selectFileFlag = false;
+
+        var lan = $.cookie($.MES.CK_LAN_NAME);
+        $(document).ready(function () {
+            $("#ModifyList").hide();
+            $("#SkunoList").show();
+            var TXTControlTYPE = $("#TXTControlTYPE").val();
+            var param = "{\"Control_TYPE\":\"\"}";
+            var SKUID = "";
+            init();
+            //查询C_CONTROL表的ControlName栏位信息
+            self.parent.client.CallFunction("MESStation.Config.SFCControlConfig", "SelectControlName", { "xxx": " " }, function (e) {
+                console.log(e);
+                selectLoad($("#ControlName"), e.Data);
+            });
+            //查询C_CONTROL表的ControlName栏位信息
+            self.parent.client.CallFunction("MESStation.Config.SFCControlConfig", "SelectControlName", { "xxx": " " }, function (e) {
+                console.log(e);
+                selectLoad($("#tControlName"), e.Data);
+            });
+           //查询文件列表
+            self.parent.client.CallFunction("MESStation.Config.SFCControlConfig", "FuzzySearchFile", { "FileName": "" }, function (e) {
+                console.log(e);
+                if (e.Status == "Pass") {
+                    selectLoad($("#selectFile"), e.Data);
+                } else {
+                    layer.msg(e.Message, {
+                        icon: 0,
+                        time: 2000
+                    });
+                }
+            });
+            //下载文件
+            $("#downLoad").on("click", function () {
+                self.parent.client.CallFunction("MESStation.Config.SFCControlConfig", "GetFile", { "FileName": $("#selectFile").val() }, function (e) {
+                    console.log(e);
+                    if (e.Status == "Pass") {
+                        location.href = "./../File/SFC_CONTROL_File/" + e.Data;
+                    } else {
+                        layer.msg(e.Message, {
+                            icon: 0,
+                            time:2000
+                        });
+                    }
+                });
+            });
+            console.log($("#tb_departments"));
+            //显示前20条信息
+            self.parent.client.CallFunction("MESStation.Config.SFCControlConfig", "GetAllControlltype", {}, function (e) {
+                if (e.Status == "Pass") {
+                    if (lan == "CHINESE") {
+                        tableLocale = "zh-CN"
+                    }
+                    else if (lan == "CHINESE_TW") {
+                        tableLocale = "zh-TW"
+                    }
+                    else {
+                        tableLocale = "en"
+                    };
+                    console.log("#tb_departments", e);
+                    $('#tb_departments').bootstrapTable({
+
+                        data: e.Data,
+
+                        striped: true,                      //是否显示行间隔色
+                        cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+
+                        pagination: true,                   //是否显示分页（*）
+
+                        sortable: false,                     //是否启用排序
+                        sortOrder: "asc",                   //排序方式
+                        sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+
+                        pageNumber: 1,                       //初始化加载第一页，默认第一页
+
+                        pageSize: 50,         //初始化每一页的数据条数
+                        pageList: [50, 100, 200, 500],
+
+                        search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                        strictSearch: false,
+                        searchOnEnterKey: false,            //回车搜索
+                        showColumns: false,                  //是否显示所有的列
+
+                        showRefresh: false,                  //是否显示刷新按钮
+                        minimumCountColumns: 2,             //最少允许的列数
+                        clickToSelect: true,                //是否启用点击选中行
+
+                        //height: 500,             //高度调整
+                        uniqueId: "RouteID",                     //每一行的唯一标识，一般为主键列
+
+                        showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+                        cardView: false,                    //是否显示详细视图
+                        detailView: false,                   //是否显示父子表
+
+                        //contentType: "application/x-www-form-urlencoded",//请求数据内容格式 默认是 application/json 自己根据格式自行服务端处理
+
+                        dataType: "json",//期待返回数据类型
+                        method: "post",//请求方式
+                        searchAlign: "left",//查询框对齐方式
+
+                        queryParamsType: "limit",//查询参数组织方式
+                        queryParams: function getParams(params) {
+                            //params obj
+                            params.other = "otherInfo";
+                            return params;
+                        },
+                        buttonsAlign: "left",//按钮对齐方式
+                        toolbar: "#toolbar",//指定工具栏
+
+                        toolbarAlign: "right",//工具栏对齐方式
+                        onPageChange: function () {
+                            $("#tb_departments").find("td").css({
+                                whiteSpace: "nowrap",
+                                textAlign: "left"
+                            });
+                        },
+                        columns: [{
+                            checkbox: true
+                        },
+                        {     //添加序号 
+                            field: "NO",
+                            title: "<label set-lan=" + "html:" + "NO" + ">" + "NO" + "</label>",// item,  
+                            align: 'left',
+                            valign: 'middle',
+                            formatter: function (value, row, index) {
+                                return index + 1;
+                            }
+                        },
+                        {
+                            field: 'ID',
+                            title: 'ID',
+                            rowspan: 1,
+                            align: 'left',
+                            valign: 'middle',
+                            sortable: true,
+                            visible: false
+                        }, {
+                            field: 'CONTROL_NAME',
+                            title: '<label set-lan="html:ControlName">CONTROL_NAME</label>',
+                            rowspan: 1,
+                            align: 'left',
+                            valign: 'middle',
+                            sortable: true
+                        }, {
+                            field: 'CONTROL_VALUE',
+                            title: '<label set-lan="html:ControlValue">CONTROL_VALUE</label>',
+                            rowspan: 1,
+                            align: 'left',
+                            valign: 'middle',
+                            sortable: true
+                        }, {
+                            field: 'CONTROL_TYPE',
+                            title: '<label set-lan="html:ControlType">CONTROL_TYPE</label>',
+                            rowspan: 1,
+                            align: 'left',
+                            valign: 'middle',
+                            sortable: true
+                        }, {
+                            field: 'CONTROL_LEVEL',
+                            title: '<label set-lan="html:ControlLevel">CONTROL_LEVEL</label>',
+                            rowspan: 1,
+                            align: 'left',
+                            valign: 'middle',
+                            sortable: true
+                        },
+                         {
+                             field: 'CONTROL_DESC',
+                             title: '<label set-lan="html:ControlDesc">CONTROL_DESC</label>',
+                             rowspan: 1,
+                             align: 'left',
+                             valign: 'middle',
+                             sortable: true
+                         },
+                        {
+                            field: 'EDIT_EMP',
+                            title: '<label set-lan="html:EditEmp">EDIT_EMP</label>',
+                            rowspan: 1,
+                            align: 'left',
+                            valign: 'middle',
+                            sortable: true
+                        },
+                        {
+                            field: 'EDIT_TIME',
+                            title: '<label set-lan="html:EditTime">EDIT_TIME</label>',
+                            rowspan: 1,
+                            align: 'left',
+                            valign: 'middle',
+                            sortable: true
+                        }],
+                        //locale: tableLocale//中文支持,
+                    });
+                    $("#tb_departments").find("td").css({
+                        whiteSpace: "nowrap",
+                        textAlign: "left"
+                    });
+                } else {
+                    swal({
+                        title: "ALERT",
+                        text: e.Message,
+                        type: "warning",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    return;
+                }
+                mesUI.SetLanguage("ControlTYPE");
+
+            });
+        });
+
+        function selectLoad($ele,dataArr) {    // 生成下拉框内容   $ele:下拉框节点    dataArr:数组
+            $.each(dataArr, function (index,dataObj) {
+                //var option = $("<option value=" + dataObj + "> " + dataObj + " </option>")
+                var option = $("<option value=\""+ dataObj +"\" >"+ dataObj +"</option>")
+                $ele.append(option);
+            });
+        }
+
+
+        //判断中英文
+        function init() {
+            var tableLocale = "";
+            if (lan == "CHINESE") {
+                tableLocale = "zh-CN"
+            }
+            else if (lan == "CHINESE_TW") {
+                tableLocale = "zh-TW"
+            }
+            else {
+                tableLocale = "en"
+            };
+            mesUI.SetLanguage("SFCControl");
+        }
+      
+
+        //單個信息查詢
+        function SearchSkuno() {
+            var txtControlName = $("#ControlName").val();
+            var txtControlValue = $("#ControlValue").val();
+            console.log({ "ControlName": txtControlName, "ControlValue": txtControlValue });
+            //txtControlName
+            self.parent.client.CallFunction("MESStation.Config.SFCControlConfig", "SelectControltype", { "ControlName": txtControlName, "ControlValue": txtControlValue }, function (e) {
+                if (e.Status == "Pass") {
+                    if (Object.prototype.toString.call(e.Data) === '[object Object]') {
+                        swal({
+                            title: "ALERT",
+                            text: e.Message,
+                            type: "warning",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        return;
+                        //window.location = "SkunoControl.html";
+                    } else {
+                        $('#tb_departments').bootstrapTable("load", e.Data);
+                    }
+                } else {
+                    swal({
+                        title: "ALERT",
+                        text: e.Message,
+                        type: "warning",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    return;
+                }
+            });
+        }
+        function changeTest() {
+            var selections = document.getElementById("ControlName");
+            var option = document.createElement("option");
+            option.text = '請輸入需要查詢的特殊管控號碼';
+            option.value = '請輸入需要查詢的特殊管控號碼';
+            selections.options.add(option);
+           
+           
+            //查询C_CONTROL表的ControlName栏位信息
+            self.parent.client.CallFunction("MESStation.Config.SFCControlConfig", "SelectControlName", {}, function (e) {               
+                for (var i = 1; i < e.Data.length; i++) {
+                    option.text = e[i].data;
+                    option.value = e[i].data;
+                    selections.options.add(option);
+                }
+            });
+        }
+
+        //點擊添加按鈕進入新建機種界面
+        function TypeAdd() {
+
+            $("#ModifyList input[type=text]").each(function () {
+                $(this)[0].value = "";
+            });
+
+            //加載全部帳點信息
+            var tableLocale = "";
+            if (lan == "CHINESE") {
+                tableLocale = "zh-CN"
+            }
+            else if (lan == "CHINESE_TW") {
+                tableLocale = "zh-TW"
+            }
+            else {
+                tableLocale = "en"
+            };
+
+            var NullJson = [];
+
+            $("#SkunoList").hide();
+            if (self.parent.client.UserInfo.EMP_LEVEL >= 9) {//ADD BY ZC 2019/04/15 start
+                $("#ModifyList").show();
+            } else {
+                $("#ctype").addClass("hidden");
+                $("#clever").addClass("hidden");
+                $("#ModifyList").show();
+            };//end
+
+            $("#ModifySkuno").addClass("active");
+
+            $("a[href=#ModifySkuno]")[0].parentNode.className = "active";
+
+            readXlsx($("#tSelectFile"), 1, ["A1"], "array", function (d) {    //选择文件（无需上传，前端只读取数据）
+                //A1: SN
+                //fileData = d;   //得到文件数据
+                fileData = d[Object.keys(d)[0]].join(",");
+            });
+            
+            $("input[name=Upload_File]").on("change", function () {  //选择文件（需要上传的文件），解析da文件
+                selectFileFlag = true;
+                var file = this;
+                console.log(file.value);
+                var w = new Worker("../../Scripts/Setting/BigFileReader.js");
+                w.onmessage = function (e) {
+                    if (e.data.Status == "Pass") {
+                        Bas64File = e.data.Bas64File;
+
+                        //console.log(Bas64File);
+                    } else {
+                        layer.msg(e.data.Message, {
+                            icon: 2,
+                            time: 3000
+                        }, function () {
+                        });
+                    }
+                };
+                w.onerror = function () {
+                    layer.msg("请选择文件！", {
+                        icon: 2,
+                        time: 2000
+                    }, function () {
+                    });
+                }
+                filename = $(this).val();
+                filename = filename.substring(filename.lastIndexOf("\\") + 1);
+                UseType = filename.substring(filename.lastIndexOf(".") + 1).toUpperCase();
+                w.postMessage({ file: file.files[0], filename: filename, UseType: UseType, ExtName: ".txt,.pdf,.cs,.mp3,.mp4,.xls,.xlsx,.doc,.docx,.ppt,.pptx,.exe,.jpg,.png" });
+
+            });
+
+            mesUI.SetLanguage("ControlTYPE");
+            
+        }
+
+
+
+        //读取xlsx档(基于XLSX插件) gch add by 20200309
+        function readXlsx(ele, sheetIndex, fieldArr, type, callback) {  //( excel --> 读取excel内容 --> 表数据 / 字段数组 )
+            //ele:（选择文件用的控件，用于事件绑定) sheetIndex：第几张表 fieldArr：字段坐标数组 type: 数据处理后数据类型（“table”表数据 “array”字段数组）
+            var reader = new FileReader();
+            ele.on("change", function () {
+                reader.readAsArrayBuffer(this.files[0]);
+                reader.onload = function () {
+                    var data = new Uint8Array(reader.result);
+                    var wb = XLSX.read(data, { type: 'array' });   //包含excel档的内容*
+                    var dataObj = wb["Sheets"][wb["SheetNames"][sheetIndex - 1]];   //每个单元格的内容  dataObj 逐行读取内容，A1,B1,C1,...A2,B2,C2...A3,B3,C3......
+                    switch (type) {
+                        case "array":
+                            var newData = {};
+                            fieldArr.forEach(function (fieldCoor) {
+                                var x = fieldCoor.match(/[A-z]+/g)[0];  //字母部分
+                                var field = dataObj[fieldCoor] ? dataObj[fieldCoor].v : fieldCoor; //字段
+                                var tempArr = Object.keys(dataObj).filter(function (coor) {
+                                    return coor.match(/\d+/g) && coor.match(/\d+/g)[0] != "1" && x === coor.match(/[A-z]+/g)[0];
+                                }).map(function (coor) {
+                                    return dataObj[coor].v;
+                                });
+                                newData[field] = tempArr;
+                            });
+                            callback(newData);
+                            return;
+                        case "table":
+                            var newData = [];  //最后的数据  //dataObj : 每个单元格的内容
+                            tempRows = [];   //存在内容的行号（除第一行,用于高效遍历单元格内容）
+                            Object.keys(dataObj).forEach(function (coor) {   //coor: 每个单元格的坐标
+                                var numberStr = coor.match(/\d+/g);    //numberStr[0] ： 单元格坐标的数字部分（行号）
+                                if (numberStr && numberStr[0]) {       //存在数字部分时
+                                    if (!tempRows.includes(numberStr[0]) && numberStr[0] != "1") {   //存在新的一行（除第一行）内容 
+                                        tempRows.push(numberStr[0]);   //插入新的一行的行号
+                                        var tempO = {};   //临时的对象
+                                        fieldArr.forEach(function (fieldCoor) {  //fieldCoor : 字段坐标
+                                            var field = dataObj[fieldCoor] ? dataObj[fieldCoor].v : fieldCoor;   //字段内容
+                                            var valO = dataObj[fieldCoor.match(/[A-z]+/g)[0] + numberStr[0]]; //该行（新的一行），该字段对应的值（dataObj[coor]: object）
+                                            tempO[field] = valO ? valO.v : "";  //赋值
+                                        });
+                                        newData.push(tempO);  //插入
+                                    }
+                                }
+                            });
+                            callback(newData);
+                            return;
+                        default:
+                            callback({});
+                            return;
+                    }
+                }
+            });
+        }
+
+        //到嵌套 JSON 中尋找指定 key 的值
+        function FindValueByKey(key, data) {
+            for (var d in data) {
+                if (key.name == d) {
+                    key.value = data[d];
+                    break;
+                }
+                else if (Object.prototype.toString.call(data[d]) === '[object Object]') {
+                    FindValueByKey(key, data[d]);
+                }
+            }
+        }
+
+        //將嵌套 JSON 平鋪成一層
+        function parseToJson(data) {
+            var objArr = new Array();
+            var result = '[';
+            var prefix = '';
+            for (i = 0; i < data.length; i++) {
+                result += '{';
+                obj = data[i];
+                for (var d in obj) {
+                    if (Object.prototype.toString.call(obj[d]) === '[object Object]') {
+                        if (prefix == '')
+                            result = parseToJson2(d, obj[d], result);
+                        else
+                            result = parseToJson2(prefix + "_" + d, obj[d], result);
+                    }
+                    else {
+                        if (prefix == '') {
+                            if (obj[d] == null || obj[d] == "null")
+                                result += '"' + d + '":"-",';
+                            else
+                                result += '"' + d + '":"' + obj[d] + '",';
+                        }
+
+                        else {
+                            if (obj[d] == null || obj[d] == "null")
+                                result += '"' + prefix + "_" + d + '":"-",';
+                            else
+                                result += '"' + prefix + "_" + d + '":"' + obj[d] + '",';
+                        }
+                    }
+
+                }
+                result = result.substring(0, result.lastIndexOf(","));
+                result += "},";
+            }
+            result = result.substring(0, result.lastIndexOf(","));
+            result += ']';
+            var objs = JSON.parse(result)
+            for (k = 0; k < objs.length; k++)
+                objArr.push(objs[k]);
+            return objArr;
+        }
+
+        //添加新的管控信息
+        function InsertMes() {
+            var tControlName = document.getElementById("tControlName").value;
+            var tControlValue = document.getElementById("tControlValue").value;
+            var tControlType = document.getElementById("tControlType").value;
+            var tControlLevel = document.getElementById("tControlLevel").value;
+            var tControlDesc = document.getElementById("tControlDesc").value;
+            var tSelectFile = null;
+            //var file = $("input[name=Upload_File]")[0].files[0]
+            var sendData = {
+                CONTROL_NAME: tControlName,
+                CONTROL_VALUE: tControlValue.length > 0 ? tControlValue : fileData,
+                CONTROL_TYPE: tControlType,
+                CONTROL_LEVEL: tControlLevel,
+                CONTROL_DESC: tControlDesc,
+                filename:filename,
+                FileBase64: Bas64File ? Bas64File : ""
+            }
+            Bas64File == "" && (function () {
+                console.log(selectFileFlag,"==============================");
+                if (selectFileFlag) {
+                    layer.msg("請稍等！解析文件中。。。", {
+                        icon: 0,
+                        time: 2000
+                    }, function () {
+                        //location.reload();
+                    });
+                }
+                else {
+                    console.log("----------------------------");
+                    layer.msg("請留意：未選擇文件！", {
+                        icon: 0,
+                        time: 2000
+                    }, function () {
+                        //location.reload(); 
+                    });
+                }
+                
+            }())
+
+            //console.log(sendData, selectFileFlag, send_flag, Bas64File);
+            //(send_flag || !Bas64File)
+            self.parent.client.CallFunction("MESStation.Config.SFCControlConfig", "AddControltype", sendData, function (e) {
+                if (e.Status == "Pass") {//modify by zc 2019/04/15 
+                    layer.msg(e.Message, {
+                        icon: 1,
+                        time: 2000
+                    }, function () {
+                        location.reload();
+                    });
+                        return;
+                } else {
+                    layer.msg(e.Message, {//modify by zc 2019/04/15 
+                        icon: 0,
+                        time: 2000
+                    }, function () {
+                        //location.reload();
+                    });
+                    return;
+                }
+            });
+        }
+   
+
+        //点击返回按钮
+        function BackSkuno() {
+            $("#ModifyList").hide()
+            $("#SkunoList").show();
+            location.reload(true);
+            mesUI.SetLanguage("ControlTYPE");
+        }
+    </script>
+
+</body>
+</html>
+

@@ -1,0 +1,315 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<!--<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-table.min.css" />-->
+<!--<script src="js/jquery-1.9.1.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/layer/layer.min.js"></script>-->
+<!--<script src="js/report.js"></script>-->
+
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/highcharts.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background: #fff;
+    }
+
+    .title {
+        width: 100%;
+        height: 54px;
+        padding: 10px 15px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+        line-height: 33px;
+    }
+
+    .bottom {
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        height: 60px;
+        background: #337ab7;
+        z-index: 10000;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        font-size: 30px;
+        text-align: center;
+        line-height: 60px;
+        color: #fff;
+    }
+
+    #container0, #container1, container2, container3, container4 {
+        height: 100%;
+        margin: 15px;
+    }
+
+        #container0 h2 {
+            text-align: center;
+        }
+
+        #container0 .tabBody {
+            overflow: hidden;
+        }
+
+    .control1, .control2 {
+        height: 30px;
+        margin: 10px 20px;
+    }
+
+        .control1 span, .control2 span {
+            display: inline-block;
+            height: 100%;
+            line-height: 30px;
+            text-align: center;
+            font-size: 18px;
+            padding: 0px 15px;
+            background: #fff;
+            border: 1px solid #337ab7;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .control1 .AgingDays, .control2 .BU {
+            width: 160px;
+            border: none;
+            background: #ddd;
+        }
+
+    .checked {
+        background: #337aa0 !important;
+        color: #fff;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:SMT">ByStationWip数量趋势图</span>
+    </div>
+    <div id="container1"></div>
+    <div id="container2"></div>
+    <div class="control1">
+        <span class="AgingDays" set-lan="html:AgingDays">Aging天數:</span>
+        <!--<span class="checked">ALL</span>
+        <span>30-60天</span>
+        <span>>60天</span>-->
+    </div>
+</body>
+
+<script>
+
+    $(document).ready(function () {
+        var Json1 = {     //JSON规范
+            type: "",    //  bar  横（条形）     column  竖（柱形）
+            title: "主标题",
+            subtitle: "副标题",
+            xAxis: {
+                title: "x轴名（可带单位）",
+                categories: ["x1", "x2", "x3", "x4", "x5", "x6"]    //x轴上各值
+
+            },
+            yAxis: {
+                title: "y轴名(%)"
+            },
+            series: [   //图表主要数据
+                {      //一条数据
+                    name: "数据名1",
+                    data: [61, 29, 33, 44, 53, 22]   //长度要对应，类型是数字
+                },
+                {      //一条数据
+                    name: "数据名2",
+                    data: [22, 71, 54, 38, 74, 32]   //长度要对应，类型是数字
+                },
+                {      //一条数据
+                    name: "数据名3",
+                    data: [88, 10, 29, 101, 6, 67]   //长度要对应，类型是数字
+                },
+                {      //一条数据
+                    name: "数据名4",
+                    data: [12, 52, 53, 7, 69, 100]   //长度要对应，类型是数字
+                },
+            ]
+        }
+
+        var TestData = {     //JSON规范
+            type: "column",    //  bar  横（条形）     column  竖（柱形）
+            title: "ByStationWip数量趋势图",
+            subtitle: "",
+            xAxis: {
+                title: "工站",
+                categories: ["station1", "station2", "station3", "station4", "station5", "station6"]    //x轴上各值
+            },
+            yAxis: {
+                title: "數量(pcs)"
+            },
+            series: [   //图表主要数据
+                {      //一条数据
+                    name: "2019-05-21",
+                    data: [61, 29, 33, 44, 53, 22]   //长度要对应，类型是数字
+                },
+                {      //一条数据
+                    name: "2019-05-22",
+                    data: [22, 71, 54, 38, 74, 32]   //长度要对应，类型是数字
+                },
+                {      //一条数据
+                    name: "2019-05-23",
+                    data: [88, 10, 29, 101, 6, 67]   //长度要对应，类型是数字
+                },
+                {      //一条数据
+                    name: "2019-05-24",
+                    data: [12, 52, 53, 7, 69, 100]   //长度要对应，类型是数字
+                },
+            ]
+        }
+
+        self.parent.client.CallFunction("MESStation.Config.AgingConfig", "getDate", {}, function (e) {
+            if (e.Status == "Fail") {
+                createBtn($(".control1"), ["ALL", "0-30天", "30-60天", ">60天"], "ALL");
+                addEvent($(".control1 span:not(.AgingDays)"), function () {
+                    var sendData1 = {
+                        Agingtime: $(this).text()
+                    };
+                    self.parent.client.CallFunction("MESStation.Config.AgingConfig", "AgingBonepileByBuChart", sendData1, function (e) {
+                        if (e.Status == "Pass") {
+                            highChart($("#container1"), e.Data);
+                        }
+                    });
+                })
+            }
+        });
+
+        self.parent.client.CallFunction("MESStation.Config.AgingConfig", "AgingBonepileByBuChart", { Agingtime: "ALL" }, function (e) {
+            if (e.Status == "Pass") {
+                highChart($("#container1"), e.Data);
+            }
+        });
+
+        function addEvent($span, fn) {
+            $span.on("click", function (e) {
+                if ($(this).attr("class") != "checked") {
+                    $span.removeClass("checked");
+                    $(this).attr("class", "checked");
+                    fn.call(this);
+                }
+            });
+        }
+
+        function createBtn($control, btnArr, chBtn) {
+            $.each(btnArr, function (index, btnName) {
+                var btnSpan = $("<span>" + btnName + "</span>");
+                if (btnName == chBtn) {
+                    btnSpan.addClass("checked");
+                }
+                $control.append(btnSpan);
+            });
+        }
+
+        function highChart(control, data) {    //绘制直方图
+            var chart = {
+                type: data["type"],   //column  bar
+                height: "35%"
+            };
+            var title = {
+                text: data["title"]
+            };
+            var subtitle = {
+                text: data["subtitle"]
+            };
+            var xAxis = {
+                categories: data["xAxis"]["categories"],         // ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                title: {
+                    text: data["xAxis"]["title"],
+                    align: 'high'    //high
+                },
+                crosshair: true
+            };
+            var yAxis = {
+                min: 0,
+                title: {
+                    text: data["yAxis"]["title"],
+                    align: 'high'    //high
+                },
+                lineWidth: "1"
+            };
+            var company = data["yAxis"]["title"].match(/\(.+?\)/g)[0];
+            company = company.substr(1, company.length - 2);
+            var tooltip = {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                   '<td style="padding:0"><b>{point.y:.1f} ' + company + '</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            };
+            var plotOptions = {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            };
+            var credits = {
+                enabled: false
+            };
+            var series = data["series"];
+            var json = {};
+            json.chart = chart;
+            json.title = title;
+            json.subtitle = subtitle;
+            json.tooltip = tooltip;
+            json.xAxis = xAxis;
+            json.yAxis = yAxis;
+            json.series = series;
+            json.plotOptions = plotOptions;
+            json.credits = credits;
+            control.highcharts(json);
+        }
+
+        $.fn.setWidth = function (widthArr) {  //只能设置一行
+            this.each(function (index, ele) {
+                $(this).css("width", widthArr[index] + "%");
+            });
+            return this;   //this:jQuery对象
+        }
+
+        function str_num(arr) {  //把字符串数组变成数字数组
+            var _arr = [];
+            $.each(arr, function (i, str) {
+                _arr.push(Number(str));
+            });
+            return _arr;
+        }
+
+    });
+
+</script>
+
+</html>

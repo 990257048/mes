@@ -1,0 +1,400 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>MES系统</title>
+    <link href="../../css/plugins/jQueryUI/jquery-ui.min.css" rel="stylesheet" />
+    <link href="../../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../../css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="../../css/animate.css" rel="stylesheet">
+    <link href="../../css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="../../css/style.css" rel="stylesheet">
+    <link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="../../css/plugins/bootswatch/bootstrap.min.default.css" rel="stylesheet" />
+    <style>
+        body {
+            zoom: .75;
+            height: 99%;
+        }
+
+        #inputsite .form-group, #toolsite .form-group {
+            height: 35px;
+            margin-bottom: 13px !important;
+            font-size: 1.9rem;
+        }
+
+            #inputsite .form-group .lab, #toolsite label[for=ScanType] {
+                background: linear-gradient(#fff,#a8cbf1);
+                margin-left: 15px;
+                box-sizing: border-box;
+                border-bottom: 1px solid #000;
+            }
+
+            #inputsite .form-group label, #toolsite .form-group label {
+                height: 35px;
+                line-height: 35px;
+                font-weight: 500 !important;
+            }
+
+            #inputsite .form-group .ctr-wrap {
+                height: 35px;
+            }
+
+        .ctr-wrap input[type=text], .ctr-wrap input[type=password], .ctr-wrap select {
+            outline: none !important;
+            border: none !important;
+            border-bottom: 1px solid #000 !important;
+            border-radius: 0px;
+        }
+
+        .ctr-wrap input[type=radio] {
+            width: 20px;
+            height: 20px;
+            margin-top: 7.5px; /* (30 - 20)/2 竖直居中 */
+        }
+
+        .ctr-wrap button {
+            height: 35px;
+            line-height: 35px;
+            background: #007bff;
+            padding: 0 15px;
+            border-radius: 5px;
+            color: #fff;
+        }
+
+            .ctr-wrap button:hover {
+                background: #0651a0;
+            }
+
+        #inputsite .form-control {
+            font-size: 1.9rem !important;
+            font-weight: 500 !important;
+            border: 1px solid #4c4c4c;
+        }
+
+            #inputsite .form-control:focus {
+                background: linear-gradient(#fff,#f8fb3f);
+                box-shadow: none !important;
+            }
+
+        #outputsite {
+            font-size: 2rem !important;
+        }
+
+            #outputsite .form-group {
+                /*width: calc((100% - 45px)/3);*/
+                width: calc((100% - 45px)/2);
+                float: left;
+                border-bottom: 1px solid #000;
+                padding: 0 !important;
+                margin-right: 15px;
+                height: 30px;
+                line-height: 30px;
+            }
+
+                #outputsite .form-group label {
+                    padding: 0 15px 0 0 !important;
+                    margin: 0;
+                    font-size: 1.8rem;
+                    font-weight: 500 !important;
+                    float: left;
+                    width: auto;
+                }
+
+                #outputsite .form-group div {
+                    width: auto;
+                    padding: 0px !important;
+                    min-height: 18px;
+                }
+
+
+        #messagesite {
+            overflow: auto;
+            font-size: 1.8rem;
+        }
+
+        .ibox {
+            margin-bottom: 0px;
+        }
+
+        .ibox-content {
+            height: calc(100% - 54px);
+        }
+
+        #open-close {
+            height: 200px;
+            position: absolute;
+            right: 0px;
+            top: 50%;
+            margin-top: -100px;
+            border-bottom-left-radius: 50%;
+            border-top-left-radius: 50%;
+            outline: none;
+            padding-left: 8px;
+            padding-right: 8px;
+            background: #007bff;
+            font-weight: bold;
+            color: #fff;
+        }
+
+            #open-close:hover {
+                background: #065ab5;
+            }
+
+        ::-webkit-scrollbar {
+            width: 0px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #337ab7;
+        }
+
+        @media(max-width:1599px) {
+            #outputsite .form-group {
+                float: left;
+                width: calc((100% - 30px)/2);
+                /*width: 100%;*/
+            }
+        }
+
+        @media(max-width:1199px) {
+            #outputsite .form-group {
+                float: left;
+                width: 100%;
+            }
+        }
+
+        @media(max-width:991px) {
+            #outputsite .form-group {
+                float: left;
+                width: calc(50% - 30px);
+                /*width: 100%;*/
+            }
+        }
+
+        @media(max-width:749px) {
+            #outputsite .form-group {
+                float: left;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="color-cPage gray-bg">
+
+    <div class="ibox full-height">
+        <div class="panel-heading" style="background:#8fc3fa; ">
+            <h3 class="no-padding no-margins">
+                <i class="fa fa-tags" style="font-size:20px;"></i>
+                <span style="padding-left:10px; font-size:20px !important; color:#000; font-weight:800;" set-lan="html:PassStation">
+                </span>
+                <button class="btn btn-default small" id="btnReset">
+                    <i class="glyphicon glyphicon-refresh"></i> <lan set-lan="html:Reset">Reset</lan>
+                </button>
+                <button class="btn btn-default small" id="btnResetLine">
+                    <i class="glyphicon glyphicon-refresh"></i> <lan set-lan="html:ReSetLine">Reset Line</lan>
+                </button>
+            </h3>
+        </div>
+        <div class="ibox-content">
+            <div class="row full-height">
+                <div class="col-xs-12" id="IOSite" style="height:100%">
+                    <div class="col-xs-4" style="position:absolute; left:-0%; height:100%;  border:1px solid #337ab7; border-radius:0px; padding-top:15px; padding-right:36px;">
+                        <button id="open-close" status="open"><</button>
+                        <div class="panel panel-default col-xs-12 no-padding" style=" height:99%; border:1px solid #8fc3fa; margin-bottom:15px; overflow:auto;">
+                            <div class="panel-heading fa fa-list" style="width:100%;font-size:20px; margin-bottom:10px; font-weight:800;background: linear-gradient(#fff,#8fc3fa) " set-lan="html:StationInfo"> Station Information </div>
+                            <div class="panel-body no-padding">
+                                <div class="col-xs-12" id="outputsite"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="null" class="col-xs-4"></div>
+                    <div class="col-xs-8 right-wrap" style="border:1px solid #337ab7; border-radius:0px;  padding-top:15px; height:100%">
+                        <div class="panel ipt-wrap panel-default col-xs-12 no-padding" style=" border:1px solid #8fc3fa;">
+                            <div class="panel-heading fa fa-edit" style="width:100%; font-size:20px; margin-bottom:10px; font-weight:800; background: linear-gradient(#fff,#8fc3fa);" set-lan="html:StationInput"> Input</div>
+                            <div class="panel-body no-padding">
+                                <div class="col-xs-12 no-padding" id="toolsite"></div>
+                                <div class="col-xs-12 no-padding" id="inputsite">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default col-xs-12 no-padding" style=" border:1px solid #8fc3fa;">
+                            <div class="panel-heading fa fa-twitch" style="width:100%;  background: linear-gradient(#fff,#8fc3fa); font-size:20px; font-weight:800;" set-lan="html:StationMessage"> Message</div>
+                            <div class="panel-body no-padding" id="messagesite">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--<div class="ibox full-height">
+        <div class="panel-heading bg-primary">
+            <h3 class="no-padding no-margins">
+                <i class="glyphicon glyphicon-tags"></i>
+                <span style="padding-left:10px;" set-lan="html:PassStation">
+                </span>
+                <button class="btn btn-default small" id="btnReset">
+                    <i class="glyphicon glyphicon-refresh"></i> <lan set-lan="html:Reset">Reset</lan>
+                </button>
+                <button class="btn btn-default small" id="btnResetLine">
+                    <i class="glyphicon glyphicon-refresh"></i> <lan set-lan="html:ReSetLine">Reset Line</lan>
+                </button>
+            </h3>
+        </div>
+        <div class="ibox-content">
+            <div class="row full-height">
+                <div class="col-xs-12" id="IOSite">
+                    <div class="col-xs-6">
+                        <div class="panel panel-default col-xs-12 no-padding">
+                            <div class="panel-heading" style=" font-size:large; margin-bottom:10px; font-weight:bold;" set-lan="html:StationInfo">Station Information</div>
+                            <div class="panel-body no-padding">
+                                <div class="col-xs-12" id="outputsite">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="panel panel-default col-xs-12 no-padding">
+                            <div class="panel-heading" style=" font-size:large; margin-bottom:10px; font-weight:bold;" set-lan="html:StationInput">Input</div>
+                            <div class="panel-body no-padding">
+                                <div class="col-xs-12 no-padding" id="inputsite"></div>
+                                <div class="col-xs-12 no-padding" id="toolsite"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default col-xs-12 no-padding">
+                    <div class="panel-heading" style="background-color: #92B5D3 !important; font-size:large; font-weight:bold;" set-lan="html:StationMessage">Message</div>
+                    <div class="panel-body no-padding" id="messagesite">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+    <!-- 全局js -->
+    <script src="../../Scripts/jquery.min.js"></script>
+    <script src="../../Scripts/jquery.cookie.js"></script>
+    <script src="../../Scripts/bootstrap.min.js?v=3.3.6"></script>
+    <!-- 第三方插件 -->
+    <script src="../../Scripts/plugins/jquery-ui/jquery-ui.js"></script>
+    <script src="../../Scripts/plugins/JSON/json2.js"></script>
+    <script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="../../Scripts/plugins/toastr/toastr.min.js"></script>
+    <script src="../../Scripts/plugins/layer/layer.min.js"></script>
+    <script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+    <!--<script src="../../Scripts/echarts.min.js"></script>-->
+    <!-- 自定义 -->
+    <script src="../../Scripts/global.js"></script>
+    <script src="../../Scripts/MesClient.js"></script>
+    <script src="../../Scripts/MesClient.UI.js"></script>
+    <script src="../../Scripts/Station/MesClient.Helper.js"></script>
+    <script src="../../Scripts/Station/MesClient.Station.js"></script>
+    <script>
+        var Client = null;
+        var stationName = "";
+        var option = null;
+        var station = null;
+        var line = "Line1";
+        var mesUI = null;
+        $(document).ready(function () {
+            Client = self.parent.client;
+            mesUI = new MesClientUI(Client);
+            line = localStorage.getItem($.MES.CK_LINE_NAME);
+            if (!line) {
+                line = "Line1";
+            }
+            stationName = $.MES.getQueryString("StationName");
+            $('.panel-heading h3 span').text(stationName);
+            var resize = function () {
+                //var hg = $(".ibox-content").height() - $("#IOSite").height() - 40;
+                //$("#messagesite").height(hg > 300 ? hg : 300);
+                var msgH = $(".right-wrap").css("height").replace("px", "") - $(".ipt-wrap").css("height").replace("px", "") - 100;
+                //console.log($(".right-wrap"), $(".ipt-wrap"), msgH);
+                $("#messagesite").css("height", msgH + "px");
+            };
+            option = {
+                Client: Client,
+                mesUI:mesUI,    //配置语言 2019/06/19 add by gch
+                Line: line,
+                Name: stationName,
+                IScale: "2:4",
+                TContainer: $("#toolsite"),
+                IContainer: $("#inputsite"),
+                OContainer: $("#outputsite"),
+                MContainer: $("#messagesite"),
+                MessageShowType: undefined,
+                BeforeInit: function () {
+                    self.parent.Loading(true);
+                    option.Line = localStorage.getItem($.MES.CK_LINE_NAME);
+                },
+                Init: function (d) {
+                    if (d.Status == "Pass") {
+                        stationName = station.Name;
+                        $('.panel-heading h3 span').text(stationName);
+                    }
+                    else {
+                        swal("工站初始化失败！", d.Message, "error");
+                    }
+                    resize();
+                },
+                resize: function () {
+                    resize();
+                }
+            };
+
+            station = new MesStation(option);
+
+            $("#btnReset").on("click", function (e) {
+                self.parent.Loading(true);
+                $("#messagesite").empty();
+                option.ScanType = station.ScanType;
+                station = new MesStation(option);
+            });
+            $("#btnResetLine").on("click", function (e) {
+                option.Line = "Line1";
+                localStorage.setItem($.MES.CK_LINE_NAME, "");
+                option.ScanType = station.ScanType;
+                station = new MesStation(option);
+            });
+            $("#open-close").on("click", function () {
+                var status = $(this).attr("status");
+                if (status == "open") {
+                    $(this).attr("status", "close");
+                    aninmationClose($(this).parents().eq(0));
+                    $(this).text(">");
+                } else {
+                    $(this).attr("status", "open");
+                    animationOpen($(this).parents().eq(0));
+                    $(this).text("<");
+                }
+                //console.log(status,$(this).parents());
+                function aninmationClose($ele,start,end) {
+                    console.log();
+                    $ele.css("left", "-31.6%")
+                    $("#null").css("width", "1.5%");
+                    $(".right-wrap").css("width","98%");
+                }
+                function animationOpen($ele) {
+                    $ele.css("left", "-0%");
+                    $("#null").css("width", "33.3%");
+                    $(".right-wrap").css("width", "66.6%");
+                }
+            });
+            mesUI = new MesClientUI(self.parent.client);
+            mesUI.SetLanguage("PassStation");
+            window.onresize = function () {
+                resize();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,675 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Second Uesr</title>  <!-- 二级账号权限表 GCH 2018/11/7 ADD-->
+</head>
+
+<!--<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-table.min.css" />
+
+<script src="js/jquery-1.9.1.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/layer/layer.min.js"></script>-->
+
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background: #fff;
+    }
+
+    .title {
+        width: 100%;
+        height: 54px;
+        padding: 10px 15px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #337ab7;
+        border-radius: 3px;
+        line-height: 33px;
+    }
+
+    .list {
+        width: 100%;
+        height: 34px;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-top: 25px;
+    }
+
+        .list .btnList {
+            height: 100%;
+            float: left;
+            border: 1px solid #337ab7;
+            border-radius: 3px;
+            border-right: none;
+        }
+
+            .list .btnList .btn0 {
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                color: rgb(103,106,108);
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor: pointer;
+            }
+
+                .list .btnList .btn0:hover {
+                    color: #fff;
+                    background: #286090;
+                }
+
+            .list .btnList .btn1,
+            .list .btnList .btn2 {
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                color: rgba(103,106,108,0.6); /*rgba(103,106,108,0.6)*/
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor: no-drop; /*no-drop*/
+            }
+
+                .list .btnList .btn1:hover,
+                .list .btnList .btn2:hover {
+                    color: #fff;
+                    background: #337ab7;
+                    opacity: 0.6;
+                }
+
+            .list .btnList .btn11,
+            .list .btnList .btn22 {
+                height: 100%;
+                padding: 6px 17px;
+                line-height: 22px;
+                color: rgb(103, 106, 108);
+                float: left;
+                font-size: 14px;
+                border-right: 1px solid #337ab7;
+                cursor: pointer;
+            }
+
+                .list .btnList .btn11:hover,
+                .list .btnList .btn22:hover {
+                    color: #fff;
+                    background: #286090;
+                }
+
+        .list .query {
+            float: right;
+            height: 100%;
+        }
+
+            .list .query .input {
+                float: left;
+                height: 100%;
+                width: 196px;
+                border: 1px solid #337ab7;
+                box-sizing: border-box;
+                border-radius: 5px;
+            }
+
+                .list .query .input input {
+                    width: 100%;
+                    height: 100%;
+                    padding: 6px 12px;
+                    border-radius: 5px;
+                    border: none;
+                    color: #676a6c;
+                    outline: none;
+                }
+
+            .list .query .btnQuery {
+                float: left;
+                height: 100%;
+                padding: 6px 12px;
+                line-height: 20px;
+                border: 1px solid #337ab7;
+                margin-left: 8px;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+
+                .list .query .btnQuery:hover {
+                    color: #fff;
+                    background: #286090;
+                }
+
+    .tab {
+        width: auto;
+        /*border: 1px solid #adadad;*/
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-left: 15px;
+        margin-right: 15px;
+        overflow: auto;
+    }
+
+    #ModifyList, #AddList {
+        position: absolute;
+    }
+
+        #AddList .addBtn, #ModifyList .editBtn {
+            background: #337ab7;
+            color: #fff;
+            font-weight: bold;
+        }
+
+            #AddList .addBtn:hover, #ModifyList .editBtn:hover {
+                background: #337ab7;
+            }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<body>
+
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:ReworkSet">Second Uesr</span>
+    </div>
+
+    <div class="list">
+        <div class="btnList">
+            <div class="btn0"><i class="glyphicon glyphicon-plus"></i><span set-lan="html:New">New</span></div>
+            <div id="btn1" class="btn1" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i><span set-lan="html:Edit">Edit</span></div>
+            <div id="btn2" class="btn2"><i class="glyphicon glyphicon-trash"></i><span set-lan="html:Delete">Delete</span></div>
+        </div>
+        <div class="query">
+            <div class="input">
+                <input type="text" value="" />
+            </div>
+            <div class="btnQuery" set-lan="html:Query">
+                Query
+            </div>
+        </div>
+    </div>
+
+    <div class="tab">
+        <table></table>
+    </div>
+    
+    <!--新增弹窗-->
+    <div id="AddList" class="hidden">
+        <div class="panel-body">
+            <div class="row">
+                </br>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:EMP_NO">EMP_NO</label>
+                    <div class="col-xs-8">
+                        <input id="EMP_NO" class="form-control" value="" />
+                    </div>
+                </div>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:EMP_PASSWORD">EMP_PASSWORD</label>
+                    <div class="col-xs-8">
+                        <input id="EMP_PASSWORD" class="form-control" value="" />
+                    </div>
+                </div>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:STATION_NAME">STATION_NAME</label>
+                    <div class="col-xs-8">
+                        <!--<input id="STATION_NAME" class="form-control" value="" />-->
+                        <select class="form-control" id="STATION_NAME">
+                            <!--<option>xxxxxx</option>  
+                            <option>xxxxxx</option>
+                            <option>xxxxxx</option>
+                            <option>xxxxxx</option>-->
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:STATION_ITEM">STATION_ITEM</label>
+                    <div class="col-xs-8">
+                        <input id="STATION_ITEM" class="form-control"  />
+                    </div>
+                </div>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:MAC_ADDRESS">MAC_ADDRESS</label>
+                    <div class="col-xs-8">
+                        <input id="MAC_ADDRESS" class="form-control"  />
+                    </div>
+                </div>
+                <div class="ADD col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right"></label>
+                    <div class="col-xs-8">
+                        <button class="form-control addBtn">ADD</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--修改弹窗-->
+    <div id="ModifyList" class="hidden">
+        <div class="panel-body">
+            <div class="row">
+                </br>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right">ID:</label>
+                    <div class="col-xs-8">
+                        <input id="ID" class="form-control" value="" disabled="disabled" />
+                    </div>
+                </div>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:EMP_NO">EMP_NO</label>
+                    <div class="col-xs-8">
+                        <input id="EMP_NO" class="form-control" value="" />
+                    </div>
+                </div>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:EMP_PASSWORD">EMP_PASSWORD</label>
+                    <div class="col-xs-8">
+                        <input id="EMP_PASSWORD" class="form-control" value="" />
+                    </div>
+                </div>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:STATION_NAME">STATION_NAME</label>
+                    <div class="col-xs-8">
+                        <!--<input id="STATION_NAME" class="form-control" value="" />-->
+                        <select class="form-control" id="STATION_NAME">
+                            <!--<option>xxxxxx</option>
+                            <option>xxxxxx</option>
+                            <option>xxxxxx</option>
+                            <option>xxxxxx</option>-->
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:STATION_ITEM">STATION_ITEM</label>
+                    <div class="col-xs-8">
+                        <input id="STATION_ITEM" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right" set-lan="html:MAC_ADDRESS">MAC_ADDRESS</label>
+                    <div class="col-xs-8">
+                        <input id="MAC_ADDRESS" class="form-control" />
+                    </div>
+                </div>
+                <div class="EDIT col-sm-6 col-md-6">
+                    <label class="col-xs-3 control-label text-right"></label>
+                    <div class="col-xs-8">
+                        <button class="form-control editBtn">EDIT</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+
+<script>
+
+	$(document).on("ready",function (){
+	    var getData = null;
+	    var checkedData = null;
+
+		//ID EMP_NO EMP_PASSWORD STATION_NAME STATION_ITEM MAC_ADDRESS EDIT_EMP EDIT_TIME
+		
+	    self.parent.client.CallFunction("MESStation.MESUserManager.CSecondUser", "GetByEMPNO", { "EMP_NO": "" }, function (e) {
+		    console.log(e);
+		    if(e.Status == "Pass"){   //Pass
+		        getData = e.Data;  //e.Data
+		        init(getData);
+		    }
+		});
+		//init(tableData);
+		function init(data) {  //入口
+		    console.log("init");
+		    showData(data);     //show数据
+		    layerInit();             //初始化layer弹出框
+		    //setLanguage();     //设置多语言
+		    clickOperation();     //事件集合
+		}
+        //////////////////////////////////////////////////////////
+	    //show数据
+		function showData(data) {
+		    $(".tab table").bootstrapTable({
+		        data: data,
+		        pagination: true,    //分页显示
+		        pageSize: 10,         //初始化每一页的数据条数
+		        pageList: [10, 25, 50, 100],
+		        search: false,        //显示查找框
+		        striped: true,        //背景色相间
+		        showRefresh: false,   //显示重置按钮
+		        clickToSelect: true,   //单击一行内任意单元格选中该行
+		        onCheck: function (row) {
+		            var rows = $('.tab table').bootstrapTable('getAllSelections');  ///getAllSelections
+		            //console.log(rows);
+		            if (rows.length == 1) {
+		                $("#btn1").attr("class", "btn11");
+		            } else {
+		                $("#btn1").attr("class", "btn1");
+		            }
+		            if (rows.length > 0) {
+		                $("#btn2").attr("class", "btn22");
+		            } else {
+		                $("#btn2").attr("class", "btn2");
+		            }
+		            checkedData = rows;
+		        },
+		        onUncheck: function (row) {
+		            var rows = $('.tab table').bootstrapTable('getAllSelections');  ///getAllSelections
+		            //console.log(rows);
+		            if (rows.length == 1) {
+		                $("#btn1").attr("class", "btn11");
+		            } else {
+		                $("#btn1").attr("class", "btn1");
+		            }
+		            if (rows.length > 0) {
+		                $("#btn2").attr("class", "btn22");
+		            } else {
+		                $("#btn2").attr("class", "btn2");
+		            }
+		            checkedData = rows;
+		        },
+		        columns: [{
+		            checkbox: true
+		        }, {           //ID EMP_NO EMP_PASSWORD STATION_NAME STATION_ITEM MAC_ADDRESS EDIT_EMP EDIT_TIME
+		            field: 'ID',
+		            title: '<label set-lan="html:ID">ID</label>',
+		            align: 'center',
+                    valign: 'middle'
+		        }, {  //["ID","SN","R_SN_ID","SKUNO","RW_SKUNO","RW_WO"]
+		            field: 'EMP_NO',
+		            title: '<label set-lan="html:EMP_NO">EMP_NO</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {  
+		            field: 'EMP_PASSWORD',
+		            title: '<label set-lan="html:EMP_PASSWORD">EMP_PASSWORD</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'STATION_NAME',
+		            title: '<label set-lan="html:STATION_NAME">STATION_NAME</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'STATION_ITEM',
+		            title: '<label set-lan="html:STATION_ITEM">STATION_ITEM</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'MAC_ADDRESS',
+		            title: '<label set-lan="html:MAC_ADDRESS">MAC_ADDRESS</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        },  {
+		            field: 'EDIT_EMP',
+		            title: '<label set-lan="html:EDIT_EMP">EDIT_EMP</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }, {
+		            field: 'EDIT_TIME',
+		            title: '<label set-lan="html:EDIT_TIME">EDIT_TIME</label>',
+		            align: 'center',
+		            valign: 'middle'
+		        }],
+		    });
+		    $(".tab table").find(".bs-checkbox").css({
+		        "text-align": "center",
+		        "vertical-align": "middle",
+		    });
+		}
+	    //初始化layer弹出框
+		function layerInit() {
+		    getStationName();
+		    function getStationName() {    //获取所有工站名
+
+		        console.log($("#AddList").find("#STATION_NAME"), $("#ModifyList").find("#STATION_NAME"));
+
+
+		        var addStationName = $("#AddList").find("#STATION_NAME");
+		        var modifyStationName = $("#ModifyList").find("#STATION_NAME");
+		        var stationCount;  //工站總數量
+		        self.parent.client.CallFunction("MESStation.MESUserManager.CSecondUser", "GetAllStation", { "STATION_NAME": "" }, function (e) {
+		            //console.log(e);
+		            if (e.Status == "Pass") {    //Pass
+		                stationCount = e.Data.length;
+		                for (var i = 0; i < stationCount; i++) {
+		                    var addOption = $("<option value = " + e.Data[i] + ">" + e.Data[i] + "</option>");    //e.Data[i].STATION_NAME
+		                    var modifyOption = $("<option value = " + e.Data[i] + ">" + e.Data[i] + "</option>");
+		                    //if (i == 0) {
+		                    //    addOption.attr("selected", "selected");
+		                    //    modifyOption.attr("selected", "selected");
+		                    //}
+		                    addStationName.append(addOption);
+		                    modifyStationName.append(modifyOption);
+		                }
+		            }
+		        });
+
+		    }
+		}
+	    //设置多语言
+		function setLanguage(pageMsg) {
+		    var client = self.parent.client;
+		    //console.log(client);
+		    var MesUI = new MesClientUI(client);
+		    MesUI.SetLanguage(pageMsg);
+		}
+        //////////////////////////////////////////////////////////
+        //点击操作
+		function clickOperation() {
+		    /////////////////////////新增
+		    $(".btn0").on("click", function () {
+		        //var EditEmp = self.parent.client.UserInfo.EMP_NAME;
+		        layer.open({
+		            type: 1,
+		            skin: "layui-layer-lan",
+		            title: 'New Data',
+		            area: ["80%", "80%"],
+		            scrollbar: false,
+		            content: $("#AddList"),
+		            maxmin: true,
+		            success: function (layero, index) {
+		                $("#AddList").removeClass("hidden");        //显示弹出框
+		                var inputList = $("#AddList .panel-body").find("input");
+		                $(".addBtn").on("click", function () {   //点击 新增数据
+		                    var colNameList = ["EMP_NO","EMP_PASSWORD","STATION_ITEM","MAC_ADDRESS"];    //列名
+		                    var valList = [];    //值列表
+		                    var flag = true;
+		                    inputList.each(function (i) {    //i为下标
+		                        valList.push(inputList[i].value);
+		                        //console.log(inputList[i].value);
+		                        if (inputList[i].value == "") {
+		                            flag = false;
+		                        }
+		                    });
+		                    if (flag || true) {             //允许为空
+		                        var sendData = {};      //待发送的数据
+		                        for (var i = 0; i < colNameList.length; i++) {
+		                            sendData[colNameList[i]] = valList[i];
+		                        }
+		                        sendData["STATION_NAME"] = $("#AddList").find("#STATION_NAME").val();
+		                        console.log(sendData);
+		                        self.parent.client.CallFunction("MESStation.MESUserManager.CSecondUser", "AddSecondUser", sendData, function (e) {
+		                            if (e.Status == "Pass") {      //Pass 
+		                                console.log(sendData);
+		                                layer.msg("已新增1条数据!", {
+		                                    icon: 1,
+		                                    time: 1000
+		                                }, function () {
+		                                    location.reload();
+		                                });
+		                            }
+		                        });
+		                    } else {
+		                        layer.msg("请补全数据!", {
+		                            icon: 0,
+		                            time: 1000
+		                        }, function () {
+		                        });
+		                    }
+		                });
+		            },
+		            end: function () {
+		                $("#AddList").addClass("hidden");                                       //隐藏弹出框
+		                $(".panel-body").find("input").each(function (index, node) {     //关闭弹出框各项数据置空
+		                    node.value = "";
+		                });
+		            }
+		        });
+		    });
+		    /////////////////////////修改
+		    $("#btn1").on("click", function () {
+		        if ($(this).attr("class") == "btn11") {
+		            var checkedData = $('.tab table').bootstrapTable('getAllSelections');
+		            console.log(checkedData);
+		            //弹出layer框
+		            layer.open({
+		                type: 1,
+		                skin: "layui-layer-lan",
+		                title: 'Edit Data',
+		                area: ["80%", "80%"],
+		                scrollbar: false,
+		                content: $("#ModifyList"),
+		                maxmin: true,
+		                success: function (layero, index) {
+		                    $("#ModifyList").removeClass("hidden");        //显示弹出框
+		                    var colNameList = ["ID","EMP_NO","EMP_PASSWORD"   ,"STATION_ITEM","MAC_ADDRESS"];    //列名 "STATION_NAME"项为下拉框
+		                    var inputList = $("#ModifyList .panel-body").find("input");
+		                    $.each(inputList, function (i, node) {               //给各项赋值
+		                        node.value = checkedData[0][colNameList[i]];
+		                    });
+		                    $.each($("#ModifyList").find("#STATION_NAME option"), function (i, opt) {     //自动选中已选中的工站名
+		                        //console.log(this, opt);
+		                        if (checkedData[0]["STATION_NAME"] == opt.value) {
+                                    $(opt).attr("selected", "selected");
+		                        }
+		                    });
+		                    
+
+		                    $(".editBtn").on("click", function () {   //点击 修改数据
+		                        var valList = [];                                 //值列表
+		                        var flag = false;
+		                        inputList.each(function (i, node) {      //i为下标
+		                            valList.push(node.value);
+		                            if (String(node.value) != String(checkedData[0][colNameList[i]])) {
+		                                //console.log(node.value =="undefined", checkedData[0][colNameList[i]] == undefined);
+		                                flag = true;
+		                            }
+		                        });
+		                        if (flag || true) {
+		                            console.log(1);
+		                            var sendData = {};    //待发送的数据
+		                            for (var i = 0; i < colNameList.length; i++) {
+		                                sendData[colNameList[i]] = valList[i];
+		                            }
+		                            sendData["STATION_NAME"] = $("#ModifyList").find("#STATION_NAME").val();
+		                            console.log(sendData);
+		                            self.parent.client.CallFunction("MESStation.MESUserManager.CSecondUser", "UpdateByEMPNO", sendData, function (e) {
+		                                console.log(e);
+		                                if (e.Status == "Pass") {      //Pass 
+		                                    console.log(sendData);
+		                                    layer.msg("已修改1条数据!", {
+		                                        icon: 1,
+		                                        time: 1000
+		                                    }, function () {
+		                                        location.reload();
+		                                    });
+		                                }
+		                            });
+		                        } else {
+		                            console.log(0);
+		                            layer.msg("请修改数据!", {
+		                                icon: 0,
+		                                time: 1000
+		                            }, function () {
+		                            });
+		                        }
+		                    });
+		                },
+		                end: function () {
+		                    $("#ModifyList").addClass("hidden");                                     //隐藏弹出框 
+		                    $(".panel-body").find("input").each(function (index, node) {  //关闭弹出框各项数据置空
+		                        node.value = "";
+		                    });
+		                    $("#ModifyList").find("#STATION_NAME option[selected=selected]").removeAttr("selected");
+		                }
+		            });
+		        }
+		    })
+		    /////////////////////////删除
+		    $("#btn2").on("click", function () {
+		        if ($(this).attr("class") == "btn22") {
+		            layer.open({                          //确定是否删除?
+		                title: 'Warning',
+		                btn: ['Delete', 'Cancel'],
+		                content: "Delete operation cannot be rolled back! </br> Are you sure you want to delete these records?",
+		                yes: function (index) {      //确定删除
+		                    layer.close(index);        //关闭该选择layer框
+		                    var checkedData = $('.tab table').bootstrapTable('getAllSelections');
+		                    console.log(checkedData);
+		                    var successCount = 0;     //成功数量
+		                    $.each(checkedData, function (i) {
+		                        var currentId = checkedData[i]["ID"];
+		                        console.log(currentId);
+		                        self.parent.client.CallFunction("MESStation.MESUserManager.CSecondUser", "DeleteByEMPNO", { "ID": currentId }, function (e) {
+		                            console.log(e);
+		                            if (e.Status == "Pass") {   // Pass
+		                                successCount++;
+		                                if (successCount == checkedData.length) {
+		                                    layer.msg("已删除" + checkedData.length + "条数据!", {
+		                                        icon: 1,
+		                                        time: 1000
+		                                    }, function () {
+		                                        console.log("deleteSuccess!");
+		                                        location.reload();
+		                                    });
+		                                }
+		                            }
+		                        });
+		                    });
+		                }
+		            });
+		        }
+		    });
+		    /////////////////////////查询
+		    $(".query .btnQuery").on("click", function () {
+		        var val = $(".query .input input")[0].value;
+		        $(".tab")[0].innerHTML = "";
+		        var table = $("<table></table>");
+		        $(".tab").append(table);
+		        console.log(val);
+		        self.parent.client.CallFunction("MESStation.MESUserManager.CSecondUser", "GetByEMPNO", { "EMP_NO": val }, function (e) {
+		            console.log(e);
+		            if (e.Status == "Pass") {    //Pass
+		                //console.log(e.Data);
+		                showData(e.Data);     //e.Data
+		                //setLanguage("");
+		            }
+		        });
+		    });
+		}
+	});
+
+
+</script>
+
+
+</html>

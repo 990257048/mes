@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>testReport</title>  <!-- GCH 2019/03/11 ADD-->
+</head>
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link href="../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+<link href="../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+<link href="../../css/ReportConfig.css" rel="stylesheet" />
+
+<script src="../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../Scripts/jquery.cookie.js"></script>
+<script src="../../Scripts/bootstrap.min.js"></script>
+<script src="../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script src="../../Scripts/global.js"></script>
+<script src="../../Scripts/MesClient.js"></script>
+<script src="../../Scripts/MesClient.UI.js"></script>
+<script src="../../Scripts/Report/MesClient.ReportConfig.js"></script>
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:"></span>
+    </div>
+    <div class="list">
+        <div class="btnList"></div>
+        <div class="query">
+            <div class="input">
+                <input type="text" value="" placeholder="" />
+            </div>
+        </div>
+    </div>
+    <div class="tab">
+        <table></table>
+    </div>
+</body>
+<script>
+
+
+    //执行顺序：
+    //①：打开页面自动执行（fn: loadLayerData[btnName]），无选中数据，对弹出框操作（为控件绑定事件，随意操作弹出框内容）
+    //②：打开弹出框执行(fn: btnClick[btnName].loadLayer2)，有选中数据，对弹出框操作（一般情况自动填充数据，这里可以根据选中数据对控件（特殊）二次填充数据，也能对弹出框进行更复杂的操作）
+    //③：点击操作按钮执行(fn: btnClick[btnName].retSendData)，二次处理待发送数据，保证数据无误。
+    //④：后台传回数据时执行(fn: btnClick[btnName].callBackPass / callBackFail)。
+
+
+
+
+    var report = new ConfigReport({
+        "pageMsg": {
+            "pageName": "UserConfirmPowerRevie",                    //title名
+            "setLan": "UserConfirmPowerRevie",                          //该网页的多语言标签名
+            "queryTip": "暂时无用",             //查询框的提示信息
+            "multiSelect":true,
+            "btnMsg": [
+                  {
+                      "id": "btn0",                                      //该按钮的id,可随意定义
+                      "btnName": "Pass",                             //按钮显示名字，点击该按钮后弹出层的id名（Edit加上Layer ===> EditLayer）注意：需要和layerMsg,apiList,btnClick下的名字一致(非常重要)
+                      "icon": "glyphicon glyphicon-ok",      //该按钮的bootstrap字体图标的类名
+                      "layerBtnName": "new",                      //点击该按钮弹出窗口的功能按钮名（大框需要，小框不需要）
+                      "style": "2",                                      //勾选数据与该按钮是否能操作的关系（0：不勾选数据也能操作  1：仅勾选一条数据后才能操作 2：选中一条或多条数据都可以操作）
+                      "layerFlag": false                                //是否弹出大框
+                  },
+                  {
+                      "id": "btn1",
+                      "btnName": "Reject",  
+                      "layerBtnName":"edit",  
+                      "icon": "glyphicon glyphicon-remove",
+                      "style": "2", 
+                      "layerFlag": false
+                  }
+            ],
+        },
+        "apiList": {                                                                 //该网页的重要操作对应的前端与后台交互的api（homePage select 都是固定的写法，除此之外名称全部与按钮名称一致） 
+            "homePage": {                                                       //首页的api（homePage：固定写法，用于加载首页表数据）
+                "className": "MESStation.MESUserManager.UserConfirmPowerRevie",   //该api对应的后台的类路径
+                "functionName": "GetUseQuarter",                                  //该api名称（方法名称）
+                "colList": [""],                                 //后台接收数据的键的集合（大框操作不需要配置，下同；其它情况此项必填，下同）
+                "sendList": [""]                                                 //后台接收数据的值的集合（与键一一对应）
+            },
+            "select": {                                                            //查询框(select:固定写法，用于快速查询表数据)
+                "className": "MESStation.MESUserManager.UserConfirmPowerRevie",
+                "functionName": "GetUseQuarter",
+                "colList": ["xxxx"]  
+            },
+            "Pass": {                                                              //New:与btnName相同，严格对应（大框不需要配置键集合，值集合）
+                "className": "MESStation.MESUserManager.UserConfirmPowerRevie",
+                "functionName": "UserConfirmPass",
+                "colList": ["EMP_NO"]
+            },
+            "Reject": {
+                "className": "MESStation.MESUserManager.UserConfirmPowerRevie",
+                "functionName": "UserConfirmRejected",
+                "colList": ["EMP_NO"]
+            }
+        },
+        "tableMsg": {                                                           //该表的各字段集合 
+
+            //"EMP_NO": "F1335848",
+            //"EMP_NAME": "黃順鵬",
+            //"DEPT": "MIS 龍華 CEM資訊管理部 SFC一課一組",
+            //"EMP_CREATE_DATE": "2020/01/09 16:10:18"
+
+            "column": ["EMP_NO", "EMP_NAME", "DEPT", "EMP_CREATE_DATE"]
+        },
+        "layerMsg": {                                                           //弹出框（针对大框）各个控件的配置
+        },
+        "loadLayerData": {                                              //弹出框的控件的所有操作（大框内特殊控件数据加载[加载完页面数据后自动执行]）
+            
+        },
+        "btnClick": {                                                       //点击按钮及后续所有操作（所有弹出框都要配置，大框动态变化，处理特殊控件（如表格），处理数据[用于发送至后台]，返回数据）
+            "Pass": function (chData, fun1, fun2) {            //小框（chData：选中的数据 fun1：不弹出框直接执行[与后台交互] fun2：弹出小框后确定操作再执行）
+                fun2();
+            },
+            "Reject": function (chData, fun1, fun2) {            //小框（chData：选中的数据 fun1：不弹出框直接执行[与后台交互] fun2：弹出小框后确定操作再执行）
+                fun2();
+            }
+        }
+    });
+
+</script>
+</html>
