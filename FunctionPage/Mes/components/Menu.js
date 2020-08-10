@@ -27,6 +27,7 @@ class Menu extends React.Component {
             closeLayer, clickPrimary, clickCancel
         } = this.props;
         var { menuData, editMenu } = MenuState;
+        console.log(menuData);
         var itemArr = menuData.map(menuO => {
             return <Item key={Math.random()} data={menuO} />
         });
@@ -175,6 +176,7 @@ class Item extends React.Component {
     }
     render() {
         var { data, w } = this.props;
+        // console.log(data);
         var style = {
             color: '#000',
             width: this.setWidth(w, 280, 6),

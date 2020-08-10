@@ -59,50 +59,50 @@ var MesIframesReducer = (state = {
     }
 }
 
-var MesMenuSideReducer = (state = {
-    display:'none',    //是否显示侧边栏
-    menuRoute:[],
-    data:[]             
-}, action) => {
-    switch(action.type){
-        case FIRST_OPEN_MENUSIDE:    //第一次打开侧边栏
-            var {menuSideD} = action;
-            return {
-                display:'block',    //是否显示侧边栏
-                menuRoute:[],
-                data:[menuSideD] 
-            };
-        case INIT_MENUSIDE:          //初始化侧边栏
-            var {menuSideD} = action;
-            return {
-                ...state,
-                data:[menuSideD]
-            };
-        case ADD_MENUSIDE:          //更新侧边栏内容
-            var {contain, newD, grade} = action;
-            var menuRoute = state.menuRoute.slice(0, grade);
-            menuRoute.push(contain);
-            var data = state.data.slice(0, grade + 1);
-            data.push(newD);
-            return {
-                ...state,
-                menuRoute,
-                data
-            };
-        case CLOSE_MENUSIDE:       //隐藏侧边栏
-            return {
-                ...state,
-                display:"none"
-            };
-        case CHANGE_MENUSIDE_DISPLAY:    //切换侧边栏的显示状态（显示 / 隐藏）
-            return {
-                ...state,
-                display: state.display == 'none' ? 'block' : 'none'
-            };
-        default :
-            return state;
-    }
-}
+// var MesMenuSideReducer = (state = {
+//     display:'none',    //是否显示侧边栏
+//     menuRoute:[],
+//     data:[]             
+// }, action) => {
+//     switch(action.type){
+//         case FIRST_OPEN_MENUSIDE:    //第一次打开侧边栏
+//             var {menuSideD} = action;
+//             return {
+//                 display:'block',    //是否显示侧边栏
+//                 menuRoute:[],
+//                 data:[menuSideD] 
+//             };
+//         case INIT_MENUSIDE:          //初始化侧边栏
+//             var {menuSideD} = action;
+//             return {
+//                 ...state,
+//                 data:[menuSideD]
+//             };
+//         case ADD_MENUSIDE:          //更新侧边栏内容
+//             var {contain, newD, grade} = action;
+//             var menuRoute = state.menuRoute.slice(0, grade);
+//             menuRoute.push(contain);
+//             var data = state.data.slice(0, grade + 1);
+//             data.push(newD);
+//             return {
+//                 ...state,
+//                 menuRoute,
+//                 data
+//             };
+//         case CLOSE_MENUSIDE:       //隐藏侧边栏
+//             return {
+//                 ...state,
+//                 display:"none"
+//             };
+//         case CHANGE_MENUSIDE_DISPLAY:    //切换侧边栏的显示状态（显示 / 隐藏）
+//             return {
+//                 ...state,
+//                 display: state.display == 'none' ? 'block' : 'none'
+//             };
+//         default :
+//             return state;
+//     }
+// }
 
 var MesTopReducer = (state = {
     user_msg_hover:false,

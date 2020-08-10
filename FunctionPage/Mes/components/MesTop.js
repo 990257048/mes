@@ -1,7 +1,4 @@
 
-let {useState, useEffect, useMemo, memo, useRef} = React;
-let {useSelector, useDispatch} = ReactRedux;
-let {message} = antd;
 
 let MesTop = () => {
     return <div className="mes-top">
@@ -17,20 +14,18 @@ let MesSearch = () => {
     let display = useSelector(state => state.MesTopReducer.searchBlock.display);
     let dispatch = useDispatch();
     //事件处理函数
-    let input_fn = useMemo(() => {
-        return (e, v) => {
-            getMenuLike({menuStr: v}).then(e => {
-                var newD = e.Data.map(({CONTAIN, IMGSRC, BGCOLOR, LINK}) => ({
-                    contain:CONTAIN,
-                    imgsrc:'../img/menu/' + IMGSRC,
-                    bgcolor:BGCOLOR,
-                    link:LINK
-                }));
-                dispatch(set_menulist(newD));
-            }, e => {
-                message.error(e.Message);
-            });
-        }
+    let input_fn = useCallback((e, v) => {
+        getMenuLike({ menuStr: v }).then(e => {
+            var newD = e.Data.map(({ CONTAIN, IMGSRC, BGCOLOR, LINK }) => ({
+                contain: CONTAIN,
+                imgsrc: '../img/menu/' + IMGSRC,
+                bgcolor: BGCOLOR,
+                link: LINK
+            }));
+            dispatch(set_menulist(newD));
+        }, e => {
+            message.error(e.Message);
+        });
     }, []);
     //root绑定事件,点击关闭搜索结果
     useEffect(() => {
@@ -39,29 +34,27 @@ let MesSearch = () => {
         });
     }, [display]);
     //节流
-    let throttle = useMemo(() => {
-        return (fn,delay)=>{
-            var timer;
-            return (e)=>{
-                var v = e.target.value;
-                clearTimeout(timer);
-                timer = setTimeout(()=>{
-                    fn(e,v);
-                },delay);
-            }
+    let throttle = useCallback((fn, delay) => {
+        var timer;
+        return (e) => {
+            var v = e.target.value;
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                fn(e, v);
+            }, delay);
         }
     }, []);
     return <div className="mes-search-wrap">
         <div className="search-img-wrap">
             <div className="search-img"></div>
         </div>
-        <input className="mes-search" set-lan="attr:placeholder=fastFiring" onInput={throttle(input_fn, 600) } placeholder="搜索模块" />
+        <input className="mes-search" set-lan="attr:placeholder=fastFiring" onInput={throttle(input_fn, 600)} placeholder="搜索模块" />
     </div>
 }
 
 let MesSearchBlock = () => {
-    let {display, menuList} = useSelector(state => state.MesTopReducer.searchBlock);
-    return <div className="mes-search-block" style={{display}}>
+    let { display, menuList } = useSelector(state => state.MesTopReducer.searchBlock);
+    return <div className="mes-search-block" style={{ display }}>
         <div className="mes-search-block-contain">
             {
                 menuList.map(menuO => {
@@ -72,7 +65,7 @@ let MesSearchBlock = () => {
     </div>
 }
 
-let MesSearchItem = ({search_d: {bgcolor, imgsrc, contain, link}}) => {
+let MesSearchItem = ({ search_d: { bgcolor, imgsrc, contain, link } }) => {
     imgsrc = "../img/menu/module.png";
     let dispatch = useDispatch();
     let click_search_menu = useMemo(() => {
@@ -83,10 +76,10 @@ let MesSearchItem = ({search_d: {bgcolor, imgsrc, contain, link}}) => {
     }, []);
     return <div className="search-menu-item">
         <div className="search-menu">
-            <div className="search-menu-img-wrap" style={{background: bgcolor}}>
-                <div className="search-menu-img" style={{background:"url("+ imgsrc +") 0% 0% / 100% 100%"}}></div>
+            <div className="search-menu-img-wrap" style={{ background: bgcolor }}>
+                <div className="search-menu-img" style={{ background: "url(" + imgsrc + ") 0% 0% / 100% 100%" }}></div>
             </div>
-            <div className="search-menu-contain" onClick={ () => {click_search_menu(contain,link)} }>
+            <div className="search-menu-contain" onClick={() => { click_search_menu(contain, link) }}>
                 {contain}
             </div>
         </div>
@@ -96,21 +89,21 @@ let MesSearchItem = ({search_d: {bgcolor, imgsrc, contain, link}}) => {
 let UserMsg = () => {
     let user_msg_hover = useSelector(state => state.MesTopReducer.user_msg_hover);
     let dispatch = useDispatch();
-    let {EMP_NAME, Department, EMP_LEVEL} = useMemo(() => {
+    let { EMP_NAME, Department, EMP_LEVEL } = useMemo(() => {
         return client.UserInfo;
     }, []);
-    return <div 
-        style={{background: user_msg_hover ? '#648dff' : null}} className="user-msg" 
-        onClick={() => {dispatch(change_userbox_state())}} 
+    return <div
+        style={{ background: user_msg_hover ? '#648dff' : null }} className="user-msg"
+        onClick={() => { dispatch(change_userbox_state()) }}
     >
         {EMP_NAME + Department + "-" + (EMP_LEVEL == 9 ? "管理员" : "作业员")}
     </div>
 }
 
 let UserBlock = () => {
-    let {user_block_display, debug_flag} = useSelector(state => state.MesTopReducer);
+    let { user_block_display, debug_flag } = useSelector(state => state.MesTopReducer);
     let dispatch = useDispatch();
-    let {click_fn, exit_fn, debug_change} = useMemo(() => {
+    let { click_fn, exit_fn, debug_change } = useMemo(() => {
         return {
             click_fn: (name, url) => {
                 dispatch(open_iframe(name, url));
@@ -126,11 +119,11 @@ let UserBlock = () => {
             }
         }
     }, []);
-    return <div className="user-block" style={{display:user_block_display}}>
+    return <div className="user-block" style={{ display: user_block_display }}>
         <ul className="user-wrap">
-            <li set-lan="html:Personal" onClick={() => {click_fn('个人资料', 'FunctionPage/User/UserView.html')}}>个人资料</li>
-            <li set-lan="html:ChangePWD" onClick={() => {click_fn('修改密码', 'FunctionPage/User/PWDManage.html')}}>修改密码</li>
-            <li set-lan="html:Contact" onClick={() => {click_fn('联系我们', 'FunctionPage/contactsView.html')}}>联系我们</li>
+            <li set-lan="html:Personal" onClick={() => { click_fn('个人资料', 'FunctionPage/User/UserView.html') }}>个人资料</li>
+            <li set-lan="html:ChangePWD" onClick={() => { click_fn('修改密码', 'FunctionPage/User/PWDManage.html') }}>修改密码</li>
+            <li set-lan="html:Contact" onClick={() => { click_fn('联系我们', 'FunctionPage/contactsView.html') }}>联系我们</li>
             <li set-lan="html:SafetyExit" onClick={exit_fn}>安全退出1</li>
             <li>DEBUG <input className='debug' name='debug' type='checkbox' checked={debug_flag} onChange={debug_change} /></li>
         </ul>
@@ -154,7 +147,7 @@ let UserBlock = () => {
 // class MesLogo extends React.Component {
 //     render (){
 //         return <div className="mes-logo"></div>
-        
+
 //     }
 // }
 

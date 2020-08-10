@@ -1,46 +1,62 @@
+//// saga action
+
+const $OPEN_IFRAME = "打开一个导航栏选项卡";
+const $open_iframe = (name, url) => ({
+    type: $OPEN_IFRAME,
+    name, url
+});
+
+
+
+
+
+
+// ===============================================================================================================================================
+
+
 //系統頭部
-var SET_MENULIST = 'SET_MENULIST';
+var SET_MENULIST = '设置模块数据';
 var set_menulist = menuList => ({
     type: SET_MENULIST,
     menuList
 });
-var CLOSE_SEARCHBLOCK = 'CLOSE_SEARCHBLOCK';
+var CLOSE_SEARCHBLOCK = '关闭搜索块';
 var close_searchblock = () => ({
     type:CLOSE_SEARCHBLOCK
 });
-var CHANGE_USERBOX_STATE = 'CHANGE_USERBOX_STATE';
+var CHANGE_USERBOX_STATE = '改变用户模块状态';
 var change_userbox_state = () => ({
     type:CHANGE_USERBOX_STATE
 });
-var CHANGE_DEBUG = 'CHANGE_DDEBUG';
+var CHANGE_DEBUG = '切换DEBUG状态';
 var change_debug = () => ({
     type:CHANGE_DEBUG
 });
 
 
 //导航栏点击windows
-var CHANGE_MENUSIDE_DISPLAY = 'CHANGE_MENUSIDE_DISPLAY';   //切换侧边栏显示状态
+var CHANGE_MENUSIDE_DISPLAY = '切换侧边栏显示状态';   //切换侧边栏显示状态
 var change_menuside_display = () => ({
     type: CHANGE_MENUSIDE_DISPLAY
 });
-var FIRST_OPEN_MENUSIDE = 'FIRST_OPEN_MENUSIDE';   //第一次打开侧边栏
+var FIRST_OPEN_MENUSIDE = '第一次打开侧边栏';   //第一次打开侧边栏
 var first_open_menuside = menuSideD => ({
     type:FIRST_OPEN_MENUSIDE,
     menuSideD
 });
 //关闭选项卡
-var CLOSE_ACT_IFRAME = 'CLOSE_ACT_IFRAME';   //关闭当前活动的选项卡
+var CLOSE_ACT_IFRAME = '关闭当前活动的选项卡';   //关闭当前活动的选项卡
 var close_act_iframe = name => ({
     type:CLOSE_ACT_IFRAME,
     name
 });
-var CLOSE_NOACT_IFRAME = 'CLOSE_NOACT_IFRAME';  //关闭非活动的选项卡
+var CLOSE_NOACT_IFRAME = '关闭非活动的选项卡';  //关闭非活动的选项卡
 var close_noact_iframe = name => ({
     type:CLOSE_NOACT_IFRAME,
     name
 });
 //切换选项卡
-var CHANGE_ACT_IFRAME = 'CHANGE_ACT_IFRAME';
+var CHANGE_ACT_IFRAME = '切换选项卡';
 var change_act_iframe = name => ({
     type:CHANGE_ACT_IFRAME,
     name
@@ -50,7 +66,7 @@ var change_act_iframe = name => ({
 
 
 //菜单侧边栏搜索
-var INIT_MENUSIDE = 'INIT_MENUSIDE';
+var INIT_MENUSIDE = '初始化菜单侧边栏';
 var init_menuside = menuSideD => ({
     type:INIT_MENUSIDE,
     menuSideD
@@ -82,8 +98,8 @@ var menu_side_search = (ev, value) => dispatch => {
 }
 
 //添加菜单侧边栏
-var ADD_MENUSIDE = "ADD_MENUSIDE";
-var CLOSE_MENUSIDE = "CLOSE_MENUSIDE";
+var ADD_MENUSIDE = "添加菜单侧边栏";
+var CLOSE_MENUSIDE = "关闭菜单侧边栏";
 var close_menuside = () => ({
     type:CLOSE_MENUSIDE
 });
@@ -105,12 +121,13 @@ var add_menuside = (contain, newD, grade) => dispatch => {   //点击侧边栏�
     }); 
 };
 
-var CHANGE_IFRAME = "CHANGE_IFRAME";   //切换iframe（选项卡）
-var ADD_IFRAME = "ADD_IFRAME";
+var CHANGE_IFRAME = "切换iframe（选项卡）";   //切换iframe（选项卡）
 var change_iframe = url => ({
     type:CHANGE_IFRAME,
     url
 });
+
+var ADD_IFRAME = "新增iframe（选项卡）";
 var add_iframe = (name, url) => ({
     type:ADD_IFRAME,
     name,
@@ -137,14 +154,14 @@ var open_iframe = (name, url) => (dispatch, getState) => {     //跳轉頁面入
 
 //菜单
 //宽度变化
-var CHANGE_MENU_W = 'CHANGE_MENU_W';
+var CHANGE_MENU_W = '系统可视口宽度发生变化';
 var change_menu_w = w => ({
     type:CHANGE_MENU_W,
     w
 });
 
 //菜单初始化
-var INIT_MENU = 'INIT_MENU';
+var INIT_MENU = '菜单初始化';
 var init_menu = (w, menuData) => ({
     type:INIT_MENU,
     w,

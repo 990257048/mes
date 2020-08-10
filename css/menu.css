@@ -217,7 +217,8 @@
         cursor:pointer;
     }
     .nav-ul{
-        width:calc(100% - 240px);
+        /* width:calc(100% - 240px); */
+        width:calc(100% - 200px);
         margin: 0;
         white-space: nowrap;
         overflow: hidden;
