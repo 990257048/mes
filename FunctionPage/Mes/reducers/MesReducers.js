@@ -178,15 +178,21 @@ var MesMenuReducer = (state = {
                 editMenu: false,
                 menuData
             };
-        case INIT_MENU:    //初始化菜单
-            var {w, menuData} = action;
+        // case INIT_MENU:    //初始化菜单
+        //     var {w, menuData} = action;
+        //     return {
+        //         ...state,
+        //         w,
+        //         menuData
+        //     };
+        case SET_MENU_DATA:    //初始化菜单 设置菜单数据
+            var {menuData} = action;
             return {
                 ...state,
-                w,
                 menuData
             };
         case BACK_PREV_MENU:    //返回上一层菜单
-            var {menuData}  = action;
+            // var {menuData}  = action;
             var {current_id, all_id} = state.linkData;  //all_id.length只会大于1
             if(all_id.length > 2){
                 var c_id, p_id, a_id, index;
@@ -200,7 +206,7 @@ var MesMenuReducer = (state = {
                 a_id = all_id.slice(0, index);
                 return {
                     ...state,
-                    menuData,
+                    // menuData,
                     linkData:{
                         current_id:c_id,
                         prev_id:p_id,
@@ -210,7 +216,7 @@ var MesMenuReducer = (state = {
             }else{      //all_id.length = 2
                 return {
                     ...state,
-                    menuData,
+                    // menuData,
                     linkData:{
                         current_id: all_id[0].id,   //0
                         prev_id: null,
@@ -219,12 +225,12 @@ var MesMenuReducer = (state = {
                 }
             }
         case CHANGE_MENU_MAP:    //切换菜单页
-            var {index, id, menuData} = action;   //注意：index只会大于1或等于0
+            var {index, id} = action;   //注意：index只会大于1或等于0
             var {all_id} = state.linkData;
             if(index != 0){
                 return {
                     ...state,
-                    menuData,
+                    // menuData,
                     linkData:{
                         current_id: id,
                         prev_id: all_id[index - 1].id,
@@ -234,7 +240,7 @@ var MesMenuReducer = (state = {
             }else{
                 return {
                     ...state,
-                    menuData,
+                    // menuData,
                     linkData:{
                         current_id: id,
                         prev_id: null,
@@ -243,11 +249,11 @@ var MesMenuReducer = (state = {
                 }
             }
         case CLICK_PARENT_MODULE:   //点击父级模块
-            var {menuData, name, id} = action;   //menuData：获取的子模块数据， name/id：父级模块名/id
+            var {name, id} = action;   //menuData：获取的子模块数据， name/id：父级模块名/id
             var {current_id, all_id} = state.linkData;
             return {
                 ...state,
-                menuData,
+                // menuData,
                 linkData:{
                     current_id:id,
                     prev_id:current_id,

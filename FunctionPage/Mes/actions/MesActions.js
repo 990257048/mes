@@ -7,9 +7,45 @@ const $open_iframe = (name, url) => ({
 });
 
 
+// const $INIT_MENU_DATA = "获取菜单数据生成菜单";
+// const $init_menu_data = () => ({
+//     type: $INIT_MENU_DATA
+// });
 
+const $LOAD_MENU = "获取菜单数据生成菜单";
+const $load_menu = (parentMenuID) => ({   // parentMenuID: 父级菜单ID，用于获取子级菜单数据，生成菜单（高复用）
+    type: $LOAD_MENU,
+    parentMenuID
+});
 
+const $BACK_MENU = "返回上一层菜单操作";
+const $back_menu = () => ({
+    type: $BACK_MENU
+});
 
+const $MENU_MAP_CLICK = "切换菜单层级操作";
+const $menu_map_click = (index, id) => ({
+    type: $MENU_MAP_CLICK,
+    index, id
+});
+
+const $PARENT_MODULE_CLICK = "点击父级模块操作";
+const $parent_module_click = (name, id) => ({
+    type: $PARENT_MODULE_CLICK,
+    name, id
+});
+
+// const $DELETE_MODULE = "删除模块操作";
+// const $delete_module = (id) => ({
+//     type: $DELETE_MODULE,
+//     id
+// });
+
+const $TOGGER_COLLECT = "切换收藏操作";
+const $togger_collect = id => ({
+    type: $TOGGER_COLLECT,
+    id
+});
 
 // ===============================================================================================================================================
 
@@ -134,22 +170,22 @@ var add_iframe = (name, url) => ({
     url
 });
 
-var open_iframe = (name, url) => (dispatch, getState) => {     //跳轉頁面入口
-    var mesIframe = getState().MesIframesReducer;
-    //单击模块（会链接到新的页面）
-    //创建新的iframe,新增选项卡，改变当前活动的选项卡
-    var existFlag = false;   //是否包含该选项卡未打开
-    mesIframe.iframes.forEach(navO => {
-        if(navO.url == url){
-            existFlag = true;
-        }
-    });
-    if(existFlag){   //存在该选项卡
-        dispatch(change_iframe(url));
-    }else{   //不存在该选项卡
-        dispatch(add_iframe(name, url));
-    }    
-}
+// var open_iframe = (name, url) => (dispatch, getState) => {     //跳轉頁面入口
+//     var mesIframe = getState().MesIframesReducer;
+//     //单击模块（会链接到新的页面）
+//     //创建新的iframe,新增选项卡，改变当前活动的选项卡
+//     var existFlag = false;   //是否包含该选项卡未打开
+//     mesIframe.iframes.forEach(navO => {
+//         if(navO.url == url){
+//             existFlag = true;
+//         }
+//     });
+//     if(existFlag){   //存在该选项卡
+//         dispatch(change_iframe(url));
+//     }else{   //不存在该选项卡
+//         dispatch(add_iframe(name, url));
+//     }    
+// }
 
 
 //菜单
@@ -161,150 +197,188 @@ var change_menu_w = w => ({
 });
 
 //菜单初始化
-var INIT_MENU = '菜单初始化';
-var init_menu = (w, menuData) => ({
-    type:INIT_MENU,
-    w,
+
+var SET_MENU_DATA = '设置菜单数据';
+var set_menu_data = menuData => ({
+    type:SET_MENU_DATA,
     menuData
 });
 
-var initMenuData = () => dispatch => {
-    var p = new Promise((resolve, reject) => {
-        client.CallFunction("MESStation.GlobalConfig.SystemMenuConfig", "GetSubMenu", {MENU_NAME: 0}, e => {   //获取第一页菜单数据
-            if(e.Status == 'Pass'){
-                resolve(e.Data);
-            }else{
-                reject(e);
-            }
-        });
-    });
-    p.then(d => {
-        var menuData = d.map( menuO => {
-            var {ID, MENU_NAME, CLASS_NAME, STYLE_NAME, PAGE_PATH} = menuO;
-            return {
-                type: 1,
-                contain: MENU_NAME,
-                imgsrc: '../img/menu/' + CLASS_NAME,
-                bgcolor: STYLE_NAME,
-                link: PAGE_PATH,
-                id: ID
-            }
-        });
-        dispatch(init_menu(Number($(document.body).css("width").replace("px","")) - 40, menuData));
-    }, e => {
-        throw new Error("获取菜单数据失败，请检查后台！");
-    });
-}
+// var INIT_MENU = '菜单初始化';
+// var init_menu = (w, menuData) => ({
+//     type:INIT_MENU,
+//     w,
+//     menuData
+// });
+
+
+
+
+
+// var initMenuData = () => dispatch => {
+//     var p = new Promise((resolve, reject) => {
+//         client.CallFunction("MESStation.GlobalConfig.SystemMenuConfig", "GetSubMenu", {MENU_NAME: 0}, e => {   //获取第一页菜单数据
+//             if(e.Status == 'Pass'){
+//                 resolve(e.Data);
+//             }else{
+//                 reject(e);
+//             }
+//         });
+//     });
+//     p.then(d => {
+//         var menuData = d.map( menuO => {
+//             var {ID, MENU_NAME, CLASS_NAME, STYLE_NAME, PAGE_PATH} = menuO;
+//             return {
+//                 type: 1,
+//                 contain: MENU_NAME,
+//                 imgsrc: '../img/menu/' + CLASS_NAME,
+//                 bgcolor: STYLE_NAME,
+//                 link: PAGE_PATH,
+//                 id: ID
+//             }
+//         });
+//         dispatch(init_menu(Number($(document.body).css("width").replace("px","")) - 40, menuData));
+//     }, e => {
+//         throw new Error("获取菜单数据失败，请检查后台！");
+//     });
+// }
+
+
+
+
+
+
+
+
 //返回上一层菜单
-var BACK_PREV_MENU = 'BACK_PREV_MENU';
-var back_prev_menu = menuData => ({
-    type:BACK_PREV_MENU,
-    menuData
+var BACK_PREV_MENU = '返回上一层菜单';
+var back_prev_menu = () => ({
+    type:BACK_PREV_MENU
 });
-var back_menu = () => (dispatch, getState) => {
-    var {all_id} = getState().MesMenuReducer.linkData;
-    if(all_id.length >= 2){   
-        var p = new Promise((resolve, reject) => {
-            client.CallFunction("MESStation.GlobalConfig.SystemMenuConfig", "GetSubMenu", {MENU_NAME: all_id.slice(-2)[0].id}, e => {
-                if(e.Status == 'Pass'){
-                    resolve(e.Data);
-                }else{
-                    reject(e);
-                }
-            });
-        });
-        p.then(d =>{
-            var menuData = d.map(menuO => {
-                var {MENU_NAME, CLASS_NAME, STYLE_NAME, PAGE_PATH, ID} = menuO;
-                return {
-                    type:1,
-                    contain:MENU_NAME,
-                    imgsrc:'../img/menu/' + CLASS_NAME,
-                    bgcolor:STYLE_NAME,
-                    link:PAGE_PATH,
-                    id:ID
-                };
-            });
-            dispatch(back_prev_menu(menuData));
-        }, e => {
-            throw new Error("获取菜单数据失败，请检查后台！");
-        });
-    }        
-}
+// var back_prev_menu = menuData => ({
+//     type:BACK_PREV_MENU,
+//     menuData
+// });
+
+
+
+
+// var back_menu = () => (dispatch, getState) => {
+//     var {all_id} = getState().MesMenuReducer.linkData;
+//     if(all_id.length >= 2){   
+//         var p = new Promise((resolve, reject) => {
+//             client.CallFunction("MESStation.GlobalConfig.SystemMenuConfig", "GetSubMenu", {MENU_NAME: all_id.slice(-2)[0].id}, e => {
+//                 if(e.Status == 'Pass'){
+//                     resolve(e.Data);
+//                 }else{
+//                     reject(e);
+//                 }
+//             });
+//         });
+//         p.then(d =>{
+//             var menuData = d.map(menuO => {
+//                 var {MENU_NAME, CLASS_NAME, STYLE_NAME, PAGE_PATH, ID} = menuO;
+//                 return {
+//                     type:1,
+//                     contain:MENU_NAME,
+//                     imgsrc:'../img/menu/' + CLASS_NAME,
+//                     bgcolor:STYLE_NAME,
+//                     link:PAGE_PATH,
+//                     id:ID
+//                 };
+//             });
+//             dispatch(back_prev_menu(menuData));
+//         }, e => {
+//             throw new Error("获取菜单数据失败，请检查后台！");
+//         });
+//     }        
+// }
 //点击菜单导航切换菜单页
-var CHANGE_MENU_MAP = 'CHANGE_MENU_MAP';
-var change_menu_map = (index, id, menuData) => ({
+var CHANGE_MENU_MAP = '切换当前层级的菜单';
+var change_menu_map = (index, id) => ({
     type:CHANGE_MENU_MAP,
-    index,
-    id,
-    menuData
+    index, id
 });
-var menu_map_click = (index, id) => (dispatch, getState) => {
-    //index: 当前点击的是第几个
-    //id: 当前点击的菜单id
-    var {all_id} = getState().MesMenuReducer.linkData;
-    var p = new Promise((resolve, reject) => {
-        client.CallFunction("MESStation.GlobalConfig.SystemMenuConfig", "GetSubMenu", {MENU_NAME:id}, e => {
-            if(e.Status == 'Pass'){
-                resolve(e.Data);
-            }else{
-                reject(e);
-            }
-        });
-    });
-    p.then(d => {
-        var menuData = d.map(menuO => {
-            var {MENU_NAME, CLASS_NAME, STYLE_NAME, PAGE_PATH, ID} = menuO;
-            return {
-                type:1,
-                contain:MENU_NAME,
-                imgsrc:'../img/menu/' + CLASS_NAME,
-                bgcolor:STYLE_NAME,
-                link:PAGE_PATH,
-                id:ID
-            };
-        });
-        dispatch(change_menu_map(index, id, menuData));
-    }, e => {
-        throw new Error("请求菜单数据失败，请检查后台！");
-    });
-}
+
+
+
+
+
+// var menu_map_click = (index, id) => (dispatch, getState) => {
+//     //index: 当前点击的是第几个
+//     //id: 当前点击的菜单id
+//     var {all_id} = getState().MesMenuReducer.linkData;
+//     var p = new Promise((resolve, reject) => {
+//         client.CallFunction("MESStation.GlobalConfig.SystemMenuConfig", "GetSubMenu", {MENU_NAME:id}, e => {
+//             if(e.Status == 'Pass'){
+//                 resolve(e.Data);
+//             }else{
+//                 reject(e);
+//             }
+//         });
+//     });
+//     p.then(d => {
+//         var menuData = d.map(menuO => {
+//             var {MENU_NAME, CLASS_NAME, STYLE_NAME, PAGE_PATH, ID} = menuO;
+//             return {
+//                 type:1,
+//                 contain:MENU_NAME,
+//                 imgsrc:'../img/menu/' + CLASS_NAME,
+//                 bgcolor:STYLE_NAME,
+//                 link:PAGE_PATH,
+//                 id:ID
+//             };
+//         });
+//         dispatch(change_menu_map(index, id, menuData));
+//     }, e => {
+//         throw new Error("请求菜单数据失败，请检查后台！");
+//     });
+// }
 
 //菜单页点击模块（父级）
-var CLICK_PARENT_MODULE = 'CLICK_PARENT_MODULE';
-var click_parent_module = (menuData, name, id) => ({
+var CLICK_PARENT_MODULE = '进入子模块';
+var click_parent_module = (name, id) => ({
     type:CLICK_PARENT_MODULE,
-    menuData,
-    name,
-    id
+    name, id
 });
-var parent_module_click = (name, id) => dispatch => {   //点击模块(父级)执行
-    var p = new Promise((resolve, reject) => {
-        client.CallFunction("MESStation.GlobalConfig.SystemMenuConfig", "GetSubMenu", {MENU_NAME:id}, e => {
-            if(e.Status == 'Pass'){
-                resolve(e.Data);
-            }else{
-                reject(e);
-            }
-        });
-    });
-    p.then(d => {
-        var menuData = d.map(menuO => {
-            var {MENU_NAME, CLASS_NAME, STYLE_NAME, PAGE_PATH, ID} = menuO;
-            return {
-                type:1,
-                contain:MENU_NAME,
-                imgsrc:'../img/menu/' + CLASS_NAME,
-                bgcolor:STYLE_NAME,
-                link:PAGE_PATH,
-                id:ID
-            };
-        });
-        dispatch(click_parent_module(menuData, name, id));
-    }, e => {
-        throw new Error("请求子模块数据失败，请检查后台！");
-    });
-}
+// var click_parent_module = (menuData, name, id) => ({
+//     type:CLICK_PARENT_MODULE,
+//     menuData,
+//     name,
+//     id
+// });
+
+
+
+// var parent_module_click = (name, id) => dispatch => {   //点击模块(父级)执行
+//     var p = new Promise((resolve, reject) => {
+//         client.CallFunction("MESStation.GlobalConfig.SystemMenuConfig", "GetSubMenu", {MENU_NAME:id}, e => {
+//             if(e.Status == 'Pass'){
+//                 resolve(e.Data);
+//             }else{
+//                 reject(e);
+//             }
+//         });
+//     });
+//     p.then(d => {
+//         var menuData = d.map(menuO => {
+//             var {MENU_NAME, CLASS_NAME, STYLE_NAME, PAGE_PATH, ID} = menuO;
+//             return {
+//                 type:1,
+//                 contain:MENU_NAME,
+//                 imgsrc:'../img/menu/' + CLASS_NAME,
+//                 bgcolor:STYLE_NAME,
+//                 link:PAGE_PATH,
+//                 id:ID
+//             };
+//         });
+//         dispatch(click_parent_module(menuData, name, id));
+//     }, e => {
+//         throw new Error("请求子模块数据失败，请检查后台！");
+//     });
+// }
+
+
 
 //刷新模塊
 var CHANGE_MENU = 'CHANGE_MENU';
@@ -312,6 +386,9 @@ var change_menu = menuData => ({
     type: CHANGE_MENU,
     menuData
 }); 
+
+
+
 //新增模块
 var SET_LAYER_OPTION = 'SET_LAYER_OPTION';
 var set_layer_option = option => ({
@@ -362,10 +439,15 @@ var get_all_icon = () => (dispatch, getState) => { //获取所有图标数据，
 
 
 //修改菜单
-var TOGGLE_EDITMENU = 'TOGGLE_EDITMENU';
+var TOGGLE_EDITMENU = '切换修改菜单的状态';
 var toggle_editmenu = () => ({
     type:TOGGLE_EDITMENU
 });
+
+
+
+
+
 //我要收藏
 var TOGGLE_COLLECTION = "切换我要收藏的状态";
 var toggle_collection = () => ({
@@ -419,6 +501,10 @@ var edit_module = ({title, Content, w, h, id}) => dispatch => {
 //删除菜单
 // Class":"MESStation.GlobalConfig.SystemMenuConfig",
 // "Function":"DeletetMenu","Data":{"ID":"MFGII0000000000000000000000000001GA"}}
+
+
+
+
 var delete_module = id => (dispatch, getState) => {
     var parentId = getState().MesMenuReducer.linkData.current_id;
     swal({
@@ -456,14 +542,15 @@ var delete_module = id => (dispatch, getState) => {
                     });
                     p1.then(d => {
                         var menuData = d.map(menuO => {
-                            var {MENU_NAME, CLASS_NAME, STYLE_NAME, PAGE_PATH, ID} = menuO;
+                            var {MENU_NAME, CLASS_NAME, STYLE_NAME, PAGE_PATH, ID, FavoriteFlag} = menuO;
                             return {
                                 type:1,
                                 contain:MENU_NAME,
                                 imgsrc:'../img/menu/' + CLASS_NAME,
                                 bgcolor:STYLE_NAME,
                                 link:PAGE_PATH,
-                                id:ID
+                                id:ID,
+                                fav_flag: FavoriteFlag
                             };
                         });
                         dispatch(change_menu(menuData));
@@ -484,8 +571,8 @@ var delete_module = id => (dispatch, getState) => {
 };
 
 //弹出层
-var CLOSE_LAYER = 'CLOSE_LAYER';
-var OPEN_LAYER = 'OPEN_LAYER';
+var CLOSE_LAYER = '关闭弹出层';
+var OPEN_LAYER = '打开弹出层';
 var close_layer = () => ({
     type:CLOSE_LAYER
 });
@@ -496,82 +583,89 @@ var open_layer = () => ({
 var click_close = () => dispatch => {
     dispatch(close_layer());
 }
-var click_primary = ev => (dispatch, getState) => {
-    //var lay = $(ev.target).parents(".mes-layer");  //整個彈出層節點
-    var state = getState();
-    var type = state.LayerReducer.title == "新增模塊" ? "add" : "update";
-    var {id, name, url, des, iconSrc, color} = state.LayerContentReducer.currentModule;
-    var parentId = state.MesMenuReducer.linkData.current_id;
-    var editEmp = client.UserInfo.EMP_NO;
-    var updateMenuSendData = {
-        ID:id,
-        MENU_NAME:name,
-        CLASS_NAME:iconSrc,
-        STYLE_NAME:color,
-        PAGE_PATH:url,
-        MENU_DESC:des,
-        LANGUAGE_ID:name,
-        EDIT_EMP:editEmp
-    };
-    var createMenuSendData = {
-        PARENT_CODE:parentId,
-        MENU_NAME:name,
-        CLASS_NAME:iconSrc,
-        STYLE_NAME:color,
-        PAGE_PATH:url,
-        MENU_DESC:des,
-        LANGUAGE_ID:name,
-        EDIT_EMP:editEmp
-    };
-    var className = "MESStation.GlobalConfig.SystemMenuConfig"
-    var functionName = type == "add" ? "CreatMenu" : "UpdateMenu";
-    var sendData = type == "add" ? createMenuSendData : updateMenuSendData;
-    var p = new Promise((resolve, reject) => {
-        client.CallFunction(className, functionName, sendData, e => {
-            if(e.Status == "Pass"){
-                resolve(e);
-            }else{
-                reject(e);
-            }
-        });
-    });
-    p.then(e => {
-        swal({
-            title: type == "add" ? '新增成功' : '修改成功',
-            text: e.Message,
-            type: 'success',
-        }, () => {
-            var p1 = new Promise((resolve, reject) => {
-                client.CallFunction("MESStation.GlobalConfig.SystemMenuConfig", "GetSubMenu", {MENU_NAME:parentId}, e => {
-                    if(e.Status == 'Pass'){
-                        resolve(e.Data);
-                    }else{
-                        reject(e);
-                    }
-                });
-            });
-            p1.then(d => {
-                var menuData = d.map(menuO => {
-                    var {MENU_NAME, CLASS_NAME, STYLE_NAME, PAGE_PATH, ID} = menuO;
-                    return {
-                        type:1,
-                        contain:MENU_NAME,
-                        imgsrc:'../img/menu/' + CLASS_NAME,
-                        bgcolor:STYLE_NAME,
-                        link:PAGE_PATH,
-                        id:ID
-                    };
-                });
-                dispatch(close_layer());
-                dispatch(change_menu(menuData));
-            }, e => {
-                throw new Error("请求子模块数据失败，请检查后台！");
-            });
-        });
-    }, e => {
-        throw new Error("獲取數據失敗，請檢查後臺！");
-    });
-}
+
+const $CLICK_PRIMARY = "提交模块操作(新增或修改)";
+const $click_primary = () => ({
+    type: $CLICK_PRIMARY
+})
+
+// var click_primary = ev => (dispatch, getState) => {
+//     //var lay = $(ev.target).parents(".mes-layer");  //整個彈出層節點
+//     var state = getState();
+//     var type = state.LayerReducer.title == "新增模塊" ? "add" : "update";
+//     var {id, name, url, des, iconSrc, color} = state.LayerContentReducer.currentModule;
+//     var parentId = state.MesMenuReducer.linkData.current_id;
+//     var editEmp = client.UserInfo.EMP_NO;
+//     var updateMenuSendData = {
+//         ID:id,
+//         MENU_NAME:name,
+//         CLASS_NAME:iconSrc,
+//         STYLE_NAME:color,
+//         PAGE_PATH:url,
+//         MENU_DESC:des,
+//         LANGUAGE_ID:name,
+//         EDIT_EMP:editEmp
+//     };
+//     var createMenuSendData = {
+//         PARENT_CODE:parentId,
+//         MENU_NAME:name,
+//         CLASS_NAME:iconSrc,
+//         STYLE_NAME:color,
+//         PAGE_PATH:url,
+//         MENU_DESC:des,
+//         LANGUAGE_ID:name,
+//         EDIT_EMP:editEmp
+//     };
+//     var className = "MESStation.GlobalConfig.SystemMenuConfig"
+//     var functionName = type == "add" ? "CreatMenu" : "UpdateMenu";
+//     var sendData = type == "add" ? createMenuSendData : updateMenuSendData;
+//     var p = new Promise((resolve, reject) => {
+//         client.CallFunction(className, functionName, sendData, e => {
+//             if(e.Status == "Pass"){
+//                 resolve(e);
+//             }else{
+//                 reject(e);
+//             }
+//         });
+//     });
+//     p.then(e => {
+//         swal({
+//             title: type == "add" ? '新增成功' : '修改成功',
+//             text: e.Message,
+//             type: 'success',
+//         }, () => {
+//             var p1 = new Promise((resolve, reject) => {
+//                 client.CallFunction("MESStation.GlobalConfig.SystemMenuConfig", "GetSubMenu", {MENU_NAME:parentId}, e => {
+//                     if(e.Status == 'Pass'){
+//                         resolve(e.Data);
+//                     }else{
+//                         reject(e);
+//                     }
+//                 });
+//             });
+//             p1.then(d => {
+//                 var menuData = d.map(menuO => {
+//                     var {MENU_NAME, CLASS_NAME, STYLE_NAME, PAGE_PATH, ID} = menuO;
+//                     return {
+//                         type:1,
+//                         contain:MENU_NAME,
+//                         imgsrc:'../img/menu/' + CLASS_NAME,
+//                         bgcolor:STYLE_NAME,
+//                         link:PAGE_PATH,
+//                         id:ID
+//                     };
+//                 });
+//                 dispatch(close_layer());
+//                 dispatch(change_menu(menuData));
+//             }, e => {
+//                 throw new Error("请求子模块数据失败，请检查后台！");
+//             });
+//         });
+//     }, e => {
+//         throw new Error("獲取數據失敗，請檢查後臺！");
+//     });
+// }
+
 var click_cancel = () => dispatch => {
     dispatch(close_layer());
 }

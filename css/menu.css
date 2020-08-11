@@ -636,6 +636,16 @@
         font-size: 1.8rem;
         /* color: red; */
     }
+
+    .collected{
+        color: red;
+    }
+
+    .uncollected{
+        color: #fff;
+    }
+
+
     .module-edit{
         right:30px;
     }
