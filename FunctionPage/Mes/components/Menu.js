@@ -1,4 +1,32 @@
 
+// let Menu1 = ({display}) => {
+//     return <div className='mes-menu' style={{ display: display }} >
+//     <MenuTop />
+//     <div className="mul-wrap">
+//         <ul ref='menu-wrap' className='mul'>
+//             {
+
+//             }
+//         </ul>
+//     </div>
+//     {/* <Layer
+//         option={{ LayerOption, LayerContentOption }}
+//         onClose={closeLayer} onPrimary={clickPrimary} onCancel={clickCancel}
+//     /> */}
+//     <Layer />
+//     <MenuShadow />
+// </div>
+// } 
+
+
+
+
+
+
+// ================================================================================================================================================
+// ================================================================================================================================================
+
+
 class Menu extends React.Component {
     constructor(...args) {
         super(...args);
