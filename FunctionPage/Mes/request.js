@@ -28,5 +28,5 @@ let updateMenu = createRequest("MESStation.GlobalConfig.SystemMenuConfig", "Upda
 // 删除模块 
 let deleteMenu = createRequest("MESStation.GlobalConfig.SystemMenuConfig", "DeletetMenu");   // {ID}
 // 切换收藏状态
-let toggerCollect = createRequest("MESStation.GlobalConfig.SystemMenuConfig", "xxxxxxxxxxxxxx");   // {ID}
+let toggerCollect = createRequest("MESStation.Config.FavoriteMenuConfig", "EditFavoriteMenuByID");   // {MENU_ID}
 

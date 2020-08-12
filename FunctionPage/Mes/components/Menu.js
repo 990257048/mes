@@ -105,7 +105,6 @@ let MenuOperation = () => {
     let style = useMemo(() => {
         return {display: client.UserInfo.EMP_LEVEL == "9" ? "inline-block" : "none"}
     }, [client.UserInfo.EMP_LEVEL]);
-    console.log("xxxxxxxxx rander!");
     return <div className="menu-operation">
         <div className={collection ? "collection collection-act" : "collection"} set-lan="html:collection" onClick={toggleCollection}>
             <span className="glyphicon glyphicon-heart"></span>
