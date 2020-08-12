@@ -128,7 +128,14 @@ function* mesLayerSaga() {
 
     yield takeEvery($TOGGER_COLLECT, function* ({id}){
         console.log("TOGGER_COLLECT action run");
-        console.log(id);
+        try{
+            let {Message} = yield call(toggerCollect, {ID: id});
+            message.success(Message);
+            let current_id = yield select(state => state.MesMenuReducer.linkData.current_id);
+            yield put($load_menu(current_id));
+        }catch(e){
+            message.error(e.Message);
+        }
     });
 }
 

@@ -5,7 +5,6 @@ let Menu = ({ display }) => {
     let LayerOption = useSelector(state => state.LayerReducer);
     let LayerContentOption = useSelector(state => state.LayerContentReducer);
 
-
     let resize = useCallback(() => {  // onresize的回调
         let w = document.body.clientWidth - 40;
         dispatch(change_menu_w(w));
@@ -14,14 +13,16 @@ let Menu = ({ display }) => {
         resize();
         dispatch($load_menu(0));   // 初始化菜单(首页菜单)
     }, []);
-    useEffect(() => {      // 配置多语言 监听body宽度
-        var mesUI = new MesClientUI(client);
-        mesUI.SetLanguage("menu");
+    useEffect(() => {   // 监听body宽度
         window.onresize = throttle(resize, 100);
         return () => {
             window.onresize = null;
         }
     }, []);
+    useEffect(() => {      // 配置多语言 
+        var mesUI = new MesClientUI(client);
+        mesUI.SetLanguage("menu");
+    }, [menuData]);
     let itemList = useMemo(() => {
         var itemArr = menuData.map(menuO => {
             return <Item key={menuO.id} data={menuO} />
@@ -29,8 +30,6 @@ let Menu = ({ display }) => {
         editMenu && itemArr.push(<Item key={"add-menu"} data={{}} />);
         return itemArr;
     }, [menuData, editMenu]);
-
-
 
     let closeLayer = useCallback(() => {
         dispatch(close_layer());
@@ -103,13 +102,17 @@ let MenuOperation = () => {
     let toggleEditmenu = useCallback(() => {
         dispatch(toggle_editmenu());
     }, []);
+    let style = useMemo(() => {
+        return {display: client.UserInfo.EMP_LEVEL == "9" ? "inline-block" : "none"}
+    }, [client.UserInfo.EMP_LEVEL]);
+    console.log("xxxxxxxxx rander!");
     return <div className="menu-operation">
         <div className={collection ? "collection collection-act" : "collection"} set-lan="html:collection" onClick={toggleCollection}>
             <span className="glyphicon glyphicon-heart"></span>
             {' '}
             <span>我要收藏</span>
         </div>
-        <div className={editMenu ? "edit-menu edit-menu-act" : "edit-menu"} set-lan="html:editMenu" onClick={toggleEditmenu}>
+        <div className={editMenu ? "edit-menu edit-menu-act" : "edit-menu"} style={ style } set-lan="html:editMenu" onClick={toggleEditmenu}>
             <span className="glyphicon glyphicon-pencil"></span>
             {' '}
             <span>修改菜单</span>

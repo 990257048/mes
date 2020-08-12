@@ -70,7 +70,7 @@ let MesSearchItem = ({ search_d: { bgcolor, imgsrc, contain, link } }) => {
     let dispatch = useDispatch();
     let click_search_menu = useMemo(() => {
         return (name, url) => {
-            dispatch(open_iframe(name, url));
+            dispatch($open_iframe(name, url));
             dispatch(close_searchblock());
         }
     }, []);
