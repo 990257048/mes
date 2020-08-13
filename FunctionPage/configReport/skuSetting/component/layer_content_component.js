@@ -4,7 +4,7 @@ let WrapCon1 = () => {
     let {globalRely, con1: {init, load}} = useSelector(state => state.layerContentReducer);
     let {selectData, currentOperate} = useSelector(state => state.configReportReducer);
     let {BU, SKU_NAME, SKUNO, SKU_TYPE, VERSION, C_SERIES_ID, CUST_PARTNO, CUST_SKU_CODE, SN_RULE, PANEL_RULE, LENGTH, DESCRIPTION} = init;
-    
+
     let dispatch = useDispatch();
     let setInitValue = o => { dispatch(set_con_init("con1", o)) };
     let setLoadValue = o => { dispatch(set_con_load("con1", o)) };
@@ -15,8 +15,6 @@ let WrapCon1 = () => {
         });
         return o;
     };
-
-    console.log("con1 rander");
 
     useEffect(() => {
         getAllBu().then(e => {
@@ -38,14 +36,15 @@ let WrapCon1 = () => {
 
     useEffect(() => {
         if(currentOperate == "edit"){
+
             dispatch(set_global_rely(convObj(selectData, globalRely))); //修改操作加载全局依赖值
             setInitValue({...convObj(selectData, init), C_SERIES_ID: selectData.SERIES_NAME});  //修改操作填充值
         }
-        if(currentOperate == "add"){
-            //init - null  rely - null
-            dispatch(set_global_rely({})); //全局依赖置空
-            setInitValue({});   //初始值置空
-        }
+        // if(currentOperate == "add"){
+        //     //init - null  rely - null
+        //     dispatch(set_global_rely({})); //全局依赖置空
+        //     setInitValue({});   //初始值置空
+        // }
     }, [currentOperate, selectData]);
 
 
@@ -67,14 +66,17 @@ let WrapCon1 = () => {
             }
         </Select>
     </div>
+
     <div className="con-son">
         <span>机种名称: </span>
         <Input value={ SKU_NAME } size="middle" onChange={e => {setInitValue({SKU_NAME: e.target.value})}} />
     </div>
+
     <div className="con-son">
         <span>机种: </span>
         <Input value={ SKUNO } size="middle" onChange={e => {setInitValue({SKUNO: e.target.value})}} />
     </div>
+
     <div className="con-son">
         <span>机种类型: </span>
         <Select size="middle" value={SKU_TYPE} style={{width: "100%"}} onChange={v => {setInitValue({SKU_TYPE: v})}}>
@@ -83,10 +85,12 @@ let WrapCon1 = () => {
             }
         </Select>
     </div>
+
     <div className="con-son">
         <span>机种版本: </span>
         <Input value={ VERSION } size="middle" onChange={e => {setInitValue({VERSION: e.target.value})}} />
     </div>
+
     <div className="con-son">
         <span>机种所属系列: </span>
         <Select size="middle" value={C_SERIES_ID} style={{width: "100%"}} onChange={v => {setInitValue({C_SERIES_ID: v})}}>
@@ -95,14 +99,17 @@ let WrapCon1 = () => {
             }
         </Select>
     </div>
+
     <div className="con-son">
         <span>客户料号: </span>
         <Input value={ CUST_PARTNO } size="middle" onChange={e => {setInitValue({CUST_PARTNO: e.target.value})}} />
     </div>
+
     <div className="con-son">
         <span>CodeValue: </span>
         <Input value={ CUST_SKU_CODE } size="middle" onChange={e => {setInitValue({CUST_SKU_CODE: e.target.value})}}  />
     </div>
+
     <div className="con-son">
         <span>SN编码规则: </span>
         <Select size="middle" value={SN_RULE} style={{width: "100%"}} onChange={v => {setInitValue({SN_RULE: v, LENGTH: v.length})}}>
@@ -111,23 +118,72 @@ let WrapCon1 = () => {
             }
         </Select>
     </div>
+
     <div className="con-son">
         <span>Panel编码规则: </span>
         <Input value={ PANEL_RULE } size="middle" onChange={e => {setInitValue({PANEL_RULE: e.target.value})}} />
     </div>
+
     <div className="con-son">
         <span>SN长度: </span>
         <Input value={ LENGTH } size="middle" disabled={true} onChange={e => {setInitValue({LENGTH: e.target.value})}} />
     </div>
+
     <div className="con-son">
         <span>描述: </span>
         <Input value={ DESCRIPTION } size="middle" onChange={e => {setInitValue({DESCRIPTION: e.target.value})}} />
     </div>
+
     <div style={{paddingTop: "10px"}}>
         <Button size="middle" type="primary" onClick={save}>保存信息</Button>
     </div>
+
   </div>);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //===============================================================================================================================
 
@@ -172,11 +228,9 @@ let WrapCon2 = () => {
         });
     }
     let testRouteOnSelect = (text, {route_id}) => {   //测试路由选择时的回调
-        setTestRouteCon({...testRouteCon, TEST_ROUTE_ID: route_id});
         let stations = text.split("==");
         setTestStation(stations);
-        //设置最后一个工站
-        setTestRouteCon({...testRouteCon, AutoStation: stations[stations.length - 1]});
+        setTestRouteCon({...testRouteCon, TEST_ROUTE_ID: route_id, AutoStation: stations[stations.length - 1]});   // 不能连续setState，只有最后一次生效
     }
     //-----------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------
@@ -343,6 +397,12 @@ let WrapCon2 = () => {
             <Button size="small" type="primary" icon={<PlusOutlined />} onClick={clickAddSfcRoute}>添加路由</Button>            
         </div>
 
+
+
+
+
+
+
         <div style={{marginBottom: "10px"}}>
             <span style={{lineHeight: "30px", fontWeight: "700"}}>測試路由：</span>
             <AutoComplete 
@@ -376,6 +436,19 @@ let WrapCon2 = () => {
             <br />
             <Button size="small" type="primary" icon={<PlusOutlined />} onClick={clickAddTestRoute}>添加路由</Button>
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <div style={{marginBottom: "10px"}}>
             <span style={{lineHeight: "30px", fontWeight: "700"}}>测试路由（PCBA）：</span>
@@ -419,6 +492,64 @@ let WrapCon2 = () => {
 }
 
 //===============================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 let WrapCon3 = () => {
     console.log("con3 render!");
