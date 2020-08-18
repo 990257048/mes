@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
@@ -17,114 +18,177 @@
         #Parameters .form-group {
             padding-top: 10px;
         }
+
+        /* #batchAddEmp{
+            border: 1px solid red;
+        } */
+        #downloadexcel a {
+            color: #fff;
+        }
     </style>
 </head>
+
 <body class="gray-bg">
     <div class="wrapper wrapper-content animated fadeInRight col-xs-12 col-sm-12 col-lg-12 col-md-12">
         <div class="ibox  float-e-margins" id="Emp_Add">
             <!--<div class="row">-->
             <div class="panel-heading bg-primary">
-                <h3 id="Header"><i class="glyphicon glyphicon-tags"><lan set-lan="text:h_newuser">Create User</lan></i></h3>
+                <h3 id="Header"><i class="glyphicon glyphicon-tags">
+                        <lan set-lan="text:h_newuser">Create User</lan>
+                    </i></h3>
             </div>
             <div class="form-horizontal col-xs-12 col-sm-12 col-lg-12 col-md-12 ibox-content">
                 <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-                    <button type="button" class="btn btn-primary" onclick="javascript:window.location='index.html'"><i class="fa fa-step-backward"></i> <lan set-lan="html:back">返回</lan></button>
+                    <button type="button" class="btn btn-primary" onclick="javascript:window.location='index.html'"><i
+                            class="fa fa-step-backward"></i>
+                        <lan set-lan="html:back">返回</lan>
+                    </button>
                 </div>
                 <div id="Parameters" class="form-horizontal m-t">
                     <div class="row">
                         <div class="form-group  col-xs-6  col-sm-6 col-lg-6 col-md-6 ">
-                            <label for="EMP_NO" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span style=" color:red">*</span><lan set-lan="html:h_empno">EMP_NO</lan>:</label>
+                            <label for="EMP_NO" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span
+                                    style=" color:red">*</span>
+                                <lan set-lan="html:h_empno">EMP_NO</lan>:
+                            </label>
                             <div class="col-xs-8 col-sm-9 col-lg-9 col-md-9">
-                                <input type="text" name="show" class="form-control" id="EMP_NO" set-lan="attr:placeholder=placeholderEMP_NO" size="12">
+                                <input type="text" name="show" class="form-control" id="EMP_NO"
+                                    set-lan="attr:placeholder=placeholderEMP_NO" size="12">
                             </div>
                         </div>
                         <div class="form-group  col-xs-6  col-sm-6 col-lg-6 col-md-6 ">
-                            <label for="EMP_NAME" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span style=" color:red">*</span><lan set-lan="html:h_empname">EMP_NAME</lan>:</label>
+                            <label for="EMP_NAME" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span
+                                    style=" color:red">*</span>
+                                <lan set-lan="html:h_empname">EMP_NAME</lan>:
+                            </label>
                             <div class="col-xs-8 col-sm-9 col-lg-9 col-md-9">
-                                <input type="text" name="show" class="form-control" disabled="disabled" id="EMP_NAME" set-lan="attr:placeholder=placeholderEMP_NAME">
+                                <input type="text" name="show" class="form-control" disabled="disabled" id="EMP_NAME"
+                                    set-lan="attr:placeholder=placeholderEMP_NAME">
                             </div>
                         </div>
                         <div class="form-group  col-xs-6  col-sm-6 col-lg-6 col-md-6 ">
-                            <label for="EMP_PASSWORD" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span style=" color:red">*</span><lan set-lan="html:h_emppassword">EMP_PASSWORD</lan>:</label>
+                            <label for="EMP_PASSWORD" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span
+                                    style=" color:red">*</span>
+                                <lan set-lan="html:h_emppassword">EMP_PASSWORD</lan>:
+                            </label>
                             <div class="col-xs-8 col-sm-9 col-lg-9 col-md-9">
                                 <!--<input type="password" name="show" class="form-control" id="EMP_PASSWORD" placeholder="密碼含数字,字母,特殊字符且超過6位的字符组成!">-->
-                                <input type="password" name="show" class="form-control" id="EMP_PASSWORD" set-lan="attr:placeholder=placeholderEMP_PASSWORD">
+                                <input type="password" name="show" class="form-control" id="EMP_PASSWORD"
+                                    set-lan="attr:placeholder=placeholderEMP_PASSWORD">
                             </div>
                         </div>
 
-                        <div class="form-group col-xs-6  col-sm-6 col-lg-6 col-md-6 " >
-                            <label for="message-text" class="col-xs-4 col-sm-3 col-lg-3 col-md-3  control-label "><lan set-lan="html:HR_DP">HR_DP</lan>:</label>
+                        <div class="form-group col-xs-6  col-sm-6 col-lg-6 col-md-6 ">
+                            <label for="message-text" class="col-xs-4 col-sm-3 col-lg-3 col-md-3  control-label ">
+                                <lan set-lan="html:HR_DP">HR_DP</lan>:
+                            </label>
                             <div class="col-xs-8 col-sm-9 col-lg-9 col-md-9">
-                                <input type="text" name="show" class="form-control" disabled="disabled" id="CURRENT_OU_NAME" set-lan="attr:placeholder=placeholderHR_DP">
+                                <input type="text" name="show" class="form-control" disabled="disabled"
+                                    id="CURRENT_OU_NAME" set-lan="attr:placeholder=placeholderHR_DP">
                             </div>
                         </div>
-                        
+
                         <div class="form-group col-xs-6  col-sm-6 col-lg-6 col-md-6 " style="display: none;">
-                            <label for="message-text" class="col-xs-4 col-sm-3 col-lg-3 col-md-3  control-label "><lan set-lan="html:h_infactorydate">IN_FACTORY</lan>:</label>
+                            <label for="message-text" class="col-xs-4 col-sm-3 col-lg-3 col-md-3  control-label ">
+                                <lan set-lan="html:h_infactorydate">IN_FACTORY</lan>:
+                            </label>
                             <div class="col-xs-8 col-sm-9 col-lg-9 col-md-9">
-                                <input type="text" name="show" class="form-control" disabled="disabled" id="IN_FACTORY" set-lan="attr:placeholder=placeholderIN_FACTORY">
+                                <input type="text" name="show" class="form-control" disabled="disabled" id="IN_FACTORY"
+                                    set-lan="attr:placeholder=placeholderIN_FACTORY">
                             </div>
                         </div>
                         <div class="form-group col-xs-6 col-sm-6 col-lg-6 col-md-6">
-                            <label for="FACTORY" class="col-xs-4 col-sm-3 col-lg-3 col-md-3  control-label"><span style=" color:red">*</span><lan set-lan="html:h_factory">FACTORY</lan>:</label>
+                            <label for="FACTORY" class="col-xs-4 col-sm-3 col-lg-3 col-md-3  control-label"><span
+                                    style=" color:red">*</span>
+                                <lan set-lan="html:h_factory">FACTORY</lan>:
+                            </label>
                             <div class="col-xs-8 col-sm-9 col-lg-9 col-md-9">
                                 <input id="FACTORY" type="text" name="show" class="form-control" disabled />
                             </div>
                         </div>
                         <div class="form-group  col-xs-6 col-sm-6 col-lg-6 col-md-6 ">
-                            <label for="BU_NAME" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span style=" color:red">*</span><lan set-lan="html:h_buname">BU_NAME</lan>:</label>
+                            <label for="BU_NAME" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span
+                                    style=" color:red">*</span>
+                                <lan set-lan="html:h_buname">BU_NAME</lan>:
+                            </label>
                             <div class="col-xs-8  col-sm-9 col-lg-9 col-md-9">
                                 <select id="BU_NAME" name="show" class="form-control"></select>
                             </div>
                         </div>
                         <div class="form-group  col-xs-6  col-sm-6 col-lg-6 col-md-6 ">
-                            <label for="DPT_NAME" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span style=" color:red">*</span><lan set-lan="html:h_dptname">DPT_NAME</lan>:</label>
+                            <label for="DPT_NAME" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span
+                                    style=" color:red">*</span>
+                                <lan set-lan="html:h_dptname">DPT_NAME</lan>:
+                            </label>
                             <div class="col-xs-8 col-sm-9 col-lg-9 col-md-9">
-                                <select type="text" id="DPT_NAME"  name="show" class="form-control" /><select/>
+                                <select type="text" id="DPT_NAME" name="show" class="form-control" /><select />
                             </div>
                         </div>
                         <div class="form-group  col-xs-6  col-sm-6 col-lg-6 col-md-6 ">
-                            <label for="ROLE_NAME" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span style=" color:red">*</span><lan set-lan="html:h_rolename">ROLE_NAME</lan>:</label>
+                            <label for="ROLE_NAME" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span
+                                    style=" color:red">*</span>
+                                <lan set-lan="html:h_rolename">ROLE_NAME</lan>:
+                            </label>
                             <div class="col-xs-8 col-sm-9 col-lg-9 col-md-9">
-                                <select type="text" id="ROLE_NAME" name="show" class="form-control" /><select/>
+                                <select type="text" id="ROLE_NAME" name="show" class="form-control" /><select />
                             </div>
                         </div>
                         <div class="form-group  col-xs-6  col-sm-6 col-lg-6 col-md-6 ">
-                            <label for="LOCATION" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span style=" color:red">*</span><lan set-lan="html:h_location">LOCATION</lan>:</label>
+                            <label for="LOCATION" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span
+                                    style=" color:red">*</span>
+                                <lan set-lan="html:h_location">LOCATION</lan>:
+                            </label>
                             <div class="col-xs-8 col-sm-9 col-lg-9 col-md-9">
                                 <input type="text" name="show" class="form-control" id="LOCATION" placeholder="D10-3F">
                             </div>
                         </div>
                         <div class="form-group  col-xs-6  col-sm-6 col-lg-6 col-md-6 ">
-                            <label for="MAIL_ADDRESS" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span style=" color:red">*</span><lan set-lan="html:h_mailaddress">MAIL_ADDRESS</lan>:</label>
+                            <label for="MAIL_ADDRESS" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span
+                                    style=" color:red">*</span>
+                                <lan set-lan="html:h_mailaddress">MAIL_ADDRESS</lan>:
+                            </label>
                             <div class="col-xs-8 col-sm-9 col-lg-9 col-md-9">
                                 <!--<input type="text" name="show" class="form-control" id="MAIL_ADDRESS" placeholder="以@mail.foxconn.com或@foxconn.com結尾">-->
-                                <input type="text" name="show" class="form-control" id="MAIL_ADDRESS" set-lan="attr:placeholder=placeholderMailAddress">
+                                <input type="text" name="show" class="form-control" id="MAIL_ADDRESS"
+                                    set-lan="attr:placeholder=placeholderMailAddress">
                             </div>
                         </div>
                         <div class="form-group  col-xs-6  col-sm-6 col-lg-6 col-md-6 ">
-                            <label for="PHONE_NUMBER" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span style=" color:red">*</span><lan set-lan="html:h_phonenumber">PHONE_NUMBER</lan>:</label>
+                            <label for="PHONE_NUMBER" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><span
+                                    style=" color:red">*</span>
+                                <lan set-lan="html:h_phonenumber">PHONE_NUMBER</lan>:
+                            </label>
                             <div class="col-xs-8 col-sm-9 col-lg-9 col-md-9">
                                 <!--<input type="text" name="show" class="form-control" id="PHONE_NUMBER" placeholder="分機格式560-XXXXX 短號格式42+XXXXXX 手機11位">-->
-                                <input type="text" name="show" class="form-control" id="PHONE_NUMBER" set-lan="attr:placeholder=placeholderPhoneNumber">
+                                <input type="text" name="show" class="form-control" id="PHONE_NUMBER"
+                                    set-lan="attr:placeholder=placeholderPhoneNumber">
                             </div>
                         </div>
                         <div class="form-group  col-xs-6  col-sm-6 col-lg-6 col-md-6 ">
-                            <label for="AGENT_EMP_NO" class="col-xs-4 col-sm-3 col-lg-3 col-md-3  control-label"><lan set-lan="html:h_agentempno">AGENT_EMP_NO</lan>:</label>
+                            <label for="AGENT_EMP_NO" class="col-xs-4 col-sm-3 col-lg-3 col-md-3  control-label">
+                                <lan set-lan="html:h_agentempno">AGENT_EMP_NO</lan>:
+                            </label>
                             <div class="col-xs-8 col-sm-9 col-lg-9 col-md-9">
-                                <input type="text" name="show" class="form-control" id="AGENT_EMP_NO" set-lan="attr:placeholder=placeholderAGENT_EMP_NO" />
+                                <input type="text" name="show" class="form-control" id="AGENT_EMP_NO"
+                                    set-lan="attr:placeholder=placeholderAGENT_EMP_NO" />
                             </div>
                         </div>
                         <div class="form-group col-xs-6  col-sm-6 col-lg-6 col-md-6 ">
-                            <label for="message-text" class="col-xs-4 col-sm-3 col-lg-3 col-md-3  control-label "><lan set-lan="html:h_empenname">EMP_EN_NAME</lan>:</label>
+                            <label for="message-text" class="col-xs-4 col-sm-3 col-lg-3 col-md-3  control-label ">
+                                <lan set-lan="html:h_empenname">EMP_EN_NAME</lan>:
+                            </label>
                             <div class="col-xs-8 col-sm-9 col-lg-9 col-md-9">
-                                <input type="text" name="show" class="form-control" id="EMP_EN_NAME" set-lan="attr:placeholder=placeholderEMP_EN_NAME">
+                                <input type="text" name="show" class="form-control" id="EMP_EN_NAME"
+                                    set-lan="attr:placeholder=placeholderEMP_EN_NAME">
                             </div>
                         </div>
                         <div class="form-group  col-xs-6  col-sm-6 col-lg-6 col-md-6 ">
-                            <label for="message-text" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label"><lan set-lan="html:h_empdesc">EMP_DESC</lan>:</label>
+                            <label for="message-text" class="col-xs-4  col-sm-3 col-lg-3 col-md-3  control-label">
+                                <lan set-lan="html:h_empdesc">EMP_DESC</lan>:
+                            </label>
                             <div class="col-xs-8 col-sm-9 col-lg-9 col-md-9">
-                                <input type="text" name="show" class="form-control" id="EMP_DESC" set-lan="attr:placeholder=placeholderEMP_DESC" />
+                                <input type="text" name="show" class="form-control" id="EMP_DESC"
+                                    set-lan="attr:placeholder=placeholderEMP_DESC" />
                             </div>
                         </div>
                         <!--<div class="form-group  col-xs-6  col-sm-6 col-lg-6 col-md-6 ">
@@ -137,12 +201,34 @@
                 </div>
                 <div class="form-group">
                     <span style="color:red;" class="col-xs-3 col-sm-3 col-lg-3 col-md-3">帶*為必填項</span>
-                    <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6  col-xs-offset-6 col-sm-offset-6 col-md-offset-6 col-lg-offset-6">
-                        <button class="btn btn-primary" onclick="submitFunction()"><i class="fa fa-save"><lan set-lan="html:save">Save</lan></i></button>
+                    <div
+                        class="col-xs-6 col-sm-6 col-lg-6 col-md-6  col-xs-offset-6 col-sm-offset-6 col-md-offset-6 col-lg-offset-6">
+                        <button class="btn btn-primary" onclick="submitFunction()"><i class="fa fa-save">
+                                <lan set-lan="html:save">Save</lan>
+                            </i></button>
                     </div>
                 </div>
             </div>
             <!--</div>-->
+            <div id="batchAddEmp" class="form-horizontal col-xs-12 col-sm-12 col-lg-12 col-md-12">
+                <h3>批量注册：</h3>
+                <label class="col-xs-3 control-label">
+                    <button class="btn btn-primary" id="downloadexcel"><i class="glyphicon glyphicon-download-alt">
+                            <a href="./File/Upload/RegisterTemplate.xls">下载Excel模板</a>
+                        </i></button>
+                </label>
+                <label class="col-xs-2 control-label">
+                    选择文件：
+                </label>
+                <label class="col-xs-3 control-label">
+                    <input type="file" name="user_msg" />
+                </label>
+                <label class="col-xs-1 control-label">
+                    <button class="btn btn-primary" id="uploadexcel"><i class="glyphicon glyphicon-open">
+                            <lan set-lan="html:uploadexcel">上传注册</lan>
+                        </i></button>
+                </label>
+            </div>
         </div>
     </div>
     <!-- 全局js -->
@@ -151,6 +237,7 @@
     <script src="../../Scripts/bootstrap.min.js?v=3.3.6"></script>
     <!-- 第三方插件 -->
     <script src="../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="../../Scripts/plugins/excel/xlsx.full.min.js"></script>
     <!-- 自定義 -->
     <script src="../../Scripts/global.js"></script>
     <script src="../../Scripts/MesClient.js"></script>
@@ -161,7 +248,7 @@
         var mesUI;
         var action = "";
         $(document).ready(function () {
-            
+
             client = new MesClient(function () {
                 mesUI = new MesClientUI(client);
                 $("#EMP_NO").focus();
@@ -182,7 +269,7 @@
                         for (var item = 0; item < e.Data.length; item++) {
                             bu.append("<option>" + e.Data[item] + "</option>");
                         }
-                    } 
+                    }
                 });
                 //加載dt
                 client.CallFunction("MESStation.GlobalConfig.GetCommonConfig", "GetDT", {}, function (e) {
@@ -194,68 +281,68 @@
                     }
 
                 });
-                
+
                 //工號限制
                 $('#EMP_NO').blur(function () {
-                        if ($("#EMP_NO").val().replace(/^\s+|\s+$/g, "") == "" || $("#EMP_NO").val().replace(/^\s+|\s+$/g, "") == null) {
-                        }
-                        else if ($('#EMP_NO').val().length >= 9 || $('#EMP_NO').val().length <= 4) {
-                            swal({
-                                title: "警告",
-                                text: "請輸入正確的工號!",
-                                type: "warning",
-                                timer: 2000,
-                                showConfirmButton: false
+                    if ($("#EMP_NO").val().replace(/^\s+|\s+$/g, "") == "" || $("#EMP_NO").val().replace(/^\s+|\s+$/g, "") == null) {
+                    }
+                    else if ($('#EMP_NO').val().length >= 9 || $('#EMP_NO').val().length <= 4) {
+                        swal({
+                            title: "警告",
+                            text: "請輸入正確的工號!",
+                            type: "warning",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        $('#EMP_NO').val("");
+                    } else {
+                        var SendData = {};
+                        SendData.EMP_NO = $(this).val();
+                        if ($(this).val() != "") {
+                            client.CallFunction("MESStation.Config.FactoryConfig", "GetHRinfor", SendData, function (e) {
+                                if (e.Status == "Pass") {
+                                    console.log(e);
+                                    var Data = e.Data;
+                                    action = Data[0].ACTION;
+                                    // Data[0].CURRENT_OU_NAME
+                                    $("#CURRENT_OU_NAME").val(Data[0].CURRENT_OU_NAME);
+                                    $("#MAIL_ADDRESS").val(Data[0].NOTES_ID);
+                                    $("#IN_FACTORY").val(Data[0].HIREDATE);
+                                    $("#EMP_NAME").val(Data[0].USER_NAME);
+                                    $("#FACTORY").val(Data[0].USER_ID_EXT);
+                                    if (action != "REGISTERED") {   //新增角色
+                                        console.log(action);
+                                        $("[name=show]").not("#ROLE_NAME").attr("disabled", "disabled")
+                                        //$("[name=show]").not("#ROLE_NAME").not("#EMP_PASSWORD").attr("disabled", "disabled")
+                                    }
+
+                                } else {
+                                    swal({
+                                        title: "警告",
+                                        text: e.Message,
+                                        type: "warning",
+                                        timer: 2000,
+                                        showConfirmButton: false
+                                    });
+                                    $('#EMP_NO').val("");
+                                    $("#DPT_NAME").val("");
+                                    $("#MAIL_ADDRESS").val("");
+                                    $("#IN_FACTORY").val("");
+                                    $("#EMP_NAME").val("");
+                                    $("#FACTORY").val("");
+                                    $("#AGENT_EMP_NO").val("");
+                                }
+                            })
+                            client.CallFunction("MESStation.GlobalConfig.GetCommonConfig", "GetRole", SendData, function (e) {
+                                if (e.Status == "Pass") {
+                                    var dt = $('#ROLE_NAME');
+                                    for (var item = 0; item < e.Data.length; item++) {
+                                        dt.append("<option>" + e.Data[item] + "</option>");
+                                    }
+                                }
                             });
-                            $('#EMP_NO').val("");
-                        } else {
-                            var SendData = {};
-                            SendData.EMP_NO = $(this).val();
-                            if ($(this).val() != "") {
-                                client.CallFunction("MESStation.Config.FactoryConfig", "GetHRinfor", SendData, function (e) {
-                                    if (e.Status == "Pass") {
-                                        console.log(e);
-                                        var Data = e.Data;
-                                        action = Data[0].ACTION;
-                                        // Data[0].CURRENT_OU_NAME
-                                        $("#CURRENT_OU_NAME").val(Data[0].CURRENT_OU_NAME);
-                                        $("#MAIL_ADDRESS").val(Data[0].NOTES_ID);
-                                        $("#IN_FACTORY").val(Data[0].HIREDATE);
-                                        $("#EMP_NAME").val(Data[0].USER_NAME);
-                                        $("#FACTORY").val(Data[0].USER_ID_EXT);
-                                        if (action != "REGISTERED") {   //新增角色
-                                            console.log(action);
-                                            $("[name=show]").not("#ROLE_NAME").attr("disabled", "disabled")
-                                            //$("[name=show]").not("#ROLE_NAME").not("#EMP_PASSWORD").attr("disabled", "disabled")
-                                        }
-                                        
-                                    } else {
-                                        swal({
-                                            title: "警告",
-                                            text: e.Message,
-                                            type: "warning",
-                                            timer: 2000,
-                                            showConfirmButton: false
-                                        });
-                                        $('#EMP_NO').val("");
-                                        $("#DPT_NAME").val("");
-                                        $("#MAIL_ADDRESS").val("");
-                                        $("#IN_FACTORY").val("");
-                                        $("#EMP_NAME").val("");
-                                        $("#FACTORY").val("");
-                                        $("#AGENT_EMP_NO").val("");
-                                    }
-                                })
-                                client.CallFunction("MESStation.GlobalConfig.GetCommonConfig", "GetRole", SendData, function (e) {
-                                    if (e.Status == "Pass") {
-                                        var dt = $('#ROLE_NAME');
-                                        for (var item = 0; item < e.Data.length; item++) {
-                                            dt.append("<option>" + e.Data[item] + "</option>");
-                                        }
-                                    }
-                                });
-                            }
                         }
+                    }
                 });
                 //電話號碼限制
                 $('#PHONE_NUMBER').blur(function () {
@@ -343,7 +430,7 @@
                 //    }
                 //});//end emp_name blur
 
-               // 密碼限制
+                // 密碼限制
                 $('#EMP_PASSWORD').blur(function () {
                     //Debug 正則表達式需要加密才能加入，取出時解密。
                     //var jiemi = decodeURI("/%5E(?!%5B0-9%5D+$)(?!%5Ba-zA-Z%5D+$)(?!(%5B%5E(0-9a-zA-Z)%5D%7C%5B()%5D)+$)(%5B%5E(0-9a-zA-Z)%5D%7C%5B()%5D%7C%5Ba-zA-Z%5D%7C%5B0-9%5D)%7B6,%7D$/");
@@ -377,7 +464,7 @@
             });//end client
 
         });
-       
+
         function submitFunction() {
             console.log(action);
             if (action == "REGISTERED" && ($('#FACTORY').val() == "" || $('#BU_NAME option:selected').text() == "" || $('#EMP_NO').val() == "" || $('#EMP_PASSWORD').val() == "" || $('#DPT_NAME').val() == "" || $('#LOCATION').val() == "")) {
@@ -435,6 +522,85 @@
                 });
             }
         }
+
+        readXlsx($("input[name=user_msg]"), 1, ["A1", "B1", "C1", "D1", "E1","F1", "G1", "H1", "I1", "J1", "K1","L1", "M1"], function (data){
+            // 所有字段必填
+            $("#uploadexcel").on("click", function (){   // 批量注册接口
+                client.CallFunction("MESStation.MESUserManager.RegisterNewUserPage", "RegisterNewUserxxxxxxxxxxxxx", {data}, function (e) {
+                    if(e.Status == "Pass"){
+                        console.log(data);
+                    }else{
+                        swal({
+                            title:"失敗提示",
+                            text: e.Message,
+                            type: "error",
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+        });
+
+        function readXlsx(ele, sheetIndex, fieldArr, callback) {     //
+            var reader = new FileReader();
+            ele.on("change", function () {
+                reader.readAsArrayBuffer(this.files[0]);
+                reader.onload = function () {
+                    var data = new Uint8Array(reader.result);
+                    var wb = XLSX.read(data, { type: 'array' });   //包含excel档的内容*
+                    var dataObj = wb["Sheets"][wb["SheetNames"][sheetIndex - 1]];
+                    var fields = [];
+                    var tabData = [];
+                    var newData = {};
+                    $.each(fieldArr, function (index, fieldKey) {
+                        fields.push(dataObj[fieldKey]);
+                    });
+                    $.each(fieldArr, function (index, val) {
+                        newData[dataObj[val]["w"]] = [];      //生成空数组
+                    });
+                    for (var prop in dataObj) {
+                        $.each(fieldArr, function (index, val) {
+                            if (prop[0] == val[0]) {
+                                newData[dataObj[val]["w"]].push(dataObj[prop]["w"]);     //对数组push
+                            }
+                        });
+                    }
+                    $.each(fieldArr, function (index, val) {
+                        newData[dataObj[val]["w"]].shift();      //删掉数组第一项
+                    });
+                    //console.log(newData);
+                    callback(data1_data2(newData));
+                }
+            });
+            function data1_data2(obj) {
+                var fields = [];
+                var retData = [];
+                var dataLen = 0;
+                for (var prop in obj) {
+                    fields.push(prop);
+                    if (!dataLen) {
+                        dataLen = obj[prop].length;
+                    }
+                }
+                for (var i = 0; i < dataLen; i++) {
+                    var o = {};
+                    for (var j = 0; j < fields.length; j++) {
+                        var key = fields[j];
+                        o[key] = obj[key][i];
+                    }
+                    retData.push(o);
+                }
+                return retData;
+            }
+        }
+
+
+
+
+
+
     </script>
 </body>
+
 </html>
