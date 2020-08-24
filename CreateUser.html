@@ -523,12 +523,19 @@
             }
         }
 
-        readXlsx($("input[name=user_msg]"), 1, ["A1", "B1", "C1", "D1", "E1","F1", "G1", "H1", "I1", "J1", "K1","L1", "M1"], function (data){
+        readXlsx($("input[name=user_msg]"), 1, ["A1", "B1", "C1", "D1", "E1","F1", "G1", "H1", "I1"], function (data){
             // 所有字段必填
             $("#uploadexcel").on("click", function (){   // 批量注册接口
-                client.CallFunction("MESStation.MESUserManager.RegisterNewUserPage", "RegisterNewUserxxxxxxxxxxxxx", {data}, function (e) {
-                    if(e.Status == "Pass"){
-                        console.log(data);
+                client.CallFunction("MESStation.MESUserManager.RegisterNewUserPage", "BulkRegisterNewUser", { data}, function (e) {
+                    console.log(e);
+                    if (e.Status == "Pass") {
+                        swal({
+                            title: "成功提示",
+                            text: e.Message,
+                            type: "success",
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
                     }else{
                         swal({
                             title:"失敗提示",

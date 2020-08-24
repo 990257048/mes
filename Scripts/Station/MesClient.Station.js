@@ -1171,6 +1171,9 @@
         })(d.Data.Station.Packing_FullCarton_Voice, function () {
             var FullCarton = new Audio("../../audio/FullCarton.WAV");
             FullCarton.play();
+        })(d.Data.Station.Packing_Mantissa_Voice, function () {   //  202008201038
+            var Mantissa = new Audio("../../audio/Mantissa.m4a");
+            Mantissa.play();
         })(d.Data.Station.StationName == "SFC_LH_AGBU_AOI", d.Data.Station.StationMessages, function (prop) {
             // AOI自动过站回传信息全部pass时的逻辑：
             var flag = true;

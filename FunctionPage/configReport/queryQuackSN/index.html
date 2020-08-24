@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<link rel="stylesheet" href="../../../css/bootstrap.min.css" />
+<link href="../../../css/plugins/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+<link href="../../../css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+<link href="../../../css/ReportConfig.css" rel="stylesheet" />
+
+<script src="../../../Scripts/jquery-1.9.1.min.js"></script>
+<script src="../../../Scripts/jquery.cookie.js"></script>
+<script src="../../../Scripts/bootstrap.min.js"></script>
+<script src="../../../Scripts/plugins/bootstrapTable/bootstrap-table.min.js"></script>
+<script src="../../../Scripts/plugins/layer/layer.min.js"></script>
+<script src="../../../Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script src="../../../Scripts/global.js"></script>
+<script src="../../../Scripts/MesClient.js"></script>
+<script src="../../../Scripts/MesClient.UI.js"></script>
+<script src="../../../Scripts/Report/MesClient.ReportConfig.js"></script>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+    .querybox-wrap{
+        width: 1000px;
+        height: 620px;
+        padding: 20px;
+        padding-bottom: 0;
+        background: #f5f5f5;
+        border: 1px solid #337ab7;
+        position: absolute;
+        top: 120px;
+        left: 15px;
+        z-index: 100;
+        border-radius: 10px;
+        box-shadow: 5px 5px 15px #000;
+    }
+    .querybox-line{
+        height: 85%;
+        display: flex;
+        justify-content: space-between;
+    }
+    .querybox-line+.querybox-line{
+        margin-top: 20px;
+    }
+    .lab {
+        width: 20%;
+        height: 35px;
+        line-height: 35px;
+        padding: 0px 20px;
+        background: #ddd;
+        text-align: right;
+        border-bottom: 2px solid #337ab7;
+    }
+    .querybox-line-right{
+        width: 80%;
+        height: 100%;
+        margin-left: 20px;
+    }
+    .querybox-line-right textarea{
+        width: 100%;
+        height: 100%;
+        padding: 5px;
+    }
+    .querybox-line .submit {
+        width: 33%;
+        height: 35px;
+        text-align: center;
+        background: #337ab7;
+        line-height: 35px;
+        margin-left: 32%;
+        color: #fff;
+        font-size: 18px;
+        cursor: pointer;
+    }
+    .querybox-line .submit:hover {
+        background: #003f75;
+    }
+</style>
+
+<body>
+    <div class="title">
+        <i class="glyphicon glyphicon-tags">&nbsp;</i><span set-lan="html:"></span>
+    </div>
+    <div class="list">
+        <div class="btnList"></div>
+        <div class="querybox-wrap">
+            <div class="querybox-line">
+                <div class="lab">SN</div>
+                <div class="querybox-line-right">
+                    <textarea name="sn" placeholder="请输入SN（多個SN之间以空格/逗号/换行隔开，最多不超過1000個）"></textarea>
+                </div>
+            </div>
+            <div class="querybox-line">
+                <div class="submit glyphicon glyphicon-search">Submit</div>
+            </div>
+        </div>
+    </div>
+    <div class="tab">
+        <table></table>
+    </div>
+</body>
+
+<script>
+    var report = new ConfigReport({
+        "pageMsg": {
+            "pageName": "Query Quack SN",                    //title名
+            "setLan": "QueryQuackSN",                          //该网页的多语言标签名
+            "btnMsg": [
+                {
+                    "id": "btn1",
+                    "btnName": "Query",
+                    "icon": "glyphicon glyphicon-search",
+                    "style": "0",
+                    "layerFlag": false
+                }
+            ]
+        },
+        "apiList": { //该网页的重要操作对应的前端与后台交互的api（homePage select 都是固定的写法，除此之外名称全部与按钮名称一致）
+            "homePage": {                                                       //首页的api（homePage：固定写法，用于加载首页表数据）
+                "className": "MESStation.Config.QUACKbyLot",   //该api对应的后台的类路径
+                "functionName": "SelectQUACKConfig",                                  //该api名称（方法名称）
+                "colList": ["QSN"],                                 //后台接收数据的键的集合（大框操作不需要配置，下同；其它情况此项必填，下同）
+                "sendList": [""]                                                 //后台接收数据的值的集合（与键一一对应）
+            },
+            "select": {                                                            //查询框(select:固定写法，用于快速查询表数据)
+                "className": "MESStation.Config.QUACKbyLot",
+                "functionName": "SelectQUACKConfig",
+                "colList": ["QSN"]
+            },
+            "Query": {
+                "className": "MESStation.Config.QUACKbyLot",   //该api对应的后台的类路径
+                "functionName": "SelectQUACKConfig",                                 //该api名称（方法名称）
+                "colList": ["QSN"]
+            }
+        },
+        "tableMsg": {                                                           //该表的各字段集合
+            "column": ["SN","QSN"]
+        },
+        "loadLayerData": {                                              //弹出框的控件的所有操作（大框内特殊控件数据加载[加载完页面数据后自动执行]）,非弹出框的操作
+            "Query": function () {
+                $(".querybox-wrap").find(".submit").on("click", function () {
+                    var sn = $(".querybox-wrap").find("textarea[name=sn]").val()
+                    var send = {}
+                    send.QSN = sn.replace(/[ \t\n,]+/g, ",").replace(/^,|,$/g,"")
+
+                    console.log(send);
+                    self.parent.client.CallFunction("MESStation.Config.QUACKbyLot", "SelectQUACKConfig", send, function (e) {
+                        if (e.Status == "Pass") {
+                            // console.log(e.Data)
+                            $(".tab table").bootstrapTable("load", e.Data);
+                        } else {
+                            $(".tab table").bootstrapTable("load", []);
+                            layer.msg(e.Message, {
+                                icon: 0,
+                                time:2000
+                            });
+                        }
+                    })
+
+                    $(".querybox-wrap").toggle()
+                });
+            }
+        },
+        "btnClick": {                                                       //点击按钮及后续所有操作（所有弹出框都要配置，大框动态变化，处理特殊控件（如表格），处理数据[用于发送至后台]，返回数据）
+            "Query": function (chData, fun1, fun2) {            //小框（chData：选中的数据 fun1：不弹出框直接执行[与后台交互] fun2：弹出小框后确定操作再执行）
+                //console.log(chData);
+                //fun1();
+                $(".querybox-wrap").toggle();
+            }
+        }
+    })
+</script>
+
+</html>
