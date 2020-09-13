@@ -361,6 +361,18 @@ let getSkuAqlData = (data) => { //获取aql第二张表内容
     });
 }
 
+// let get2dxConfig = (data) => { //获取2DX配置
+//     //data: {SKUNO}
+//     return new Promise((resolve, reject) => {
+//         self.parent.client.CallFunction("MESStation.Config.CLotRate", "Get2dxSetting", data, e => {
+//             if(e.Status == "Pass"){
+//                 resolve(e);
+//             }else{
+//                 reject(e);
+//             }
+//         });
+//     });
+// }
 
 
 
@@ -519,8 +531,8 @@ let uploadQuackImg = (data) => { //上传QUACK图片
     });
 }
 
-let save2dxConfig = (data) => { //保存2DX配置
-    //data: {BU, SKUNO, CODE_NAME, STATION_NAME, QTY, VALID_FLAG}
+let save2dxConfig = (data) => { //新增2DX配置
+    //data: {BU, SKUNO, CODE_NAME, STATION_NAME, QTY}  
     return new Promise((resolve, reject) => {
         self.parent.client.CallFunction("MESStation.Config.CLotRate", "UpdateById", data, e => {
             if(e.Status == "Pass"){
@@ -531,6 +543,22 @@ let save2dxConfig = (data) => { //保存2DX配置
         });
     });
 }
+
+
+// DeleteById
+let delete2dxConfigById = (data) => { //删除2DX配置 
+    //data: {ID}  
+    return new Promise((resolve, reject) => {
+        self.parent.client.CallFunction("MESStation.Config.CLotRate", "DeleteById", data, e => {
+            if(e.Status == "Pass"){
+                resolve(e);
+            }else{
+                reject(e);
+            }
+        });
+    });
+}
+
 
 let save73800Config = (data) => { //保存73&800配置
     //data: {SKUNO800, SKUNO73, SKUVER73}

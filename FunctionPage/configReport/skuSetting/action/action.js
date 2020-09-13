@@ -20,7 +20,8 @@ let {
     Steps,
     AutoComplete,
     Popover,
-    Upload, Popconfirm, message
+    Upload, Popconfirm, message,
+    Space
 } = antd;
 
 let {Search} = Input;

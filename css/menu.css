@@ -36,10 +36,11 @@
     .mes-search-wrap{
         position: absolute;
         /* border: 1px solid red; */
-        width:40%;
-        width:680px;
+        /* width:40%; */
+        /* width:680px; */
+        width:580px;
         height:30px;
-        left:calc(50% - 340px);
+        left:calc(50% - 290px);
         top:calc(50% - 15px);
         border-radius:5px;
         padding: 1px 40px;
@@ -63,8 +64,10 @@
     .mes-search-block{
         display: none;
         position: absolute;
-        width:680px;
-        left:calc(50% - 340px);
+        /* width:680px; */
+        width:580px;
+        /* left:calc(50% - 340px); */
+        left:calc(50% - 290px);
         top:64px;
         padding: 20px 12px;
         border-radius: 5px;

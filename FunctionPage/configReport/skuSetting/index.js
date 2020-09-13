@@ -1,5 +1,5 @@
 let composeEnhancers = self.parent.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
-let enhancer = composeEnhancers ? composeEnhancers(applyMiddleware(thunk, logger)): applyMiddleware(thunk, logger);
+let enhancer = composeEnhancers ? composeEnhancers(applyMiddleware(thunk)): applyMiddleware(thunk);
 let store = createStore(combineReducers({
     configReportReducer,
     layerReducer,
