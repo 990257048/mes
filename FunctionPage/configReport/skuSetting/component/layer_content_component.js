@@ -244,12 +244,14 @@ let WrapCon2 = () => {
         });
     }
     let testPcbaRouteOnSelect = (text, { route_id }) => {   //PCBA测试路由选择时的回调
-        console.log(text);
-        setTestPcbaRouteCon({ ...testPcbaRouteCon, TEST_ROUTE_ID: route_id });
+        console.log(text, route_id);
+        // setTestPcbaRouteCon({ ...testPcbaRouteCon, TEST_ROUTE_ID: route_id });
         let stations = text.split("==");
         setAutoStation(stations);
         //设置最后一个工站
-        setTestPcbaRouteCon({ ...testPcbaRouteCon, AutoStation: stations[stations.length - 1] });
+        // setTestPcbaRouteCon({ ...testPcbaRouteCon, TEST_ROUTE_ID: route_id });
+        // setTestPcbaRouteCon({ ...testPcbaRouteCon, AutoStation: stations[stations.length - 1] });
+        setTestPcbaRouteCon({ ...testPcbaRouteCon, AutoStation: stations[stations.length - 1], TEST_ROUTE_ID: route_id });
     }
 
     //-----------------------------------------------------------------------------------------------------

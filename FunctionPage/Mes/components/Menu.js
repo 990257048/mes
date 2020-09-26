@@ -353,8 +353,8 @@ class Li extends React.Component {
             background: bgcolor
         }
         var imgStyle = {     // 模块图标
-            background: "url(../img/menu/module.png)",
-            // background: "url(" + imgsrc + ")",    // 图标没配好
+            // background: "url(../img/menu/module.png)",  // 统一图标
+            background: "url(" + imgsrc + ")",    // 图标没配好
             backgroundSize: '100% 100%'
         }
         var layerOption = {

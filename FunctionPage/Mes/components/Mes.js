@@ -21,6 +21,9 @@ let Mes = () => {
 let MesNav = () => {
     let { iframe_act_url, iframes } = useSelector(state => state.MesIframesReducer);
     let exit_fn = useCallback(() => {
+        $.cookie("Token", null);
+        // client.SetToken(null);
+        // client.SetUserInfo(null);
         location.reload();
     }, []);
     return <div className="mes-nav">

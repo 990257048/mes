@@ -818,7 +818,7 @@
     }
     //在input框输入回车时调用
     MesStation.prototype.SendData = function () {
-        $(self.parent.document.getElementsByClassName("mes-search")[0]).focus();
+        // $(self.parent.document.getElementsByClassName("mes-search")[0]).focus();
         var MessageID = "MSGID" + parseInt(Math.random() * 99).toString() + Date.now().toString();
         //for (var i = 0; i < this.Inputs.length; i++) {
         //    this.Inputs[i].SetEnable(false);

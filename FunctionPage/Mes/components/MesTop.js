@@ -66,7 +66,7 @@ let MesSearchBlock = () => {
 }
 
 let MesSearchItem = ({ search_d: { bgcolor, imgsrc, contain, link } }) => {
-    imgsrc = "../img/menu/module.png";
+    // imgsrc = "../img/menu/module.png";
     let dispatch = useDispatch();
     let click_search_menu = useMemo(() => {
         return (name, url) => {
@@ -106,10 +106,11 @@ let UserBlock = () => {
     let { click_fn, exit_fn, debug_change } = useMemo(() => {
         return {
             click_fn: (name, url) => {
-                dispatch(open_iframe(name, url));
+                dispatch($open_iframe(name, url));
                 dispatch(change_userbox_state());
             },
             exit_fn: () => {
+                $.cookie("Token", null);
                 location.reload();
             },
             debug_change: () => {
@@ -124,7 +125,7 @@ let UserBlock = () => {
             <li set-lan="html:Personal" onClick={() => { click_fn('个人资料', 'FunctionPage/User/UserView.html') }}>个人资料</li>
             <li set-lan="html:ChangePWD" onClick={() => { click_fn('修改密码', 'FunctionPage/User/PWDManage.html') }}>修改密码</li>
             <li set-lan="html:Contact" onClick={() => { click_fn('联系我们', 'FunctionPage/contactsView.html') }}>联系我们</li>
-            <li set-lan="html:SafetyExit" onClick={exit_fn}>安全退出1</li>
+            <li set-lan="html:SafetyExit" onClick={exit_fn}>安全退出</li>
             <li>DEBUG <input className='debug' name='debug' type='checkbox' checked={debug_flag} onChange={debug_change} /></li>
         </ul>
     </div>

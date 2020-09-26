@@ -19,6 +19,8 @@ $(document).ready(function () {
             if (client.Token != null && client.Token != undefined && client.Token != "") {
                 ClientInit();
             } else {
+                $.cookie("Token", null);  //去掉这条路（新增一页）
+
                 var tk = $.cookie($.MES.CK_TOKEN_NAME);
                 if (tk && tk != null && tk != "null") {
                     client.SetToken(tk);
@@ -291,22 +293,23 @@ function ClientInit() {   //登录成功执行
     $("#loadingScreen").hide();
     //$("#wrapper").show();
     //人员信息
-    $("#userName_Show").text(client.UserInfo.EMP_NAME);
-    $("#userLevel_Show").text(client.UserInfo.Department + "-" + (client.UserInfo.EMP_LEVEL == 9 ? "管理员" : "作业员"));
-    var dbg = $("#debugSetting");
-    if ($.MES.DEBUG) {
-        dbg.val("on");
-    }else {
-        dbg.val("off");
-    }
-    dbg.on("change", function (e,k) {
-        if (this.checked) {
-            $.MES.DEBUG = true;
-        }
-        else {
-            $.MES.DEBUG = false;
-        }
-    });
+
+    // $("#userName_Show").text(client.UserInfo.EMP_NAME);
+    // $("#userLevel_Show").text(client.UserInfo.Department + "-" + (client.UserInfo.EMP_LEVEL == 9 ? "管理员" : "作业员"));
+    // var dbg = $("#debugSetting");
+    // if ($.MES.DEBUG) {
+    //     dbg.val("on");
+    // }else {
+    //     dbg.val("off");
+    // }
+    // dbg.on("change", function (e,k) {
+    //     if (this.checked) {
+    //         $.MES.DEBUG = true;
+    //     }
+    //     else {
+    //         $.MES.DEBUG = false;
+    //     }
+    // });
     
     // //菜单初始化
     // //MesUI.Menu($("#NavBlock"));

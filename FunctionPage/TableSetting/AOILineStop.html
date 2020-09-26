@@ -187,166 +187,8 @@
     </div>
 </body>
 <script>
-    //var report = new ConfigReport({
-    //    "pageMsg": {
-    //        "pageName": "AOI Line Stop",
-    //        "setLan": "AOILineStop",
-    //        "queryTip":"请输入SKUNO",
-    //        "btnMsg": [
-    //            {
-    //                "id": "btn0",
-    //                "btnName": "Close",    
-    //                "icon": "glyphicon glyphicon-trash",    //图标样式
-    //                "style": "1",       
-    //                "layerFlag": false    //点击该按钮是否弹出层(如修改数据弹窗)
-    //            },
-    //              {
-    //                  "id": "btn1",
-    //                  "btnName": "Edit",     //按钮显示名字，点击该按钮后弹出层的id名（Edit加上Layer ===> EditLayer）注意：需要和layerMsg,apiList,btnClick下的名字一致(非常重要)
-    //                  "layerBtnName":"Update",    //点击该按钮后弹出层的功能按钮名字及该按钮的类名
-    //                  "icon": "glyphicon glyphicon-pencil",
-    //                  "style": "1",  //只选中一条数据可以点击
-    //                  "layerFlag": true
-    //              },
-    //        ],
-    //    },
-    //    "apiList": {                         //homePage select 都是固定的写法，除此之外名称全部与按钮名称一致
-    //        "homePage": {   //首页
-    //            "className": "MESStation.Config.AOIStopConfig",
-    //            "functionName": "GetAOIStopBySKUNO",
-    //            "colList": ["SKUNO"],
-    //            "sendList": [""]
-    //        },
-    //        "select": {     //查询框
-    //            "className": "MESStation.Config.AOIStopConfig",
-    //            "functionName": "GetAOIStopBySKUNO",
-    //            "colList": ["SKUNO"]   //必填
-    //        },
-    //      "Close": {
-    //          "className": "MESStation.Config.AOIStopConfig",
-    //          "functionName": "ChangeByID",
-    //          "colList": ["ID"]      //必填
-    //      },
-    //        "Edit": {
-    //            "className": "MESStation.Config.AOIStopConfig",
-    //            "functionName": "Update",
-    //            "colList": []     //点击该按钮弹出大框，发送的字段集合在layerMsg里面配置，这里的colList无效
-    //        }
-    //    },
-    //    "tableMsg": {     //表格各列
-    //        "column": ["SKUNO","LINE","STATION","CHECK_DATE","CHECK_TIME","STOP_DESCRIPTION","STOP_PROGRESS","DPPM","STOP_CAUSE","CONFIRM","CORRECTED","CONFIRM_EMP","CONFIRM_TIME","EDIT_EMP","EDIT_TIME"]
-    //    },
-    //    "layerMsg": {    //弹出框各项控件(针对弹出大框)
-    //        "Edit": {
-    //            "showList": [
-    //                {
-    //                    "field": "ID",
-    //                    "type": "text",  //控件类型（text  select  checkbox  radio  textarea  ）
-    //                    "fillFlag":true,
-    //                    "disabled":true
-    //                },
-    //              {
-    //                  "field": "CHECK_DATE",
-    //                  "type": "text",
-    //                  "fillFlag": true,
-    //                  "disabled":true
-    //              },
-    //              {
-    //                  "field": "SKUNO",
-    //                  "type": "text",
-    //                  "fillFlag": true,
-    //                  "disabled": true
-    //              },
-    //              {
-    //                  "field": "LINE",
-    //                  "type": "text",
-    //                  "fillFlag": true,
-    //                  "disabled": true
-    //              },
-    //              {
-    //                  "field": "STATION",
-    //                  "type": "text",
-    //                  "fillFlag": true,
-    //                  "disabled": true
-    //              },
-    //              {
-    //                  "field": "CHECK_TIME",
-    //                  "type": "text",
-    //                  "fillFlag": true,
-    //                  "disabled": true,
-    //              },
-    //              {
-    //                  "field": "DPPM",
-    //                  "type": "text",
-    //                  "fillFlag": true,
-    //                  "disabled": true,
-    //              },
-    //              {
-    //                  "field": "CORRECTED",
-    //                  "type": "select",
-    //                  "fillFlag": true,
-    //                  "disabled": true,
-    //              },
-    //              {
-    //                  "field": "STOP_CAUSE",
-    //                  "type": "textarea",
-    //                  "fillFlag": true,
-    //                  "disabled": true,
-    //              },
-    //              {
-    //                  "field": "STOP_PROGRESS",
-    //                  "type": "textarea",
-    //                  "fillFlag": true,
-    //                  "disabled": true,
-    //              },
-    //              {
-    //                  "field": "STOP_DESCRIPTION",
-    //                  "type": "textarea",
-    //                  "fillFlag": true,
-    //                  "disabled": true,
-    //              },
-    //              {
-    //                  "field": "CONFIRM",
-    //                  "type": "textarea",
-    //                  "fillFlag": true,
-    //                  "disabled": true,
-    //              },
-    //              {
-    //                  "field": "CONFIRM_EMP",
-    //                  "type": "text",
-    //                  "fillFlag": false,
-    //                  "disabled": true,
-    //              }
-    //          ],
-    //            "sendList": ["ID","CHECK_DATE", "SKUNO", "LINE", "STATION", "CHECK_TIME", "DPPM", "CORRECTED", "CONFIRM_EMP", "STOP_CAUSE", "STOP_PROGRESS", "STOP_DESCRIPTION", "CONFIRM"]
-    //        }
-    //    },
-    //    "loadLayerData": {
-    //        "Edit": function (loadSelect) {     //loadSelect：生成下拉数据方法，this为当前弹出框（jquery对象），键与按钮名称一致       loadSelect（sleect控件，数组）
-    //            //this.find("select[name=CONFIRM]")
-    //            console.log(self.parent.document.getElementById("userLevel_Show").innerHTML);
-    //            var name = self.parent.document.getElementById("userLevel_Show").innerHTML;
-    //            if (/(IPQC|IT)/g.test(name)) {
-    //                this.find("textarea[name=CONFIRM]").removeAttr("disabled");
-    //                //this.find("input[name=CORRECTED]").removeAttr("disabled");
-    //                this.find("input[name=CONFIRM_EMP]").val(self.parent.client.UserInfo.EMP_NO);
-    //                loadSelect(this.find("input[name=CORRECTED]"),["Open","Close"]);
-    //            } else { 
-    //                this.find("textarea[name=CONFIRM]").attr("disabled", "disabled");
-    //            }
-    //        }
-    //    },
-    //    "btnClick": {        //对弹出大框无效
-    //        "Close": function (chData, fun1, fun2) {      //chData : 选中的数据  fun1:不需要提示框  fun2：需要提示框  this：按钮（jquery对象）
-    //            fun2();   //需要弹出提示框
-    //        },
-    //        "Edit": function () {
-    //        }
-    //    }
-    //});
-    
 
-    var report = new ConfigReport({
+    var option = {
         "pageMsg": {
             "pageName": "AOI Line Stop",                    //title名
             "setLan": "AOILineStop",                          //该网页的多语言标签名
@@ -484,7 +326,8 @@
         "loadLayerData": {                                              //弹出框的控件的所有操作（大框内特殊控件数据加载[加载完页面数据后自动执行]）
             "Edit": function (loadSelect, generatTable) {   //createToobar
                 var _this = this;
-                var name = self.parent.document.getElementById("userLevel_Show").innerHTML;
+                var name = self.parent.client.UserInfo.Department; // self.parent.document.getElementById("userLevel_Show").innerHTML;
+                // self.parent.client.UserInfo.Department
                 loadSelect(this.find("select[name=CORRECTED]"), ["Open", "Closed"]);
                 //this.find("input[name=CONFIRM_EMP]").val(self.parent.client.UserInfo.EMP_NO);
                 $("#btn1").on("click", function () {
@@ -529,7 +372,17 @@
                 }
             }
         }
-    });
+    }
+
+    var name = self.parent.client.UserInfo.Department;
+    console.log(name)
+    if (!/(ME|IPQC|IT)/g.test(name)){
+        // console.log("ccccccccc");
+        option.pageMsg.btnMsg = [];
+    }
+    
+    console.log(option);
+    var report = new ConfigReport(option);
 
 
     function ConfigReport(o) {
